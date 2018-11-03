@@ -8,6 +8,9 @@
     <string name="invalidPasswordLength">The password must have at least 8 characters</string>
     <string name="anonParkTitle">Campus 2 - Park A</string>
     <string name="btnLogin">Login</string>
+    <string name="btnRegister">Register</string>
     <string name="txtFree">Free:</string>
     <string name="txtOcuppied">Ocuppied:</string>
+    <string name="emptyFields">The fileds can\'t be empty</string>
+    <string name="signUpButton">Sign Up</string>
 </resources>

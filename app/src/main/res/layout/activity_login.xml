@@ -40,11 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick_buttonLogin"
-        android:text="Login" />
+        android:text="@string/btnLogin" />
+
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick_buttonRegister"
-        android:text="Register" />
+        android:text="@string/btnRegister" />
 </LinearLayout>

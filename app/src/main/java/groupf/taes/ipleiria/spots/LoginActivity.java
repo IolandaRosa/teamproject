@@ -1,5 +1,7 @@
 package groupf.taes.ipleiria.spots;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,14 +39,19 @@ public class LoginActivity extends AppCompatActivity {
 
         Map<String, Integer> errorMap = UsersManager.INSTANCE.validadeUserCredentials(email, password);
 
+        if(errorMap.containsKey("email") && errorMap.containsKey("password")){
+            UsersManager.INSTANCE.showErrorMessage(this,R.string.emptyFields);
+            return;
+        }
+
         if(errorMap.containsKey("email")){
             editEmail.setError(getResources().getString(errorMap.getOrDefault("email",-1)));
             editEmail.requestFocus();
         }
 
         if(errorMap.containsKey("password")){
-            editEmail.setError(getResources().getString(errorMap.getOrDefault("password",-1)));
-            editEmail.requestFocus();
+            editPassword.setError(getResources().getString(errorMap.getOrDefault("password",-1)));
+           editPassword.requestFocus();
         }
 
         if(errorMap.isEmpty()){
@@ -69,6 +76,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClick_buttonRegister(View view) {
+    }
+
+    public static Intent getIntent(Context context) {
+        return new Intent(context, LoginActivity.class);
     }
 
 
