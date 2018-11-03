@@ -29,7 +29,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user with not registered email
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I introduce an email that does not exist on database "empty@empty.empty"
@@ -40,7 +40,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user with invalid password
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I introduce an email that does not exist on database "test@test.test"
@@ -51,7 +51,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user with empty email
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I type my password on password field "12345"
@@ -61,7 +61,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user with invalid password
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I introduce an email that does not exist on database "test@test.test"
@@ -71,7 +71,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user empty fiels
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I press the "Login" button

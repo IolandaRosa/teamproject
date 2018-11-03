@@ -22,8 +22,13 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I am in the dashboard screen$")
     public void i_am_in_the_dashboard_screen() {
-        onViewWithId(R.id.buttonLogin).isDisplayed().check(matches(withText(R.string.signUpButton)));
+        onViewWithId(R.id.btnLogin).isDisplayed().check(matches(withText(R.string.signUpButton)));
 
+    }
+
+    @When("^I press the \"([^\"]*)\" button in dashboard$")
+    public void i_press_the_button_in_dashboard(String arg1) {
+        onViewWithId(R.id.btnLogin).click();
     }
 
     @When("^I press the \"([^\"]*)\" button$")
