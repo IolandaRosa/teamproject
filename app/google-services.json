@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "290420037628-s3860jgn6acpce0ev4de19jkcvpfeiev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "groupf.taes.ipleiria.spots",
+            "certificate_hash": "cb39d738e9c61ca9c907cd944e43dc46165b0220"
+          }
+        },
+        {
+          "client_id": "290420037628-5nv6fa120f2996d5rbjmfp015mvg48cd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "groupf.taes.ipleiria.spots",
+            "certificate_hash": "580a08f1a9a1ea8ec79f92727e812f1fbc8f5f71"
+          }
+        },
+        {
           "client_id": "290420037628-ops1tcd77a7k07dhi3nopg2u39dbaugr.apps.googleusercontent.com",
           "client_type": 3
         }

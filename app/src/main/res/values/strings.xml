@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Spots</string>
     <string name="title_activity_maps">Map</string>
+    <string name="invalidCredentials">Please, register your credentials</string>
+    <string name="emptyEmail">The email can\'t be empty</string>
+    <string name="emptyPassword">The password can\'t be empty</string>
+    <string name="invalidEmail">The email must have a valid format</string>
+    <string name="invalidPasswordLength">The password must have at least 8 characters</string>
 </resources>
