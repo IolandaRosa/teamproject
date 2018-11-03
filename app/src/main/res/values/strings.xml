@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Spots</string>
     <string name="title_activity_maps">Map</string>
+    <string name="anonParkTitle">Campus 2 - Park A</string>
+    <string name="btnLogin">Login</string>
+    <string name="txtFree">Free:</string>
+    <string name="txtOcuppied">Ocuppied:</string>
 </resources>
