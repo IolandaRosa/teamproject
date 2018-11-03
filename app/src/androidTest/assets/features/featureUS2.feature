@@ -7,7 +7,7 @@ Feature: Login for an anonymous user
 
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I type my email on email field "test@test.test"
@@ -18,7 +18,7 @@ Feature: Login for an anonymous user
   Scenario: Login as an anonymous user with invalid email
     Given I am an anonymous user
     When I am in the dashboard screen
-    And I press the "Login" button
+    And I press the "Login" button in dashboard
     And I see the login screen
     And I see all the fields displayed and empty
     And I introduce an invalid email format "test@"

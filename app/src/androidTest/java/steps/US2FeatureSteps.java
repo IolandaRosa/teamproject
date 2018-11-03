@@ -17,6 +17,7 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I am an anonymous user$")
     public void i_am_an_anonymous_user() {
+        FirebaseAuth.getInstance().signOut();
         Assert.assertNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
