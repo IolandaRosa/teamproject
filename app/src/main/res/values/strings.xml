@@ -6,4 +6,8 @@
     <string name="emptyPassword">The password can\'t be empty</string>
     <string name="invalidEmail">The email must have a valid format</string>
     <string name="invalidPasswordLength">The password must have at least 8 characters</string>
+    <string name="anonParkTitle">Campus 2 - Park A</string>
+    <string name="btnLogin">Login</string>
+    <string name="txtFree">Free:</string>
+    <string name="txtOcuppied">Ocuppied:</string>
 </resources>
