@@ -23,9 +23,9 @@ public class SpotsManager {
 
     public void writeSpotsOnDatabase() {
         spots.add(new Spot("A-1", "A", "39.734859,-8.820784", 0));
-        spots.add(new Spot("A-2", "A", "39.734884,-8.820745", 0));
+        spots.add(new Spot("A-2", "A", "39.734884,-8.820745", 1));
         spots.add(new Spot("A-3", "A", "39.734909,-8.820708", 0));
-        spots.add(new Spot("A-4", "A", "39,734905,-8.820718", 0));
+        spots.add(new Spot("A-4", "A", "39,734905,-8.820718", 1));
 
         for(Spot s : spots) {
             dbRef.child("ParkingSpots").child(s.getSpotId()).child("Park").setValue(s.getPark());

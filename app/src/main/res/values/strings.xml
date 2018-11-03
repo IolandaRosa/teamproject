@@ -10,4 +10,5 @@
     <string name="btnLogin">Login</string>
     <string name="txtFree">Free:</string>
     <string name="txtOcuppied">Ocuppied:</string>
+    <string name="txtLastInfoDate">Latest data obtained in:</string>
 </resources>
