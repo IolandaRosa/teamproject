@@ -11,6 +11,6 @@
     <string name="btnRegister">Register</string>
     <string name="txtFree">Free:</string>
     <string name="txtOcuppied">Ocuppied:</string>
-    <string name="emptyFields">The fileds can\'t be empty</string>
+    <string name="emptyFields">The fields can\'t be empty</string>
     <string name="signUpButton">Sign Up</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,9 +13,12 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
+import java.io.Console;
 import java.util.Map;
 
 import modelo.UsersManager;
@@ -51,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(errorMap.containsKey("password")){
             editPassword.setError(getResources().getString(errorMap.getOrDefault("password",-1)));
-           editPassword.requestFocus();
+            editPassword.requestFocus();
         }
 
         if(errorMap.isEmpty()){
@@ -63,12 +67,16 @@ public class LoginActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
                         //starNewActivityLoged
                     }else{
-                        if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){
-                            UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
+                        //Acho que os ifs são obsoletos chegando neste ponto quase de certeza que são credencias erradas e se não for tambem não sei ate que ponto fara sentido o utilizador receber a excepção
+                        //so faz sentido fazer isto se quisermos guardar informação dos erros em log...
+                        UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
+                        /*if(task.getException() instanceof FirebaseAuthInvalidCredentialsException ||task.getException() instanceof FirebaseAuthInvalidUserException){
+                                UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
                         }
                         else{
-                            Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                            UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
+                            //Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }*/
                     }
                 }
             });

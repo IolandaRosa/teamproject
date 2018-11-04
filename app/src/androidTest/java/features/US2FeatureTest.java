@@ -39,4 +39,5 @@ public class US2FeatureTest extends GreenCoffeeTest {
     public void test() {
         start(new US2FeatureSteps());
     }
+
 }
