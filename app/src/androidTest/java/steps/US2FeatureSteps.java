@@ -10,8 +10,12 @@ import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.AllOf.allOf;
 
 public class US2FeatureSteps extends GreenCoffeeSteps {
 
@@ -90,7 +94,7 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see an error message saying \"([^\"]*)\"$")
     public void i_see_an_error_message_saying(String arg1) {
-        onViewWithText(arg1).isDisplayed();
+        onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed()));
     }
 
     @Then("^I see an error message in password field saying \"([^\"]*)\"$")
