@@ -13,4 +13,7 @@
     <string name="txtOcuppied">Ocuppied:</string>
     <string name="emptyFields">The fields can\'t be empty</string>
     <string name="signUpButton">Sign Up</string>
+    <string name="txtLastInfoDate">Latest data obtained at:</string>
+    <string name="errorNoInternetConnection">ERROR: There is no internet connection. Try again later.</string>
+    <string name="OK">OK</string>
 </resources>

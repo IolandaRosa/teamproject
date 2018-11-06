@@ -8,6 +8,11 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -37,8 +42,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MapsActivity" />
+
         <activity android:name=".LoginActivity"></activity>
+
     </application>
 
 </manifest>
