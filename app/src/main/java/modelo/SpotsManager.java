@@ -1,6 +1,7 @@
 package modelo;
 
-import android.provider.ContactsContract;
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -8,6 +9,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,14 +21,23 @@ public class SpotsManager {
     private FirebaseDatabase database;
     private DatabaseReference dbRef;
     private List<Spot> spots;
+    private int freeSpots = 0;
+    private int ocuppiedSpots = 0;
+    private String dateOfData = null;
+
 
     public SpotsManager() {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
+
+        database.setPersistenceEnabled(true);
         dbRef = database.getReference().child("ParkingSpots");
+        dbRef.keepSynced(true);
         spots = new LinkedList<>();
-       // writeSpotsOnDatabase();
-        readSpotsDataFromDatabase();
+
+
+        //writeSpotsOnDatabase();
+       // readSpotsDataFromDatabase();
     }
 
     public void writeSpotsOnDatabase() {
@@ -41,19 +55,24 @@ public class SpotsManager {
     }
 
     public void readSpotsDataFromDatabase() {
-
-        DatabaseReference ref = database.getReference().child("ParkingSpots");
-
         // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot d : children) {
                     Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()));
                     spots.add(spot);
+                    if (spot.getStatus() == 0) {
+                        freeSpots++;
+                    } else {
+                        ocuppiedSpots++;
+                    }
                 }
 
+                DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
+                String date = df.format(Calendar.getInstance().getTime());
+                setDateOfData(date);
             }
 
             @Override
@@ -61,8 +80,6 @@ public class SpotsManager {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-
 
     }
 
@@ -73,4 +90,21 @@ public class SpotsManager {
     public List<Spot> getSpots() {
         return spots;
     }
+
+    public int getFreeSpots() {
+        return freeSpots;
+    }
+
+    public int getOcuppiedSpots() {
+        return ocuppiedSpots;
+    }
+
+    public String getDateOfData() {
+        return dateOfData;
+    }
+
+    public void setDateOfData(String dateOfData) {
+        this.dateOfData = dateOfData;
+    }
+
 }

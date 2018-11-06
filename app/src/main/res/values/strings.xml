@@ -11,4 +11,6 @@
     <string name="txtFree">Free:</string>
     <string name="txtOcuppied">Ocuppied:</string>
     <string name="txtLastInfoDate">Latest data obtained at:</string>
+    <string name="errorNoInternetConnection">ERROR: There is no internet connection. Try again later.</string>
+    <string name="OK">OK</string>
 </resources>
