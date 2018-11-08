@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Locale;
 
 import groupf.taes.ipleiria.spots.DashboardActivity;
-import steps.US1FeatureSteps;
 import steps.US2FeatureSteps;
 
 @RunWith(Parameterized.class)

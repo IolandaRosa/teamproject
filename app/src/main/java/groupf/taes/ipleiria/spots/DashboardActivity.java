@@ -130,6 +130,9 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         wm.setWifiEnabled(false);
     }
 
+    public void onClick_btnLogin(View view) {
+        startActivity(LoginActivity.getIntent(this));
+    }
 
 }
 
