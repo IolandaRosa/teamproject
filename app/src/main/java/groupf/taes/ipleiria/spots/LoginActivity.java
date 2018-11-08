@@ -1,5 +1,7 @@
 package groupf.taes.ipleiria.spots;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,6 +71,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClick_buttonRegister(View view) {
+    }
+
+    public static Intent getIntent(Context context) {
+        return new Intent(context, LoginActivity.class);
     }
 
 

@@ -7,32 +7,37 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import android.widget.TextView;
+import android.view.View;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Dash;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
+
 
 import modelo.Spot;
 import modelo.SpotsManager;
 
-import static java.lang.Thread.activeCount;
-import static java.lang.Thread.sleep;
 
 public class DashboardActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -120,11 +125,16 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         builder.show();
     }
 
+    public void onClick_btnLogin (View view) {
+        startActivity(LoginActivity.getIntent(this));
+    }
+
     public void disconnectInternet() {
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
       //  wm.disconnect();
         wm.setWifiEnabled(false);
     }
+
 
 
 
