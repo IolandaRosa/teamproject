@@ -107,4 +107,5 @@ public class SpotsManager {
         this.dateOfData = dateOfData;
     }
 
+
 }
