@@ -34,4 +34,5 @@ public class US1FeatureWithoutConnectionSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.lastInfoDate).isNotEmpty();
         onViewWithId(R.id.lastInfoDate).contains(SpotsManager.getINSTANCE().getDateOfData());
     }
+
 }

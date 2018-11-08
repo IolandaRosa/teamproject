@@ -60,4 +60,5 @@ public class US1FeatureWithoutConnectionTest extends GreenCoffeeTest {
         WifiManager wm = (WifiManager) activityTestRule.getActivity().getApplicationContext().getSystemService(WIFI_SERVICE);
         wm.setWifiEnabled(true);
     }
+
 }

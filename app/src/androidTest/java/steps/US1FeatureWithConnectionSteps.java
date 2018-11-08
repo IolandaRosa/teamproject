@@ -57,10 +57,5 @@ public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
     }
 
 
-    @When("^I don't have internet connection $")
-    public void i_don_t_have_internet_connection() {
-
-        //assertFalse()
-    }
 
 }

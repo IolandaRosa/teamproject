@@ -48,4 +48,5 @@ public class US1FeatureWithConnectionTest extends GreenCoffeeTest {
         super.beforeScenarioStarts(scenario, locale);
         FirebaseAuth.getInstance().signOut();
     }
+
 }
