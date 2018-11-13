@@ -1,6 +1,7 @@
 package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,9 +24,11 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,14 +51,13 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  disconnectInternet();
-      //  checkInternetConnection();
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
-        /*try {
-            sleep(400);
-        } catch (Exception ex) {
 
-        }*/
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            DashboardAuthActivity.getIntent(this);
+            return;
+        }
+
+        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
         setContentView(R.layout.activity_dashboard);
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
@@ -79,7 +81,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
                 LatLng marker = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
-                mMap.addMarker(new MarkerOptions().position(marker).title(s.getSpotId()));
+                mMap.addMarker(new MarkerOptions().position(marker).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             }
         }
 
@@ -132,6 +134,10 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClick_btnLogin(View view) {
         startActivity(LoginActivity.getIntent(this));
+    }
+
+    public static Intent getIntent(Context context) {
+        return new Intent(context, DashboardActivity.class);
     }
 
 }
