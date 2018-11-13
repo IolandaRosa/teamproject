@@ -27,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +37,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import modelo.Spot;
 import modelo.SpotsManager;
@@ -47,6 +50,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
+    private static List<Marker> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
+        markers = new LinkedList<>();
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -80,13 +85,16 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
-                LatLng marker = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
-                mMap.addMarker(new MarkerOptions().position(marker).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                markers.add(marker);
             }
         }
 
+
         freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
         occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
+
 
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
 
@@ -140,6 +148,9 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         return new Intent(context, DashboardActivity.class);
     }
 
+    public static List<Marker> getMarkers() {
+        return markers;
+    }
 }
 
 
