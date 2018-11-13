@@ -1,16 +1,17 @@
 package modelo;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Patterns;
 
-import com.google.android.gms.common.internal.ResourceUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,18 @@ public enum UsersManager {
     INSTANCE;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     UsersManager() {
-        this.mAuth=FirebaseAuth.getInstance();
-    }
 
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        //mDatabase.keepSynced(true);
+
+        this.mAuth=FirebaseAuth.getInstance();
+
+
+    }
 
     public Task<AuthResult> makeLogin(String email, String password) {
 
@@ -66,11 +74,58 @@ public enum UsersManager {
         return errorMap;
     }
 
-    public void showErrorMessage(Context context, int message) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+    public Map<String,Integer> validateUserCredentialsAndName(String email, String password, String name,String confirmationPass) {
 
-        builder.setTitle(message);
+        Map<String,Integer> errorMap=this.validadeUserCredentials(email,password);
 
-        builder.show();
+
+        if(confirmationPass.isEmpty())
+        {
+            errorMap.put("confirmationPass",R.string.emptyConfirmationPass);
+            return errorMap;
+        }
+
+        if(!password.equals(confirmationPass))
+        {
+            errorMap.put("confirmationPass",R.string.errorConfirmationPass);
+            return errorMap;
+        }
+
+        if(name.isEmpty()){
+            errorMap.put("name",R.string.emptyName);
+            return errorMap;
+        }
+
+        if(android.text.TextUtils.isDigitsOnly(name)){
+            errorMap.put("name",R.string.invalidName);
+        }
+
+        return errorMap;
     }
+
+    public Task<AuthResult> registerUser(String email, String password) {
+        return mAuth.createUserWithEmailAndPassword(email, password);
+    }
+
+    public void addUserToDatabase(String name, String email) {
+        String id=mAuth.getCurrentUser().getUid();
+        User user=new User(id,name,email,FindPreference.CLOSER_LOCATION);
+        mDatabase.child(id).setValue(user);
+    }
+
+    public DatabaseReference getUserProfileInfo() {
+
+        return mDatabase.child(mAuth.getCurrentUser().getUid());
+    }
+
+    public String toStringPreference(FindPreference preference) {
+        if(preference==FindPreference.CLOSER_LOCATION)
+            return "Closer To My Location";
+
+        if(preference==FindPreference.BEST_RATED)
+            return "Best Rated Place";
+
+        return "My Favourite Spots";
+    }
+
 }

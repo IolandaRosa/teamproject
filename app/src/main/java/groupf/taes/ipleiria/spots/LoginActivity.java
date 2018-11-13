@@ -3,6 +3,7 @@ package groupf.taes.ipleiria.spots;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import java.io.Console;
 import java.util.Map;
 
+import modelo.InternetConnectionManager;
 import modelo.UsersManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,21 +32,32 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            startActivity(DashboardAuthActivity.getIntent(this));
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         this.editEmail=findViewById(R.id.editTextEmail);
         this.editPassword=findViewById(R.id.editTextPassword);
     }
 
     public void onClick_buttonLogin(View view) {
+
+        if(! InternetConnectionManager.INSTANCE.checkInternetConnection(this)){
+            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.noInternetConnection);
+            return;
+        }
+
         String email=editEmail.getText().toString().trim();
         String password=editPassword.getText().toString().trim();
 
         Map<String, Integer> errorMap = UsersManager.INSTANCE.validadeUserCredentials(email, password);
 
         if(errorMap.containsKey("email") && errorMap.containsKey("password")){
-            UsersManager.INSTANCE.showErrorMessage(this,R.string.emptyFields);
+            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.emptyFields);
             return;
         }
 
@@ -65,18 +78,11 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        //starNewActivityLoged
+                        InternetConnectionManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.registerSuccess);
+                        startActivity(DashboardAuthActivity.getIntent(LoginActivity.this));
+
                     }else{
-                        //Acho que os ifs são obsoletos chegando neste ponto quase de certeza que são credencias erradas e se não for tambem não sei ate que ponto fara sentido o utilizador receber a excepção
-                        //so faz sentido fazer isto se quisermos guardar informação dos erros em log...
-                        UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
-                        /*if(task.getException() instanceof FirebaseAuthInvalidCredentialsException ||task.getException() instanceof FirebaseAuthInvalidUserException){
-                                UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
-                        }
-                        else{
-                            UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
-                            //Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }*/
+                        InternetConnectionManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
                     }
                 }
             });
@@ -84,11 +90,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClick_buttonRegister(View view) {
+        startActivity(RegisterActivity.getIntent(this));
     }
 
     public static Intent getIntent(Context context) {
         return new Intent(context, LoginActivity.class);
     }
-
-
 }
