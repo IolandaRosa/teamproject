@@ -78,23 +78,25 @@ public enum UsersManager {
 
         Map<String,Integer> errorMap=this.validadeUserCredentials(email,password);
 
+        //boolean flag = false;
 
         if(confirmationPass.isEmpty())
         {
             errorMap.put("confirmationPass",R.string.emptyConfirmationPass);
-            return errorMap;
-        }
 
-        if(!password.equals(confirmationPass))
-        {
-            errorMap.put("confirmationPass",R.string.errorConfirmationPass);
-            return errorMap;
         }
-
         if(name.isEmpty()){
             errorMap.put("name",R.string.emptyName);
             return errorMap;
         }
+
+        if(!confirmationPass.isEmpty() && !password.equals(confirmationPass))
+        {
+            errorMap.put("confirmationPass",R.string.errorConfirmationPass);
+
+        }
+
+
 
         if(android.text.TextUtils.isDigitsOnly(name)){
             errorMap.put("name",R.string.invalidName);

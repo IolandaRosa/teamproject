@@ -23,7 +23,7 @@ Feature: Register as an anonymous user
     Given I type my name "Test" on name field
     When I type my email "test@test.test" on email field
     And I type my password "123456678" on password field
-    And I type my confirmation password "123456677" on confirmation password field
+    And I type my confirmation password "123456678" on confirmation password field
     And I click the register button in the register screen
     And I see the error message on screen "You are already registered"
     Then The application assert that no user was authenticated and added on database
@@ -83,7 +83,7 @@ Feature: Register as an anonymous user
     When I type my email "jose@jose.com" on email field
     And I type my password "123456677" on password field
     And I click the register button in the register screen
-    And II see the error message "The confirmation password can't be empty" on the confirmation password field
+    And I see the error message "The confirmation password can't be empty" on the confirmation password field
     Then The application assert that no user was authenticated and added on database
 
   Scenario: Register as an anonymous user with wrong password confirmation
@@ -92,5 +92,5 @@ Feature: Register as an anonymous user
     And I type my password "123456677" on password field
     And I type my confirmation password "123456678" on confirmation password field
     And I click the register button in the register screen
-    And I see the error message "The confirmation password must be equal to password field" on the confirmation password field
+    And I see the error message "The password must be equal to the password" on the confirmation password field
     Then The application assert that no user was authenticated and added on database

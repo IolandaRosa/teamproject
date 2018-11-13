@@ -19,6 +19,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class US3FeatureSteps extends GreenCoffeeSteps {
 
+
+    @When("^I see the error message \"([^\"]*)\" on the confirmation password field$")
+    public void i_see_the_error_message_on_the_confirmation_password_field(String arg1) {
+        onViewWithId(R.id.editTextConfirmationPassword).hasErrorText(arg1);
+    }
+
     @Given("^I am an anonymous user$")
     public void i_am_an_anonymous_user() {
         Assert.assertNull(FirebaseAuth.getInstance().getCurrentUser());
@@ -134,5 +140,7 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
     public void i_see_the_error_message_on_the_password_field(String arg1) {
         onViewWithId(R.id.editTextPassword).hasErrorText(arg1);
     }
+
+
 
 }
