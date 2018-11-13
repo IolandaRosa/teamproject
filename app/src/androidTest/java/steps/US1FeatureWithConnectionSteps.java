@@ -13,6 +13,7 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import org.junit.Assert;
 
+import groupf.taes.ipleiria.spots.DashboardActivity;
 import groupf.taes.ipleiria.spots.R;
 import modelo.SpotsManager;
 
@@ -42,6 +43,11 @@ public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
 
         onViewWithId(R.id.txtNumberOcuppiedSpots).isDisplayed();
         onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
+    }
+
+    @Then("^I see the markers of free spots displayed on the map$")
+    public void i_see_the_markers_of_free_spots_displayed_on_the_map() {
+        Assert.assertEquals(DashboardActivity.getMarkers().size(), SpotsManager.getINSTANCE().getFreeSpots());
     }
 
     @Then("^I see the last update date$")

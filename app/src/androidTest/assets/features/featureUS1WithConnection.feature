@@ -13,9 +13,9 @@ Feature: Screen to anonymous user
     When I open the application 
     Then I see the parking lot map of the Campus 2 - Park A
     And I see the number of free and occupied sports 
+    And I see the markers of free spots displayed on the map
     And I see the last update date
     And I see the button to Login
-
 
 
 
