@@ -25,7 +25,6 @@ public class US5FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
     public void i_am_in_the_dashboard_authenticated_screen() {
         //todo mudar para carregar ver o auth dashboard
         onViewWithId(R.id.btnProfile).isDisplayed().check(matches(withText(string(R.string.btnProfile))));
-
     }
 
     @When("^I press the My Profile button$")

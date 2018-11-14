@@ -125,4 +125,7 @@ public enum UsersManager {
         return "My Favourite Spots";
     }
 
+    public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
+        mDatabase.child(id).child("findPreference").setValue(findPreference);
+    }
 }

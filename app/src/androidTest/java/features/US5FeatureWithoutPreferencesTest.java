@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeConfig;
 import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
-import com.mauriciotogneri.greencoffee.Scenario;
 import com.mauriciotogneri.greencoffee.ScenarioConfig;
 
 import org.junit.AfterClass;
@@ -22,7 +21,6 @@ import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Locale;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
