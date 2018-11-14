@@ -49,7 +49,7 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
-        sleep(2000);
+        sleep(5000);
         onViewWithId(R.id.btnProfile).click();
     }
 
