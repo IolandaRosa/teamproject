@@ -23,7 +23,7 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
     @When("^I am in the dashboard screen$")
     public void i_am_in_the_dashboard_screen() {
-        onViewWithId(R.id.btnLogin).isDisplayed().check(matches(withText(R.string.btnLogin)));
+        onViewWithId(R.id.btnLogin).isDisplayed().check(matches(withText(R.string.signUpButton)));
     }
 
     @When("^I press the sign up button$")
