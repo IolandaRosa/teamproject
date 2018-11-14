@@ -21,7 +21,6 @@
     <string name="emptyName">The name can\'t be empty</string>
     <string name="invalidName">The name can\'t contain only digits</string>
     <string name="userColision">You are already registered</string>
-    <string name="registerSuccess">Registered with success!</string>
     <string name="errorNoInternetConnection">ERROR: There is no internet connection. Try again later.</string>
     <string name="email">Email</string>
     <string name="name">Name</string>

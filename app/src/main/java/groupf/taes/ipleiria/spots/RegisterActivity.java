@@ -93,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                         UsersManager.INSTANCE.addUserToDatabase(name,email);
                         //#############################
 
-                        InternetConnectionManager.INSTANCE.showErrorMessage(RegisterActivity.this,R.string.registerSuccess);
+                        //InternetConnectionManager.INSTANCE.showErrorMessage(RegisterActivity.this,R.string.registerSuccess);
 
                         /*if(FirebaseAuth.getInstance().getCurrentUser()!=null){
                             Toast.makeText(RegisterActivity.this,"User not null",Toast.LENGTH_LONG).show();
@@ -102,8 +102,8 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this,"User null",Toast.LENGTH_LONG).show();
                         }*/
 
+                        startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));
 
-                        //todo ir para starNewActivityLoged e mostrar welcome message
                     }else{
 
                         if(task.getException() instanceof FirebaseAuthUserCollisionException )

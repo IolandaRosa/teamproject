@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -95,7 +96,7 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
     @When("^I am registered with success$")
     public void i_am_registered_with_success() {
         //Regista e faz login logo tem sucesso
-        onView(withText("Registered with success!")).inRoot(isDialog()).check(matches(isDisplayed()));
+        sleep(5000);
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
@@ -107,7 +108,8 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the autheticated user dashboard$")
     public void i_see_the_autheticated_user_dashboard() {
-        //todo
+
+        onViewWithId(R.id.btnProfile).isDisplayed();
     }
 
     @When("^I see the error message on screen \"([^\"]*)\"$")
