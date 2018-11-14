@@ -54,12 +54,5 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
             FirebaseAuth.getInstance().signOut();
         }
-        Task<AuthResult> authResultTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
-// authResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//            @Override
-//            public void onSuccess(AuthResult authResult) {
-//                // Assumimos que espera pelo login
-//            }
-//        });
     }
 }

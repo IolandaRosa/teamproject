@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(errorMap.isEmpty()){
+
             Task<AuthResult> resultTask = UsersManager.INSTANCE.makeLogin(email, password);
 
             resultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -66,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         //starNewActivityLoged
+                        startActivity(DashboardAuthActivity.getIntent(LoginActivity.this));
                     }else{
                         //Acho que os ifs são obsoletos chegando neste ponto quase de certeza que são credencias erradas e se não for tambem não sei ate que ponto fara sentido o utilizador receber a excepção
                         //so faz sentido fazer isto se quisermos guardar informação dos erros em log...

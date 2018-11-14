@@ -30,7 +30,7 @@ public class SpotsManager {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
 
-        database.setPersistenceEnabled(true);
+//        database.setPersistenceEnabled(true);
         dbRef = database.getReference().child("ParkingSpots");
         dbRef.keepSynced(true);
         spots = new LinkedList<>();

@@ -25,6 +25,27 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnProfile).isDisplayed().check(matches(withText(R.string.btnProfile)));
     }
 
+    @When("^I press the sign up button$")
+    public void i_press_the_sign_up_button() {
+        onViewWithId(R.id.btnLogin).isDisplayed().click();
+
+    }
+
+    @When("^I type my email \"([^\"]*)\"$")
+    public void i_type_my_email(String arg1) {
+        onViewWithId(R.id.editTextEmail).isDisplayed().isEmpty().type(arg1);
+    }
+
+    @When("^I type my password \"([^\"]*)\"$")
+    public void i_type_my_password(String arg1) {
+        onViewWithId(R.id.editTextPassword).isDisplayed().isEmpty().type(arg1);
+    }
+
+    @When("^I press the Login Button$")
+    public void i_press_the_Login_Button() {
+        onViewWithId(R.id.buttonLogin).isDisplayed().click();
+    }
+
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
         onViewWithId(R.id.btnProfile).click();
