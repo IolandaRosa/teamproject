@@ -1,6 +1,3 @@
-# new feature
-# Tags: optional
-
 Feature: Login for an anonymous user
 
   Background: Anonymous User wants to log in
@@ -14,7 +11,7 @@ Feature: Login for an anonymous user
     Given I type my email on email field "test@test.test"
     And I type my password on password field "12345678"
     And I press the Login button in login activity
-    Then I see the authenticated dashboard page
+    And I see the authenticated dashboard page
 
   Scenario: Login as an anonymous user with invalid email
     Given I introduce an invalid email format "test@"

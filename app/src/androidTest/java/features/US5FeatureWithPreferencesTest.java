@@ -1,12 +1,7 @@
 package features;
 
-import android.os.UserManager;
 import android.support.test.rule.ActivityTestRule;
-import android.support.v4.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeConfig;
 import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
@@ -23,10 +18,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import groupf.taes.ipleiria.spots.DashboardActivity;
-import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.UsersManager;
 import steps.US5FeatureWithPreferencesSteps;
-import steps.US5FeatureWithoutPreferencesSteps;
 
 @RunWith(Parameterized.class)
 public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {

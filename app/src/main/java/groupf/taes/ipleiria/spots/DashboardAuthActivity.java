@@ -2,8 +2,8 @@ package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,12 +22,6 @@ public class DashboardAuthActivity extends AppCompatActivity {
 
     }
 
-    public void onClick_btnLogout(View view) {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(DashboardActivity.getIntent(this));
-        }
-    }
 
     public void onClick_btnMyProfile(View view) {
         startActivity(ProfileActivity.getIntent(this));

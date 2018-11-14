@@ -1,10 +1,6 @@
 package steps;
 
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
