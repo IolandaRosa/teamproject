@@ -11,7 +11,6 @@ Feature: Login for an anonymous user
     Given I type my email on email field "test@test.test"
     And I type my password on password field "12345678"
     And I press the Login button in login activity
-    Then I see an error message saying "Registered with success!"
     And I see the authenticated dashboard page
 
   Scenario: Login as an anonymous user with invalid email

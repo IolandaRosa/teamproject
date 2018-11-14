@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -73,6 +74,8 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the authenticated dashboard page$")
     public void i_see_the_authenticated_dashboard_page() {
+
+        sleep(5000);
         onViewWithId(R.id.btnLogout).isDisplayed();
         onViewWithId(R.id.btnProfile).isDisplayed();
     }
