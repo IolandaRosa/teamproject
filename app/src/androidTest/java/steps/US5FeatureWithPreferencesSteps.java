@@ -10,14 +10,15 @@ import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
-    @Given("^I am an authenticated user$")
-    public void i_am_an_authenticated_user() {
-        Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
+    @Given("^I am an anonymous user$")
+    public void i_am_an_anonymous_user() {
+        Assert.assertNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
     @When("^I am in the dashboard screen$")
@@ -48,6 +49,7 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
+        sleep(2000);
         onViewWithId(R.id.btnProfile).click();
     }
 

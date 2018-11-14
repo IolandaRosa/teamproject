@@ -1,7 +1,7 @@
 Feature: Profile for an authenticated user
 
   Scenario: Authenticated User wants to see your Profile details
-    Given I am an authenticated user
+    Given I am an anonymous user
     When I am in the dashboard screen
     And I press the sign up button
     And I type my email "manel@email.pt"
