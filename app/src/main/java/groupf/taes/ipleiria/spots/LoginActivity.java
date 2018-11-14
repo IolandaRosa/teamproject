@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, Integer> errorMap = UsersManager.INSTANCE.validadeUserCredentials(email, password);
 
         if(errorMap.containsKey("email") && errorMap.containsKey("password")){
-            UsersManager.INSTANCE.showErrorMessage(this,R.string.emptyFields);
+            //UsersManager.INSTANCE.showErrorMessage(this,R.string.emptyFields);
             return;
         }
 
@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(errorMap.isEmpty()){
+
             Task<AuthResult> resultTask = UsersManager.INSTANCE.makeLogin(email, password);
 
             resultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -66,10 +67,11 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         //starNewActivityLoged
+                        startActivity(DashboardAuthActivity.getIntent(LoginActivity.this));
                     }else{
                         //Acho que os ifs são obsoletos chegando neste ponto quase de certeza que são credencias erradas e se não for tambem não sei ate que ponto fara sentido o utilizador receber a excepção
                         //so faz sentido fazer isto se quisermos guardar informação dos erros em log...
-                        UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
+                        //UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
                         /*if(task.getException() instanceof FirebaseAuthInvalidCredentialsException ||task.getException() instanceof FirebaseAuthInvalidUserException){
                                 UsersManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);
                         }

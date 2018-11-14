@@ -30,7 +30,7 @@ public class DashboardAuthActivity extends AppCompatActivity {
     }
 
     public void onClick_btnMyProfile(View view) {
-  //      startActivity(ProfileActivity.getIntent(this));
+        startActivity(ProfileActivity.getIntent(this));
     }
 
 
