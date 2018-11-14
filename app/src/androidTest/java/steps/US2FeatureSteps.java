@@ -74,7 +74,7 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the authenticated dashboard page$")
     public void i_see_the_authenticated_dashboard_page() {
-
+        //todo tratar caso do sleep para sincronização de threads
         sleep(5000);
         onViewWithId(R.id.btnProfile).isDisplayed();
     }

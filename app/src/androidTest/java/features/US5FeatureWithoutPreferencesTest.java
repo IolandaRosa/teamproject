@@ -2,12 +2,18 @@ package features;
 
 import android.support.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeConfig;
 import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
-import com.mauriciotogneri.greencoffee.Scenario;
 import com.mauriciotogneri.greencoffee.ScenarioConfig;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +21,18 @@ import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Locale;
 
-import groupf.taes.ipleiria.spots.DashboardActivity;
+import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import modelo.UsersManager;
 import steps.US5FeatureWithoutPreferencesSteps;
+
+import static android.os.SystemClock.sleep;
 
 @RunWith(Parameterized.class)
 public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
     @Rule
-    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardActivity.class);
+    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
 
     public US5FeatureWithoutPreferencesTest(ScenarioConfig scenario) {
         super(scenario);
@@ -40,12 +48,66 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         start(new US5FeatureWithoutPreferencesSteps());
     }
 
-    @Override
-    protected void beforeScenarioStarts(Scenario scenario, Locale locale) {
-        super.beforeScenarioStarts(scenario, locale);
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+    //Assegurar que existe o utilizador de teste na BD Auth e na BD de Users
+    @BeforeClass
+    public static void setUpOnlyOnce() throws Exception {
+        //Criar um utilizador maria@email.pt com password "12345678"
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
+
+        //2º - Ver se o utilizador já existe (em principio não deve existir)
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
+        //todo tratar caso do sleep para sincronização de threads
+        sleep(5000);
+        //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
+        if(registerTask.isSuccessful()){
+            //Quer dizer que utilizador não existia então acrescenta utilizador na BD
+            UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
+            //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
+        }
+        else{
+            //Se não for successfull significa que email ja existia e podemos fazer login
+            //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
+
+            //Fazemos login
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
+
+            //todo tratar caso do sleep para sincronização de threads
+            sleep(5000);
+            if(loginTask.isSuccessful()){
+                //Temos de ver se utilizador já existe na Bd e se não existir acrescentar
+                DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                if(users==null){
+                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
+                }
+                //se não é porque já existe e não temos de fazer nada
+
+            }
+        }
+    }
+
+    //Apagar esse user de teste da BD auth e da BD de Users
+    @AfterClass
+    public static void tearDownOnlyOnce() throws Throwable {
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = currentUser.getUid();
+            currentUser.delete();
+
+            FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
+        }else{
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
+
+            //todo tratar caso do sleep para sincronização de threads
+            sleep(5000);
+            if(loginTask.isSuccessful()){
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
+                currentUser.delete();
+
+                FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
+            }
         }
     }
 }

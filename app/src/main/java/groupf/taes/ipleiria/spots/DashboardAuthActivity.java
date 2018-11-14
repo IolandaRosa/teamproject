@@ -16,7 +16,7 @@ public class DashboardAuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard_auth);
 
         if(FirebaseAuth.getInstance().getCurrentUser()==null){
-            DashboardActivity.getIntent(this);
+            startActivity(DashboardActivity.getIntent(this));
             return;
         }
 
