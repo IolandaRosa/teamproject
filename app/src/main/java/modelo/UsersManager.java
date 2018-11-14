@@ -106,7 +106,7 @@ public enum UsersManager {
 
     public void addUserToDatabase(String name, String email) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,FindPreference.CLOSER_LOCATION);
+        User user=new User(id,name,email,null);
         mDatabase.child(id).setValue(user);
     }
 

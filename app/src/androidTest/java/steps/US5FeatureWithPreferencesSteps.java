@@ -49,6 +49,7 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
+        //todo tratar caso do sleep para sincronização de threads
         sleep(5000);
         onViewWithId(R.id.btnProfile).click();
     }

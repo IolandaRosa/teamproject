@@ -75,9 +75,5 @@ public class US3FeatureWithoutConnectionSteps extends GreenCoffeeSteps {
     @Then("^I see an error message saying \"([^\"]*)\"$")
     public void i_see_an_error_message_saying(String arg1) {
         onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
-
     }
-
-
-
 }
