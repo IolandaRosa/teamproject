@@ -76,7 +76,6 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
     public void i_see_the_authenticated_dashboard_page() {
 
         sleep(5000);
-        onViewWithId(R.id.btnLogout).isDisplayed();
         onViewWithId(R.id.btnProfile).isDisplayed();
     }
 
