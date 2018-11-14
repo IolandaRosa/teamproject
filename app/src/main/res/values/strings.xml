@@ -13,17 +13,18 @@
     <string name="txtOcuppied">Ocuppied:</string>
     <string name="emptyFields">The fields can\'t be empty</string>
     <string name="signUpButton">Sign Up</string>
-    <string name="name">Name</string>
     <string name="hintName">MyFullName</string>
     <string name="password">Password</string>
     <string name="hintPassword">myPassword</string>
-    <string name="email">Email</string>
     <string name="hintEmail">myEmail@myEmail.com</string>
     <string name="alreadyAuth">Already authenticated? Click here for Login</string>
     <string name="emptyName">The name can\'t be empty</string>
     <string name="invalidName">The name can\'t contain only digits</string>
     <string name="userColision">You are already registered</string>
     <string name="registerSuccess">Registered with success!</string>
+    <string name="errorNoInternetConnection">ERROR: There is no internet connection. Try again later.</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
     <string name="btnProfile">My Profile</string>
     <string name="btnLogout">Logout</string>
     <string name="btnFavouriteSpots">My favourite spots</string>
@@ -37,4 +38,5 @@
     <string name="OK">Ok</string>
     <string name="emptyConfirmationPass">The confirmation password can\'t be empty</string>
     <string name="errorConfirmationPass">The password must be equal to the password</string>
+    <string name="none">None</string>
 </resources>

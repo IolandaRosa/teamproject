@@ -1,9 +1,13 @@
 package modelo;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Patterns;
 
+import com.google.android.gms.common.internal.ResourceUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,9 +35,8 @@ public enum UsersManager {
         //mDatabase.keepSynced(true);
 
         this.mAuth=FirebaseAuth.getInstance();
-
-
     }
+
 
     public Task<AuthResult> makeLogin(String email, String password) {
 
@@ -95,6 +98,7 @@ public enum UsersManager {
             errorMap.put("confirmationPass",R.string.errorConfirmationPass);
 
         }
+
 
 
 
