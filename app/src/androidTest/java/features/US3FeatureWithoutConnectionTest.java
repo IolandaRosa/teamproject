@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
 
-import groupf.taes.ipleiria.spots.LoginActivity;
 import groupf.taes.ipleiria.spots.RegisterActivity;
-import steps.US2FeatureWithoutConnectionSteps;
 import steps.US3FeatureWithoutConnectionSteps;
 
 import static android.content.Context.WIFI_SERVICE;

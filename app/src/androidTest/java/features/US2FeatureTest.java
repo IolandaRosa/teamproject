@@ -8,7 +8,6 @@ import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
 import com.mauriciotogneri.greencoffee.Scenario;
 import com.mauriciotogneri.greencoffee.ScenarioConfig;
 
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

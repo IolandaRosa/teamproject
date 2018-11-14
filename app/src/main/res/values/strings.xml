@@ -31,7 +31,6 @@
     <string name="btnUpdateMyProfile">Update my profile</string>
     <string name="btnMyPreferences">Find Me A Spot</string>
     <string name="findMeASpotPreference">Find Me A Spot Preference</string>
-    <string name="none">None</string>
     <string name="confirmationPassword">Confirmation Password</string>
     <string name="noInternetConnection">No Internet connection</string>
     <string name="txtLastInfoDate">Latest data obtained at:</string>
