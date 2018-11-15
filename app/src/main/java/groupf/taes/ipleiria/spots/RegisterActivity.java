@@ -93,15 +93,6 @@ public class RegisterActivity extends AppCompatActivity {
                         UsersManager.INSTANCE.addUserToDatabase(name,email);
                         //#############################
 
-                        //InternetConnectionManager.INSTANCE.showErrorMessage(RegisterActivity.this,R.string.registerSuccess);
-
-                        /*if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-                            Toast.makeText(RegisterActivity.this,"User not null",Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            Toast.makeText(RegisterActivity.this,"User null",Toast.LENGTH_LONG).show();
-                        }*/
-
                         startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));
 
                     }else{

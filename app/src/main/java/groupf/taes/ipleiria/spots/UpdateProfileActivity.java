@@ -11,6 +11,8 @@ import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Map;
+
 import modelo.User;
 import modelo.UsersManager;
 
@@ -68,5 +70,27 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
     public void onClick_btnCancel(View view) {
         startActivity(ProfileActivity.getIntent(this));
+    }
+
+    public void onClick_btnSave(View view) {
+        String name = this.editTextName.getText().toString();
+        String email = this.editTextName.getText().toString();
+
+        UsersManager.INSTANCE.validateName(name);
+        UsersManager.INSTANCE.validateEmail(email);
+
+        Map<String, Integer> errorMap = UsersManager.INSTANCE.getErrorMap();
+
+        if(errorMap.containsKey("email")){
+            editTextEmail.setError(getResources().getString(errorMap.getOrDefault("email",-1)));
+            editTextEmail.requestFocus();
+        }
+
+        if(errorMap.containsKey("name")){
+            editTextName.setError(getResources().getString(errorMap.getOrDefault("name",-1)));
+            editTextName.requestFocus();
+        }
+
+
     }
 }

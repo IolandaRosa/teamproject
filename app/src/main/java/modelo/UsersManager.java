@@ -18,6 +18,7 @@ public enum UsersManager {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private Map<String,Integer> errorMap;
 
     UsersManager() {
 
@@ -26,6 +27,7 @@ public enum UsersManager {
         //mDatabase.keepSynced(true);
 
         this.mAuth=FirebaseAuth.getInstance();
+        this.errorMap=new HashMap<>();
     }
 
 
@@ -87,11 +89,7 @@ public enum UsersManager {
         if(!confirmationPass.isEmpty() && !password.equals(confirmationPass))
         {
             errorMap.put("confirmationPass",R.string.errorConfirmationPass);
-
         }
-
-
-
 
         if(android.text.TextUtils.isDigitsOnly(name)){
             errorMap.put("name",R.string.invalidName);
@@ -127,5 +125,27 @@ public enum UsersManager {
 
     public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
+    }
+
+    public void validateName(String name) {
+        if(name.isEmpty()){
+            errorMap.put("name",R.string.emptyName);
+        }
+        else if(android.text.TextUtils.isDigitsOnly(name)) {
+            errorMap.put("name",R.string.invalidName);
+        }
+    }
+
+    public void validateEmail(String email) {
+        if(email.isEmpty()){
+            errorMap.put("email",R.string.emptyEmail);
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            errorMap.put("email",R.string.invalidEmail);
+        }
+    }
+
+    public Map<String, Integer> getErrorMap() {
+        return errorMap;
     }
 }
