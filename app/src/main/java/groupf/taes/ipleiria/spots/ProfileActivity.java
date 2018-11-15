@@ -72,4 +72,6 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this,"The user is null",Toast.LENGTH_LONG).show();
         }
     }
+
+
 }

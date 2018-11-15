@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import modelo.User;
+import modelo.UsersManager;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
@@ -37,7 +40,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         Intent intent= new Intent(context, UpdateProfileActivity.class);
         intent.putExtra("name",user.getName());
         intent.putExtra("email",user.getEmail());
-        intent.putExtra("preference", user.getFindPreference());
+        intent.putExtra("preference", UsersManager.INSTANCE.toStringPreference(user.getFindPreference()));
 
         return intent;
     }
@@ -45,5 +48,25 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private void initializeFields(){
 
         this.editTextName.setText(getIntent().getStringExtra("name"));
+        this.editTextEmail.setText(getIntent().getStringExtra("email"));
+
+        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(this,R.array.findPreferencesOptions, android.R.layout.simple_spinner_item);
+
+        spinnerPreferences.setAdapter(adapter);
+
+        int position=0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if(adapter.getItem(i).toString().compareToIgnoreCase(getIntent().getStringExtra("preference"))==0){
+                position=i;
+                break;
+            }
+        }
+
+        spinnerPreferences.setSelection(position,true);
+
+    }
+
+    public void onClick_btnCancel(View view) {
+        startActivity(ProfileActivity.getIntent(this));
     }
 }

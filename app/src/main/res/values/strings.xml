@@ -39,4 +39,11 @@
     <string name="none">None</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+
+    <string-array name="findPreferencesOptions">
+        <item>None</item>
+        <item>Closer To My Location</item>
+        <item>Best Rated Place</item>
+        <item>My Favourite Spots</item>
+    </string-array>
 </resources>
