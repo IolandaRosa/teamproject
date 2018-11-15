@@ -16,40 +16,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
-    @Given("^I am an anonymous user$")
-    public void i_am_an_anonymous_user() {
-        Assert.assertNull(FirebaseAuth.getInstance().getCurrentUser());
+    @Given("^I am an authenticated user$")
+    public void i_am_an_authenticated_user() {
+        Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
-    @When("^I am in the dashboard screen$")
-    public void i_am_in_the_dashboard_screen() {
-        onViewWithId(R.id.btnLogin).isDisplayed().check(matches(withText(R.string.signUpButton)));
-    }
-
-    @When("^I press the sign up button$")
-    public void i_press_the_sign_up_button() {
-        onViewWithId(R.id.btnLogin).isDisplayed().click();
-
-    }
-
-    @When("^I type my email \"([^\"]*)\"$")
-    public void i_type_my_email(String arg1) {
-        onViewWithId(R.id.editTextEmail).isDisplayed().isEmpty().type(arg1);
-    }
-
-    @When("^I type my password \"([^\"]*)\"$")
-    public void i_type_my_password(String arg1) {
-        onViewWithId(R.id.editTextPassword).isDisplayed().isEmpty().type(arg1);
-    }
-
-    @When("^I press the Login Button$")
-    public void i_press_the_Login_Button() {
-        onViewWithId(R.id.buttonLogin).isDisplayed().click();
+    @When("^I am in the dashboard authenticated screen$")
+    public void i_am_in_the_dashboard_authenticated_screen() {
+        //todo mudar para carregar ver o auth dashboard
+        onViewWithId(R.id.btnProfile).isDisplayed().check(matches(withText(string(R.string.btnProfile))));
     }
 
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
-        sleep(5000);
         onViewWithId(R.id.btnProfile).click();
     }
 
