@@ -2,6 +2,7 @@ package features;
 
 import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -69,6 +70,7 @@ public class US2FeatureTest extends GreenCoffeeTest {
 
         //2º - Ver se o utilizador já existe (em principio não deve existir)
         Task<AuthResult> registerTask = FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678");
+
         //todo tratar caso do sleep para sincronização de threads
         sleep(5000);
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
@@ -77,7 +79,9 @@ public class US2FeatureTest extends GreenCoffeeTest {
                 FirebaseAuth.getInstance().signOut();
         }
         else{
+            Exception exception = registerTask.getException();
             //Se não for successfull significa que email ja existia e podemos fazer login
+            Log.println(1,"Exception set Up",exception.getMessage());
             //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
         }
     }

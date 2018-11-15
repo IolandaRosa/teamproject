@@ -18,7 +18,6 @@ public enum UsersManager {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private Map<String,Integer> errorMap;
 
     UsersManager() {
 
@@ -27,7 +26,6 @@ public enum UsersManager {
         //mDatabase.keepSynced(true);
 
         this.mAuth=FirebaseAuth.getInstance();
-        this.errorMap=new HashMap<>();
     }
 
 
@@ -64,7 +62,6 @@ public enum UsersManager {
 
         if(password.length()<8){
             errorMap.put("password",R.string.invalidPasswordLength);
-
         }
 
         return errorMap;
@@ -73,8 +70,6 @@ public enum UsersManager {
     public Map<String,Integer> validateUserCredentialsAndName(String email, String password, String name,String confirmationPass) {
 
         Map<String,Integer> errorMap=this.validadeUserCredentials(email,password);
-
-        //boolean flag = false;
 
         if(confirmationPass.isEmpty())
         {
@@ -89,6 +84,7 @@ public enum UsersManager {
         if(!confirmationPass.isEmpty() && !password.equals(confirmationPass))
         {
             errorMap.put("confirmationPass",R.string.errorConfirmationPass);
+            return errorMap;
         }
 
         if(android.text.TextUtils.isDigitsOnly(name)){
@@ -123,29 +119,76 @@ public enum UsersManager {
         return "My Favourite Spots";
     }
 
+    public FindPreference getFindPreferenceByPreferenceString(String preference){
+        if(preference.equalsIgnoreCase("Closer To My Location"))
+            return FindPreference.CLOSER_LOCATION;
+
+        if(preference.equalsIgnoreCase("Best Rated Place"))
+            return FindPreference.BEST_RATED;
+
+        if(preference.equalsIgnoreCase("My Favourite Spots"))
+            return FindPreference.FAVOURITE_SPOTS;
+
+        return null;
+    }
+
     public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
     }
 
-    public void validateName(String name) {
+    public Map<String, Integer> validateNameAndEmail(String name, String email) {
+
+        Map<String,Integer> errorMap=new HashMap<>();
+
+        if(name.isEmpty() && email.isEmpty()){
+            errorMap.put("email", R.string.emptyEmail);
+            errorMap.put("name",R.string.emptyName);
+            return errorMap;
+        }
+
         if(name.isEmpty()){
             errorMap.put("name",R.string.emptyName);
+            return errorMap;
         }
-        else if(android.text.TextUtils.isDigitsOnly(name)) {
-            errorMap.put("name",R.string.invalidName);
-        }
-    }
 
-    public void validateEmail(String email) {
         if(email.isEmpty()){
-            errorMap.put("email",R.string.emptyEmail);
+            errorMap.put("email", R.string.emptyEmail);
+            return errorMap;
         }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+
+        if(android.text.TextUtils.isDigitsOnly(name)) {
+            errorMap.put("name",R.string.invalidName);
+            return errorMap;
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             errorMap.put("email",R.string.invalidEmail);
         }
+        return errorMap;
     }
 
-    public Map<String, Integer> getErrorMap() {
-        return errorMap;
+    public void updateUserNameInDatabase(String name) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("name").setValue(name);
+    }
+
+    public void updateUserEmailInDatabase(String email) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("email").setValue(email);
+
+        //Fazer update no firebase
+    }
+
+    public void updateUserFindPreferenceInDatabase(String selectPreference) {
+        String id=mAuth.getCurrentUser().getUid();
+        FindPreference findPreference = this.getFindPreferenceByPreferenceString(selectPreference);
+
+        if(findPreference==null){
+            mDatabase.child(id).child("findPreference").removeValue();
+        }
+        else{
+            mDatabase.child(id).child("findPreference").setValue(findPreference);
+        }
+
     }
 }
