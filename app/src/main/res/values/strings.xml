@@ -37,4 +37,6 @@
     <string name="emptyConfirmationPass">The confirmation password can\'t be empty</string>
     <string name="errorConfirmationPass">The password must be equal to the password</string>
     <string name="none">None</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

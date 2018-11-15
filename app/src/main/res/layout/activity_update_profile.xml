@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ProfileActivity"
-    android:gravity="center">
+    tools:context=".ProfileActivity">
 
     <TextView
         android:id="@+id/textView9"
@@ -16,12 +16,15 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txtViewName"
+
+    <EditText
+        android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+        android:autofillHints="@string/hintName"
+        android:ems="10"
+        android:hint="@string/hintName"
+        android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/textView12"
@@ -32,12 +35,14 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txtViewEmail"
+    <EditText
+        android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="18sp"/>
+        android:autofillHints="@string/hintEmail"
+        android:ems="10"
+        android:hint="@string/hintEmail"
+        android:inputType="textEmailAddress" />
 
     <TextView
         android:id="@+id/textView13"
@@ -48,40 +53,24 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textViewPreference"
+    <Spinner
+        android:id="@+id/spinnerFindPreference"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/none"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content" />
+
 
     <Button
-        android:id="@+id/btnMyPreferences"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btnMyPreferences"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:textColor="@android:color/background_light"
-        android:background="@android:color/holo_blue_light"
-        android:padding="20dp"
-
-        />
-
-    <Button
-        android:id="@+id/btnFavouriteSpots"
+        android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/btnFavouriteSpots" />
+        android:text="@string/save" />
 
     <Button
-        android:id="@+id/btnUpdateMyProfile"
+        android:id="@+id/btnCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="onClick_updateMyProfile"
-        android:text="@string/btnUpdateMyProfile" />
+        android:text="@string/cancel" />
+
 </LinearLayout>
