@@ -8,6 +8,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -190,5 +193,25 @@ public enum UsersManager {
             mDatabase.child(id).child("findPreference").setValue(findPreference);
         }
 
+    }
+
+    public DatabaseReference getCurrentUserPasswordReference() {
+        String id=mAuth.getCurrentUser().getUid();
+
+        return mDatabase.child(id).child("password");
+    }
+
+    public String md5_Hash(String s) {
+        MessageDigest m = null;
+
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        m.update(s.getBytes(),0,s.length());
+        String hash = new BigInteger(1, m.digest()).toString(16);
+        return hash;
     }
 }

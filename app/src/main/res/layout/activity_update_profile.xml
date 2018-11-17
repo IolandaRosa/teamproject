@@ -41,7 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="@string/hintEmail"
-        android:ems="10"
         android:hint="@string/hintEmail"
         android:inputType="textEmailAddress"
         android:layout_marginBottom="20dp"/>
@@ -60,7 +59,7 @@
         android:id="@+id/spinnerFindPreference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="30dp"/>
 
 
     <LinearLayout
@@ -78,19 +77,25 @@
             android:text="@string/confirmPassword"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:autofillHints="@string/hintPassword"
-            android:ems="10"
             android:hint="@string/hintPassword"
             android:inputType="textPassword"
             android:textColor="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="onClick_btnOk"
+            android:text="@string/OK" />
     </LinearLayout>
 
     <Button
@@ -105,7 +110,6 @@
         android:id="@+id/btnCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:onClick="onClick_btnCancel"
         android:text="@string/cancel" />
 

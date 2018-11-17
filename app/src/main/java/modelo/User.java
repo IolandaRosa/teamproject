@@ -24,7 +24,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.id = id;
-        this.password=md5_Hash(password);
+        this.password=UsersManager.INSTANCE.md5_Hash(password);
         this.favouriteSpots=new ArrayList<>();
         this.findPreference=preference;
     }
@@ -55,19 +55,5 @@ public class User {
 
     public void setFindPreference(FindPreference findPreference) {
         this.findPreference = findPreference;
-    }
-
-    private String md5_Hash(String s) {
-        MessageDigest m = null;
-
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        m.update(s.getBytes(),0,s.length());
-        String hash = new BigInteger(1, m.digest()).toString(16);
-        return hash;
     }
 }

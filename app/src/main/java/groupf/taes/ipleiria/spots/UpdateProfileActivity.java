@@ -1,17 +1,12 @@
 package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Credentials;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,15 +14,20 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
 import modelo.InternetConnectionManager;
 import modelo.User;
 import modelo.UsersManager;
+
+import static android.os.SystemClock.sleep;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
@@ -89,7 +89,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
     public void onClick_btnSave(View view) {
         String name = this.editTextName.getText().toString();
-        final String email = this.editTextEmail.getText().toString();
+        String email = this.editTextEmail.getText().toString();
 
         Map<String, Integer> errorMap = UsersManager.INSTANCE.validateNameAndEmail(name, email);
 
@@ -120,31 +120,100 @@ public class UpdateProfileActivity extends AppCompatActivity {
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
         }
 
-        if(!emailEquals){
+        if(!emailEquals || !preferenceEquals){
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
-
-            String password=editTextPassword.getText().toString();
-
-
-            //pede autenticação com password
-            //se password corresponder à do utilizador
-                //UsersManager.INSTANCE.updateUserEmailInDatabase(email);
-                //atualiza email na autenticação do firebase
-            //senão
-                //dá erro
+            findViewById(R.id.btnSave).setVisibility(View.GONE);
         }
+    }
 
-        if(!preferenceEquals){
-            findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
 
-            String password=editTextPassword.getText().toString();
-            //pede autenticação com password
-            //se password corresponder à do utilizador
-                //UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
-            //senão
-                //dá erro
+    public void onClick_btnOk(View view) {
+        final String password = editTextPassword.getText().toString();
+
+        if(password.isEmpty()){
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.emptyPassword);
         }
+        else{
+            DatabaseReference passwordRef=UsersManager.INSTANCE.getCurrentUserPasswordReference();
 
-        Toast.makeText(this,"Final",Toast.LENGTH_LONG).show();
+            passwordRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    final String userPass=dataSnapshot.getValue(String.class);
+
+                    if(!userPass.equals(UsersManager.INSTANCE.md5_Hash(password))){
+                        InternetConnectionManager.INSTANCE.showErrorMessage(UpdateProfileActivity.this,R.string.invalidPassword);
+                    }
+                    else{
+                        final String email = editTextEmail.getText().toString();
+                        final String selectPreference = spinnerPreferences.getSelectedItem().toString();
+
+                        Task<Void> voidTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
+
+                        //todo - change
+                        sleep(2000);
+
+                        voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    //Toast.makeText(UpdateProfileActivity.this,"1 - Email Updated",Toast.LENGTH_LONG).show();
+                                    UsersManager.INSTANCE.updateUserEmailInDatabase(email);
+                                    UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
+                                    startActivity(ProfileActivity.getIntent(UpdateProfileActivity.this));
+                                }else{
+
+                                    AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
+                                    Task<Void> reauthenticate = FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credentials);
+
+                                    //todo - change
+                                    sleep(2000);
+
+                                    reauthenticate.addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Task<Void> updateTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
+
+                                                //todo - change
+                                                sleep(2000);
+
+                                                updateTask.addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                            //Toast.makeText(UpdateProfileActivity.this,"2 - Email Updated",Toast.LENGTH_LONG).show();
+                                                            UsersManager.INSTANCE.updateUserEmailInDatabase(email);
+                                                            UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
+                                                            startActivity(ProfileActivity.getIntent(UpdateProfileActivity.this));
+                                                        }
+                                                        else{
+                                                            Toast.makeText(UpdateProfileActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                });
+
+
+                                            }
+                                            else{
+                                                Toast.makeText(UpdateProfileActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
     }
 }
