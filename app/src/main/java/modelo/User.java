@@ -1,5 +1,6 @@
 package modelo;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -23,23 +24,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.id = id;
-        MessageDigest instance = null;
-        try {
-            instance = MessageDigest.getInstance(SHA1.getDigestAlgorithm());
-            instance.update(password.getBytes());
-
-            byte messageDigest[] = instance.digest();
-
-            StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-
-            this.password= hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
+        this.password=md5_Hash(password);
         this.favouriteSpots=new ArrayList<>();
         this.findPreference=preference;
     }
@@ -66,5 +51,19 @@ public class User {
 
     public void setFindPreference(FindPreference findPreference) {
         this.findPreference = findPreference;
+    }
+
+    private String md5_Hash(String s) {
+        MessageDigest m = null;
+
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        m.update(s.getBytes(),0,s.length());
+        String hash = new BigInteger(1, m.digest()).toString(16);
+        return hash;
     }
 }
