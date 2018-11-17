@@ -98,9 +98,9 @@ public enum UsersManager {
         return mAuth.createUserWithEmailAndPassword(email, password);
     }
 
-    public void addUserToDatabase(String name, String email) {
+    public void addUserToDatabase(String name, String email, String password) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null);
+        User user=new User(id,name,email,null, password);
         mDatabase.child(id).setValue(user);
     }
 

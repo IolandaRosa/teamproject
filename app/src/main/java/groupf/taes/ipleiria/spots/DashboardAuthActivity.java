@@ -12,6 +12,7 @@ public class DashboardAuthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_auth);
 

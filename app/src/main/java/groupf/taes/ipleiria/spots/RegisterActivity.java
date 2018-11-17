@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
 
                         //#############################
-                        UsersManager.INSTANCE.addUserToDatabase(name,email);
+                        UsersManager.INSTANCE.addUserToDatabase(name,email,password);
                         //#############################
 
                         startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));

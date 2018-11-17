@@ -125,20 +125,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
             String password=editTextPassword.getText().toString();
 
-            /*AuthCredential credential = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(), password);
 
-            FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(UpdateProfileActivity.this,"Result",Toast.LENGTH_LONG).show();
-                        //UsersManager.INSTANCE.updateUserEmailInDatabase(email);
-                    }
-                    else{
-                        InternetConnectionManager.INSTANCE.showErrorMessage(UpdateProfileActivity.this,R.string.alreadyAuth);
-                    }
-                }
-            });*/
             //pede autenticação com password
             //se password corresponder à do utilizador
                 //UsersManager.INSTANCE.updateUserEmailInDatabase(email);
@@ -149,6 +136,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         if(!preferenceEquals){
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
+
+            String password=editTextPassword.getText().toString();
             //pede autenticação com password
             //se password corresponder à do utilizador
                 //UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);

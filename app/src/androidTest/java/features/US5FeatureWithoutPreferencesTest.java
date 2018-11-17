@@ -62,7 +62,7 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
         if(registerTask.isSuccessful()){
             //Quer dizer que utilizador não existia então acrescenta utilizador na BD
-            UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt","12345678");
             //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
         }
         else{
@@ -79,7 +79,7 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                 if(users==null){
-                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
+                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt","12345678");
                 }
                 //se não é porque já existe e não temos de fazer nada
 

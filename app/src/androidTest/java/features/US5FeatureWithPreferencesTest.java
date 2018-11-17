@@ -67,7 +67,7 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
 
         //apos obter a resposta se correu como esperado adicionar user à database (era porque utilizador não existia)
         if(registerTask.isSuccessful()){
-            UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt","12345678");
             //Colocar as preferencias no Manel
             UsersManager.INSTANCE.addFinPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
             //todo tratar caso do sleep para sincronização de threads
@@ -86,7 +86,7 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                 if(users==null){
-                    UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt");
+                    UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt","12345678");
                     //Colocar as preferencias no Manel
                     UsersManager.INSTANCE.addFinPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
                     //todo tratar caso do sleep para sincronização de threads
