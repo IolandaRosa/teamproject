@@ -151,7 +151,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         Task<Void> voidTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
 
                         //todo - change
-                        sleep(2000);
+                        sleep(5000);
 
                         voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -167,7 +167,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                                     Task<Void> reauthenticate = FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credentials);
 
                                     //todo - change
-                                    sleep(2000);
+                                    sleep(5000);
 
                                     reauthenticate.addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -176,7 +176,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                                                 Task<Void> updateTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
 
                                                 //todo - change
-                                                sleep(2000);
+                                                sleep(5000);
 
                                                 updateTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

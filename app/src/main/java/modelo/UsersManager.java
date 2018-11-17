@@ -119,7 +119,10 @@ public enum UsersManager {
         if(preference==FindPreference.BEST_RATED)
             return "Best Rated Place";
 
-        return "My Favourite Spots";
+        if(preference==FindPreference.FAVOURITE_SPOTS)
+            return "My Favourite Spots";
+
+        return "None";
     }
 
     public FindPreference getFindPreferenceByPreferenceString(String preference){
