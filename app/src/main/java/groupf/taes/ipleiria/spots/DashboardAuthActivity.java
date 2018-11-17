@@ -24,11 +24,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,10 +61,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
 
+    private int currentPark;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_auth);
+        currentPark = 0;
+
 
         spinner = findViewById(R.id.spinner);
 
@@ -73,7 +79,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             //posicao seleciondada//id para mapeamento de BD
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                currentPark = position;
 
             }
 
@@ -82,7 +88,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 //empty
 
             }
-        });//o click nao funciona para o caso
+        });
 
         if(FirebaseAuth.getInstance().getCurrentUser()==null){
             DashboardActivity.getIntent(this);
@@ -100,7 +106,16 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+
+        if(currentPark == 0)
+        {
+            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
+
+        }else
+        {
+            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
+
+        }
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
@@ -112,6 +127,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
+        //onMapReady(mMap);
     }
 
     private void addDrawerItems() {
@@ -197,10 +213,24 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+       // 39.733890, -8.821281
+       // LatLng parkD = new LatLng(39.733890, -8.821281);
+         //if(currentPark == 1)
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
+        // mMap.
 
         //SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+        //List<Spot>spots;
+        /*if(currentPark == 0)
+        {
+            spots = SpotsManager.getINSTANCE().getParkingSpotsA();
+        }else
+        {
+            spots = SpotsManager.getINSTANCE().getParkingSpotsD();
 
-        for(Spot s : SpotsManager.getINSTANCE().getSpots()) {
+        }*/
+
+        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");

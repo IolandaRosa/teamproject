@@ -33,7 +33,6 @@
         android:layout_below="@+id/btnLogin"
         map:cameraBearing="48"
         map:cameraTargetLat="39.734994"
-
         map:cameraTargetLng="-8.820697"
 
         map:cameraTilt="10"

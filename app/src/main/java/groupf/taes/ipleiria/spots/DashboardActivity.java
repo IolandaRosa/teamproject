@@ -47,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             return;
         }
 
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+        SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
         setContentView(R.layout.activity_dashboard);
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
@@ -67,7 +67,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        for(Spot s : SpotsManager.getINSTANCE().getSpots()) {
+        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
@@ -76,7 +76,6 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
                 markers.add(marker);
             }
         }
-
 
         freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
         occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
