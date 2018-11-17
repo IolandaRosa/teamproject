@@ -77,7 +77,7 @@ public class SpotsManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 freeSpots = 0;
                 ocuppiedSpots = 0;
-                //parkingSpots.clear();
+                parkingSpots.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
                 for (DataSnapshot d : children) {

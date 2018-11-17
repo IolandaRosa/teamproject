@@ -90,7 +90,24 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             //posicao seleciondada//id para mapeamento de BD
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentPark = position;
+                //LatLng parkD = new LatLng(39.733890, -8.821281);
 
+                if(currentPark == 1)
+                {
+                    LatLng parkD = new LatLng(39.733890, -8.821281);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
+                    SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
+                    ex(mMap);
+
+                }else
+                {
+                    LatLng parkD = new LatLng(39.734994, -8.820697);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
+                    SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
+                    ex(mMap);
+
+
+                }
             }
 
             @Override
@@ -272,6 +289,65 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
     }
+
+    public  void ex(GoogleMap googleMa)
+    {
+        mMap = googleMa;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        // 39.733890, -8.821281
+        // LatLng parkD = new LatLng(39.733890, -8.821281);
+        //if(currentPark == 1)
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
+        // mMap.
+
+        //SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+        //List<Spot>spots;
+        /*if(currentPark == 0)
+        {
+            spots = SpotsManager.getINSTANCE().getParkingSpotsA();
+        }else
+        {
+            spots = SpotsManager.getINSTANCE().getParkingSpotsD();
+
+        }*/
+
+        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
+            if (s.getStatus() == 0) {
+                String location = s.getLocationGeo();
+                String[] geo = location.split(",");
+                LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                markers.add(marker);
+            }
+        }
+
+
+
+        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
+        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
+
+
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
+
+        SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (!checkInternetConnection() && sharedPref.contains("dateLastInfo")) {
+            String str = sharedPref.getString("dateLastInfo", null);
+            SpotsManager.getINSTANCE().setDateOfData(str);
+            lastInfoDateTxt.setText(str);
+            //  String date = df.format(sharedPref.)
+            //  lastInfoDateTxt.setText(date);
+        } else{
+            //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
+            lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
+            editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
+            editor.commit();
+        }
+
+    }
+
+
 
     public boolean checkInternetConnection() {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
