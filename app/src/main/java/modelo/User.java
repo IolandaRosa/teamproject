@@ -37,6 +37,10 @@ public class User {
         return name;
     }
 
+    public String getPassword () {
+        return this.password;
+    }
+
     public String getEmail() {
         return email;
     }
