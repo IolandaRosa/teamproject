@@ -1,16 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".DashboardAuthActivity">
 
-    <Button
-        android:id="@+id/btnProfile"
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClick_btnMyProfile"
-        android:text="@string/btnProfile" />
+        android:layout_height="362dp"
+        android:layout_below="@+id/spinner"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="22dp"
 
-</LinearLayout>
+        map:cameraBearing="48"
+
+        map:cameraTargetLat="39.734994"
+        map:cameraTargetLng="-8.820697"
+
+        map:cameraTilt="10"
+        map:cameraZoom="19"
+        map:uiRotateGestures="true"
+        map:uiScrollGestures="false"
+        map:uiTiltGestures="false"
+        map:uiZoomControls="true"
+        map:uiZoomGestures="true" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_below="@+id/mapFragment"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="51dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginBottom="34dp"
+        android:text="@string/txtFree"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="164dp"
+        android:layout_marginBottom="34dp"
+        android:text="@string/txtOcuppied"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtNumberFreeSpots"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="83dp"
+        android:layout_marginBottom="0dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtNumberOcuppiedSpots"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="248dp"
+        android:layout_marginBottom="0dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textView5"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-58dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/txtLastInfoDate"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/lastInfoDate"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="29dp"
+        android:textSize="12sp" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="282dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="102dp" />
+
+
+</RelativeLayout>
+
+    <ListView
+        android:id="@+id/navList"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#ffeeeeee"/>
+
+</android.support.v4.widget.DrawerLayout>
