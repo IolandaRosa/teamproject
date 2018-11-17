@@ -82,11 +82,6 @@ public class SpotsManager {
 
                 for (DataSnapshot d : children) {
                     Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()));
-                   /* if(spot.getPark().equalsIgnoreCase("A")) {
-                        parkingSpotsA.add(spot);
-                    } else {
-                        parkingSpotsD.add(spot);
-                    }*/
                    parkingSpots.add(spot);
                     if (spot.getStatus() == 0) {
                         freeSpots++;

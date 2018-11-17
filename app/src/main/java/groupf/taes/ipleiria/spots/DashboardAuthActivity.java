@@ -65,16 +65,26 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_auth);
         currentPark = 0;
+
+        if(currentPark == 0)
+        {
+            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
+
+        }else
+        {
+            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
+
+        }
+
+        setContentView(R.layout.activity_dashboard_auth);
 
 
         spinner = findViewById(R.id.spinner);
-
         spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
         spinner.setAdapter(spinnerAdapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             //posicao seleciondada//id para mapeamento de BD
@@ -90,24 +100,24 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         });
 
-        if(FirebaseAuth.getInstance().getCurrentUser()==null){
-            DashboardActivity.getIntent(this);
-            return;
-        }
+        freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
+        occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
+        lastInfoDateTxt = findViewById(R.id.lastInfoDate);
+        markers = new LinkedList<>();
 
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-        addDrawerItems();
-        setupDrawer();
+        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+            DashboardActivity.getIntent(this);
+            return;
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
-
-        if(currentPark == 0)
+       /* if(currentPark == 0)
         {
             SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
 
@@ -115,13 +125,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         {
             SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
 
-        }
+        }*/
 
-        freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
-        occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
-        lastInfoDateTxt = findViewById(R.id.lastInfoDate);
-        markers = new LinkedList<>();
-
+        addDrawerItems();
+        setupDrawer();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
@@ -257,7 +264,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             lastInfoDateTxt.setText(str);
             //  String date = df.format(sharedPref.)
             //  lastInfoDateTxt.setText(date);
-        } else {
+        } else{
             //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
             lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
             editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
