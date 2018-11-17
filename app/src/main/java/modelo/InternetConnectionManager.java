@@ -1,9 +1,13 @@
 package modelo;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import groupf.taes.ipleiria.spots.R;
 
@@ -27,7 +31,7 @@ public enum InternetConnectionManager {
         builder.setIconAttribute(android.R.attr.alertDialogIcon);
         builder.setTitle(R.string.app_name);
         builder.setMessage(message);
-        builder.setPositiveButton("OK", null);
+        builder.setPositiveButton(android.R.string.ok, null);
 
         builder.show();
     }

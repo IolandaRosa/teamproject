@@ -39,6 +39,7 @@
     <string name="none">None</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="confirmPassword">Please insert your password to confirm:</string>
 
     <string-array name="findPreferencesOptions">
         <item>None</item>

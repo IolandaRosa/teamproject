@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UpdateProfileActivity">
+    tools:context=".UpdateProfileActivity"
+    android:gravity="center_horizontal">
 
     <TextView
         android:id="@+id/textView9"
@@ -59,8 +60,38 @@
         android:id="@+id/spinnerFindPreference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"/>
+        android:layout_marginBottom="50dp"/>
 
+
+    <LinearLayout
+        android:id="@+id/confirmationLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirmPassword"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:autofillHints="@string/hintPassword"
+            android:ems="10"
+            android:hint="@string/hintPassword"
+            android:inputType="textPassword"
+            android:textColor="@android:color/background_light" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnSave"

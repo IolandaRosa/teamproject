@@ -1,15 +1,26 @@
 package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Credentials;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Map;
@@ -23,7 +34,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private EditText editTextName;
     private EditText editTextEmail;
     private Spinner spinnerPreferences;
-    private User user;
+    private EditText editTextPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         this.editTextName = findViewById(R.id.editTextName);
         this.editTextEmail = findViewById(R.id.editTextEmail);
         this.spinnerPreferences = findViewById(R.id.spinnerFindPreference);
+        this.editTextPassword=findViewById(R.id.editTextPassword);
 
         this.initializeFields();
 
@@ -77,7 +89,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
     public void onClick_btnSave(View view) {
         String name = this.editTextName.getText().toString();
-        String email = this.editTextEmail.getText().toString();
+        final String email = this.editTextEmail.getText().toString();
 
         Map<String, Integer> errorMap = UsersManager.INSTANCE.validateNameAndEmail(name, email);
 
@@ -109,6 +121,24 @@ public class UpdateProfileActivity extends AppCompatActivity {
         }
 
         if(!emailEquals){
+            findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
+
+            String password=editTextPassword.getText().toString();
+
+            /*AuthCredential credential = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(), password);
+
+            FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(UpdateProfileActivity.this,"Result",Toast.LENGTH_LONG).show();
+                        //UsersManager.INSTANCE.updateUserEmailInDatabase(email);
+                    }
+                    else{
+                        InternetConnectionManager.INSTANCE.showErrorMessage(UpdateProfileActivity.this,R.string.alreadyAuth);
+                    }
+                }
+            });*/
             //pede autenticação com password
             //se password corresponder à do utilizador
                 //UsersManager.INSTANCE.updateUserEmailInDatabase(email);
@@ -118,6 +148,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         }
 
         if(!preferenceEquals){
+            findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
             //pede autenticação com password
             //se password corresponder à do utilizador
                 //UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
@@ -125,6 +156,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 //dá erro
         }
 
-        Toast.makeText(this,String.valueOf(preferenceEquals),Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Final",Toast.LENGTH_LONG).show();
     }
 }
