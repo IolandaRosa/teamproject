@@ -121,12 +121,12 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I see the email not empty$")
     public void i_see_the_email_not_empty() {
-
+        onViewWithId(R.id.editTextEmail).isNotEmpty();
     }
 
     @Then("^I see an error message on the name field saying \"([^\"]*)\"$")
     public void i_see_an_error_message_on_the_name_field_saying(String arg1) {
-
+        onViewWithId(R.id.editTextName).hasErrorText(arg1);
     }
 
     @When("^I type \"([^\"]*)\" on the name field$")
