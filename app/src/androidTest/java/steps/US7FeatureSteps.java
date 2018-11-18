@@ -136,7 +136,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I see the name not empty$")
     public void i_see_the_name_not_empty() {
-
+        onViewWithId(R.id.editTextName).isNotEmpty();
     }
 
     @Then("^I see an error message on the email field saying \"([^\"]*)\"$")
