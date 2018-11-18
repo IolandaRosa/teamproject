@@ -1,12 +1,10 @@
 package groupf.taes.ipleiria.spots;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,57 +61,20 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         currentPark = 0;
+      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
 
-        if(currentPark == 0)
-        {
-            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
-
-        }else
-        {
-            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
-
+        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+            DashboardActivity.getIntent(this);
+            return;
         }
 
         setContentView(R.layout.activity_dashboard_auth);
-
-
-        spinner = findViewById(R.id.spinner);
-        spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            //posicao seleciondada//id para mapeamento de BD
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentPark = position;
-                //LatLng parkD = new LatLng(39.733890, -8.821281);
-
-                if(currentPark == 1)
-                {
-                    LatLng parkD = new LatLng(39.733890, -8.821281);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-                    SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
-                    ex(mMap);
-
-                }else
-                {
-                    LatLng parkD = new LatLng(39.734994, -8.820697);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-                    SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
-                    ex(mMap);
-
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //empty
-
-            }
-        });
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(this);
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
@@ -126,32 +85,32 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-        if(FirebaseAuth.getInstance().getCurrentUser()==null){
-            DashboardActivity.getIntent(this);
-            return;
-        }
+
+        spinner = findViewById(R.id.spinner);
+        spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            //posicao seleciondada//id para mapeamento de BD
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentPark = position;
+                putMarkers();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //empty
+
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-       /* if(currentPark == 0)
-        {
-            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
-
-        }else
-        {
-            SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-D");
-
-        }*/
-
         addDrawerItems();
         setupDrawer();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapFragment);
-        mapFragment.getMapAsync(this);
-
-        //onMapReady(mMap);
+        //mapFragment.getMapAsync(this);
     }
 
     private void addDrawerItems() {
@@ -237,38 +196,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-       // 39.733890, -8.821281
-       // LatLng parkD = new LatLng(39.733890, -8.821281);
-         //if(currentPark == 1)
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-        // mMap.
+        SpotsManager.getINSTANCE().getParkingSpotsD();
 
-        //SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
-        //List<Spot>spots;
-        /*if(currentPark == 0)
-        {
-            spots = SpotsManager.getINSTANCE().getParkingSpotsA();
-        }else
-        {
-            spots = SpotsManager.getINSTANCE().getParkingSpotsD();
-
-        }*/
-
-        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
-            if (s.getStatus() == 0) {
-                String location = s.getLocationGeo();
-                String[] geo = location.split(",");
-                LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
-                Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                markers.add(marker);
-            }
-        }
-
-
-
-        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
-        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
-
+        putMarkers();
 
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
 
@@ -290,28 +220,28 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    public  void ex(GoogleMap googleMa)
+    public  void putMarkers()
     {
-        mMap = googleMa;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        // 39.733890, -8.821281
-        // LatLng parkD = new LatLng(39.733890, -8.821281);
-        //if(currentPark == 1)
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-        // mMap.
-
-        //SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
-        //List<Spot>spots;
-        /*if(currentPark == 0)
-        {
+        markers.clear();
+        mMap.clear();
+        List<Spot> spots = new LinkedList<>();
+        int freeSpots = 0;
+        int ocuppiedSpots = 0;
+        if (currentPark == 0) {
+            LatLng parkD = new LatLng(39.734994, -8.820697);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
             spots = SpotsManager.getINSTANCE().getParkingSpotsA();
-        }else
-        {
+            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkA();
+            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkA();
+        } else {
+            LatLng parkD = new LatLng(39.733890, -8.821281);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
             spots = SpotsManager.getINSTANCE().getParkingSpotsD();
+            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkD();
+            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkD();
+        }
 
-        }*/
-
-        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
+        for(Spot s : spots) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
@@ -321,33 +251,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         }
 
-
-
-        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
-        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
-
-
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
-
-        SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        if (!checkInternetConnection() && sharedPref.contains("dateLastInfo")) {
-            String str = sharedPref.getString("dateLastInfo", null);
-            SpotsManager.getINSTANCE().setDateOfData(str);
-            lastInfoDateTxt.setText(str);
-            //  String date = df.format(sharedPref.)
-            //  lastInfoDateTxt.setText(date);
-        } else{
-            //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
-            lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
-            editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
-            editor.commit();
-        }
-
+        freeSpotsTxt.setText(String.valueOf(freeSpots));
+        occupiedSpotsTxt.setText(String.valueOf(ocuppiedSpots));
     }
-
-
 
     public boolean checkInternetConnection() {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);

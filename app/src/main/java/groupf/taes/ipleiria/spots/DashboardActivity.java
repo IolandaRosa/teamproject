@@ -21,14 +21,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
 import modelo.Spot;
 import modelo.SpotsManager;
-
 
 public class DashboardActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -47,7 +44,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             return;
         }
 
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase("Park-A");
+        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
         setContentView(R.layout.activity_dashboard);
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
@@ -67,7 +64,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        for(Spot s : SpotsManager.getINSTANCE().getParkingSpots()) {
+       for(Spot s : SpotsManager.getINSTANCE().getParkingSpotsA()) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
@@ -77,11 +74,9 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
 
-        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
-        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
+        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkA()));
+        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkD()));
 
-
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
 
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -90,10 +85,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             String str = sharedPref.getString("dateLastInfo", null);
             SpotsManager.getINSTANCE().setDateOfData(str);
             lastInfoDateTxt.setText(str);
-          //  String date = df.format(sharedPref.)
-          //  lastInfoDateTxt.setText(date);
         } else {
-          //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
             lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
             editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
             editor.commit();
