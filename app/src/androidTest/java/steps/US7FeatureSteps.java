@@ -17,10 +17,8 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
@@ -168,6 +166,11 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I see the password confirmation displayed$")
     public void i_see_the_password_confirmation_displayed() {
+
+    }
+
+    @When("^I press the Ok button$")
+    public void i_press_the_Ok_button() {
 
     }
 

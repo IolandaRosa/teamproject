@@ -63,7 +63,7 @@ Feature: Updated Profile for an authenticate user
     When I type new email "maria_jesus@email.com" on email field
     And I press the "Save" button
     And I see the password confirmation displayed
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see an error message displayed saying "The password can't be empty"
 
   Scenario: Update profile change email with invalid password confirmation
@@ -71,7 +71,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Save" button
     And I see the password confirmation displayed
     And I type "111111111" on password field
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see an error message displayed saying "The password does not match"
 
   Scenario: Update profile change email (Happy Path)
@@ -79,7 +79,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Save" button
     And I see the password confirmation displayed
     And I type "12345678" on password field
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see the profile activity with my new email dispalyed
     And I confirm the authentication email is now "maria_jesus@email.com"
 
@@ -88,7 +88,7 @@ Feature: Updated Profile for an authenticate user
     And I choose the option "Closer To My Location"
     And I press the "Save" button
     And I see the password confirmation displayed
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see an error message displayed saying "The password can't be empty"
 
   Scenario: Update profile change preference with invalid password confirmation
@@ -97,7 +97,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Save" button
     And I see the password confirmation displayed
     And I type "111111111" on password field
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see an error message displayed saying "The password does not match"
 
   Scenario: Update profile preference (Happy Path)
@@ -106,7 +106,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Save" button
     And I see the password confirmation displayed
     And I type "12345678" on password field
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see the profile activity with my new preference dispalyed
 
   Scenario: Change email, name and preference (Happy path)
@@ -117,7 +117,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Save" button
     And I see the password confirmation displayed
     And I type "12345678" on password field
-    And I press the "Ok" button
+    And I press the Ok button
     Then I see the profile activity with my new information dispalyed
     And I confirm the authentication email is now "maria_juventina@email.com"
 

@@ -95,11 +95,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if (errorMap.containsKey("email")) {
             editTextEmail.setError(getResources().getString(errorMap.getOrDefault("email", -1)));
             editTextEmail.requestFocus();
+            return;
         }
 
         if (errorMap.containsKey("name")) {
             editTextName.setError(getResources().getString(errorMap.getOrDefault("name", -1)));
             editTextName.requestFocus();
+            return;
         }
 
         String selectPreference = spinnerPreferences.getSelectedItem().toString();
