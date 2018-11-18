@@ -146,18 +146,18 @@ public enum UsersManager {
 
         Map<String,Integer> errorMap=new HashMap<>();
 
-        if(name.isEmpty() && email.isEmpty()){
+        if(name.trim().isEmpty() && email.trim().isEmpty()){
             errorMap.put("email", R.string.emptyEmail);
             errorMap.put("name",R.string.emptyName);
             return errorMap;
         }
 
-        if(name.isEmpty()){
+        if(name.trim().isEmpty()){
             errorMap.put("name",R.string.emptyName);
             return errorMap;
         }
 
-        if(email.isEmpty()){
+        if(email.trim().isEmpty()){
             errorMap.put("email", R.string.emptyEmail);
             return errorMap;
         }

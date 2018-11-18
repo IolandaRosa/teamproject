@@ -4,8 +4,8 @@ Feature: Updated Profile for an authenticate user
   Background:
   Given I am an authenticate user
     When I am in my profile screen
-    And I type the "Update my profile" button
-    Then I am on update my profile button
+    And I click on the "Update my profile" button
+    Then I am on update my profile screen
     And I see all the fields displaying my current information
 
   Scenario Outline: Assert the option on the spinner match as the expected
@@ -120,3 +120,7 @@ Feature: Updated Profile for an authenticate user
     And I press the "Ok" button
     Then I see the profile activity with my new information dispalyed
     And I confirm the authentication email is now "maria_juventina@email.com"
+
+  Scenario: Update profile cancel
+      And I press the Cancel button
+      Then I see the profile activity displayed
