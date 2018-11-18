@@ -26,8 +26,6 @@ import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
 import steps.US5FeatureWithoutPreferencesSteps;
 
-import static android.os.SystemClock.sleep;
-
 @RunWith(Parameterized.class)
 public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
@@ -57,8 +55,10 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
         //2º - Ver se o utilizador já existe (em principio não deve existir)
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
-        //todo tratar caso do sleep para sincronização de threads
-        sleep(5000);
+
+        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        while(!registerTask.isComplete())
+            Thread.sleep(1);
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
         if(registerTask.isSuccessful()){
             //Quer dizer que utilizador não existia então acrescenta utilizador na BD
@@ -72,8 +72,10 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
             //Fazemos login
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
                 //Temos de ver se utilizador já existe na Bd e se não existir acrescentar
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -99,8 +101,10 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();

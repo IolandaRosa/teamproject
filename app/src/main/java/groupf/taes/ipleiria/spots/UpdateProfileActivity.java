@@ -9,28 +9,19 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import modelo.InternetConnectionManager;
 import modelo.User;
 import modelo.UsersManager;
-
-import static android.os.SystemClock.sleep;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
