@@ -141,7 +141,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see an error message on the email field saying \"([^\"]*)\"$")
     public void i_see_an_error_message_on_the_email_field_saying(String arg1) {
-
+        onViewWithId(R.id.editTextEmail).hasErrorText(arg1);
     }
 
     @When("^I type \"([^\"]*)\" on email$")
