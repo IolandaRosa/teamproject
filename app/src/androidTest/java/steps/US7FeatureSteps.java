@@ -1,20 +1,36 @@
 package steps;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
 
+import junit.framework.Assert;
+
+import groupf.taes.ipleiria.spots.R;
+
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticate user$")
     public void i_am_an_authenticate_user() {
-
+        Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
-    @When("^I am im my profile screen$")
-    public void i_am_im_my_profile_screen() {
-
+    @When("^I am in my profile screen$")
+    public void i_am_in_my_profile_screen() {
+        onViewWithId(R.id.btnMyPreferences).isDisplayed().check(matches(withText(R.string.btnMyPreferences)));
+        onViewWithId(R.id.btnFavouriteSpots).isDisplayed().check(matches(withText(R.string.btnFavouriteSpots)));
+        onViewWithId(R.id.btnUpdateMyProfile).isDisplayed().check(matches(withText(R.string.btnUpdateMyProfile)));
+        onViewWithText(R.string.name).isDisplayed();
+        onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Leopoldina")));
+        onViewWithText(R.string.email).isDisplayed();
+        onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_leopoldina@email.pt")));
+        onViewWithText(R.string.findMeASpotPreference).isDisplayed();
+        onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("None")));
     }
 
     @When("^I type the \"([^\"]*)\" button$")

@@ -3,7 +3,7 @@ Feature: Updated Profile for an authenticate user
 
   Background:
   Given I am an authenticate user
-    When I am im my profile screen
+    When I am in my profile screen
     And I type the "Update my profile" button
     Then I am on update my profile button
     And I see all the fields displaying my current information
