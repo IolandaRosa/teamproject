@@ -101,9 +101,9 @@ public enum UsersManager {
         return mAuth.createUserWithEmailAndPassword(email, password);
     }
 
-    public void addUserToDatabase(String name, String email, String password) {
+    public void addUserToDatabase(String name, String email/*, String password*/) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null, password);
+        User user=new User(id,name,email,null/*, password*/);
         mDatabase.child(id).setValue(user);
     }
 
@@ -181,8 +181,6 @@ public enum UsersManager {
     public void updateUserEmailInDatabase(String email) {
         String id=mAuth.getCurrentUser().getUid();
         mDatabase.child(id).child("email").setValue(email);
-
-        //Fazer update no firebase
     }
 
     public void updateUserFindPreferenceInDatabase(String selectPreference) {
@@ -198,6 +196,7 @@ public enum UsersManager {
 
     }
 
+    //Não utilizados
     public DatabaseReference getCurrentUserPasswordReference() {
         String id=mAuth.getCurrentUser().getUid();
 

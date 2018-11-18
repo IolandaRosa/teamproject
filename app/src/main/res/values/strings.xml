@@ -41,6 +41,7 @@
     <string name="cancel">Cancel</string>
     <string name="confirmPassword">Please insert your password to confirm:</string>
     <string name="invalidPassword">The password does not match</string>
+    <string name="noChanges">Nothing was changed</string>
 
     <string-array name="findPreferencesOptions">
         <item>None</item>

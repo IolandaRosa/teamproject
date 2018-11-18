@@ -54,7 +54,7 @@ public class SpotsManager {
         // Attach a listener to read the data at our posts reference
 
 
-        dbRef.child("Park-A").addValueEventListener(new ValueEventListener() {
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();

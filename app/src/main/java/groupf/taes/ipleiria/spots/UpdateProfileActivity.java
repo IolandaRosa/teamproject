@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import modelo.InternetConnectionManager;
 import modelo.User;
@@ -116,14 +119,32 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         boolean preferenceEquals=this.getIntent().getStringExtra("preference").equalsIgnoreCase(selectPreference);
 
-        if(!nameEquals){
+        if(emailEquals && preferenceEquals && nameEquals){
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.noChanges);
+            return;
+        }
+
+        if(!nameEquals && (!emailEquals || !preferenceEquals)){
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
+            findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
+            findViewById(R.id.btnSave).setVisibility(View.GONE);
+            return;
         }
 
         if(!emailEquals || !preferenceEquals){
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
             findViewById(R.id.btnSave).setVisibility(View.GONE);
+            return;
         }
+
+        if(!nameEquals){
+            UsersManager.INSTANCE.updateUserNameInDatabase(name);
+            startActivity(ProfileActivity.getIntent(this));
+        }
+
+
+
+
     }
 
 
@@ -134,7 +155,35 @@ public class UpdateProfileActivity extends AppCompatActivity {
             InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.emptyPassword);
         }
         else{
-            DatabaseReference passwordRef=UsersManager.INSTANCE.getCurrentUserPasswordReference();
+
+            AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
+
+            FirebaseAuth.getInstance().getCurrentUser().reauthenticateAndRetrieveData(credentials).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+
+                        String email = editTextEmail.getText().toString();
+                        String selectPreference = spinnerPreferences.getSelectedItem().toString();
+
+                        FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
+                        UsersManager.INSTANCE.updateUserEmailInDatabase(email);
+                        UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
+                        startActivity(ProfileActivity.getIntent(UpdateProfileActivity.this));
+                    }
+                    else{
+                        InternetConnectionManager.INSTANCE.showErrorMessage(UpdateProfileActivity.this,R.string.invalidPassword);
+                    }
+                }
+            });
+
+
+
+
+
+            /*DatabaseReference passwordRef=UsersManager.INSTANCE.getCurrentUserPasswordReference();
+
+
 
             passwordRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -148,6 +197,26 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         final String email = editTextEmail.getText().toString();
                         final String selectPreference = spinnerPreferences.getSelectedItem().toString();
 
+                        Toast.makeText(UpdateProfileActivity.this,userPass,Toast.LENGTH_LONG).show();*/
+
+                        /*AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
+                        Task<Void> task = FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credentials);
+
+                        try{
+                            Tasks.await(task);
+
+                            Tasks.await(FirebaseAuth.getInstance().getCurrentUser().updateEmail(email));
+
+                            UsersManager.INSTANCE.updateUserEmailInDatabase(email);
+                            UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }*/
+
+                        /*
                         Task<Void> voidTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
 
                         //todo - change
@@ -202,18 +271,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
                                     });
                                 }
                             }
-                        });
+                        });*/
 
-                    }
+                   /* }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
-
-
+            });*/
         }
     }
 }
