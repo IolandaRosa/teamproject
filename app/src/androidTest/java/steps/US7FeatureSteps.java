@@ -131,7 +131,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I type \"([^\"]*)\" on the name field$")
     public void i_type_on_the_name_field(String arg1) {
-
+        onViewWithId(R.id.editTextName).type(arg1);
     }
 
     @When("^I see the name not empty$")
