@@ -146,7 +146,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I type \"([^\"]*)\" on email$")
     public void i_type_on_email(String arg1) {
-
+        onViewWithId(R.id.editTextEmail).perform(replaceText(arg1));
     }
 
     @When("^I type my name \"([^\"]*)\" on name field$")
