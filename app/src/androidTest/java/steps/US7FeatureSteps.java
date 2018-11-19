@@ -182,7 +182,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the profile activity with my new email dispalyed$")
     public void i_see_the_profile_activity_with_my_new_email_dispalyed() {
-        sleep(1000);
+        sleep(5000);
         onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_jesus@email.com")));
     }
 
@@ -205,7 +205,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the profile activity with my new preference dispalyed$")
     public void i_see_the_profile_activity_with_my_new_preference_dispalyed() {
-        sleep(1000);
+        sleep(3000);
         onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("My Favourite Spots")));
     }
 
@@ -228,6 +228,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the profile activity displayed$")
     public void i_see_the_profile_activity_displayed() {
+        sleep(5000);
         onViewWithText(R.string.name).isDisplayed();
         onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Juventina")));
         onViewWithText(R.string.email).isDisplayed();
