@@ -149,11 +149,6 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.editTextEmail).perform(replaceText(arg1));
     }
 
-    @When("^I type my name \"([^\"]*)\" on name field$")
-    public void i_type_my_name_on_name_field(String arg1) {
-
-    }
-
     @Then("^I see the profile activity with my new name displayed$")
     public void i_see_the_profile_activity_with_my_new_name_displayed() {
 

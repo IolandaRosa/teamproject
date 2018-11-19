@@ -55,7 +55,7 @@ Feature: Updated Profile for an authenticate user
     Then I see an error message displayed saying "Nothing was changed"
 
   Scenario: Update profile change only the name (Happy path)
-    When I type my name "Maria Jesus" on name field
+    When I type "Maria Jesus" on the name field
     And I press the "Save" button
     Then I see the profile activity with my new name displayed
 
@@ -110,7 +110,7 @@ Feature: Updated Profile for an authenticate user
     Then I see the profile activity with my new preference dispalyed
 
   Scenario: Change email, name and preference (Happy path)
-    When I type my name "Maria Juventina" on name field
+    When I type "Maria Juventina" on the name field
     And I type new email "maria_juventina@email.com" on email field
     And I click on the spinner
     And I choose the option "None"
