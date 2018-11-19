@@ -277,15 +277,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return markers;
     }
 
-    private void showErrorMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(message);
-
-        builder.setNeutralButton(R.string.OK, null);
-
-        builder.show();
-    }
 
 
 }
