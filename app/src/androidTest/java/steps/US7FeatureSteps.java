@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -44,6 +45,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I click on the \"([^\"]*)\" button$")
     public void i_click_on_the_button(String arg1) {
+        closeKeyboard();
         onViewWithId(R.id.btnUpdateMyProfile).click();
     }
 
@@ -70,6 +72,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I click to open the spinner$")
     public void i_click_to_open_the_spinner() {
+        closeKeyboard();
         onViewWithId(R.id.spinnerFindPreference).click();
     }
 
@@ -111,6 +114,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I press the \"([^\"]*)\" button$")
     public void i_press_the_button(String arg1) {
+        closeKeyboard();
         onViewWithId(R.id.btnSave).isDisplayed().check(matches(withText(arg1))).click();
     }
 
@@ -158,29 +162,28 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Jesus")));
     }
 
-    @When("^I type new email \"([^\"]*)\" on email field$")
-    public void i_type_new_email_on_email_field(String arg1) {
-
-    }
-
     @When("^I see the password confirmation displayed$")
     public void i_see_the_password_confirmation_displayed() {
-
+        onViewWithId(R.id.confirmationLayout).isDisplayed();
+        onViewWithId(R.id.btnSave).isNotDisplayed();
+        onViewWithId(R.id.btnOk).isDisplayed().check(matches(withText(R.string.OK)));
     }
 
     @When("^I press the Ok button$")
     public void i_press_the_Ok_button() {
-
+        closeKeyboard();
+        onViewWithId(R.id.btnOk).click();
     }
 
     @When("^I type \"([^\"]*)\" on password field$")
     public void i_type_on_password_field(String arg1) {
-
+        onViewWithId(R.id.editTextPassword).type(arg1);
     }
 
     @Then("^I see the profile activity with my new email dispalyed$")
     public void i_see_the_profile_activity_with_my_new_email_dispalyed() {
-
+        sleep(1000);
+        onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_jesus@email.com")));
     }
 
     @Then("^I confirm the authentication email is now \"([^\"]*)\"$")
@@ -190,7 +193,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I click on the spinner$")
     public void i_click_on_the_spinner() {
-
+        closeKeyboard();
     }
 
     @When("^I choose the option \"([^\"]*)\"$")
@@ -210,7 +213,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I press the Cancel button$")
     public void i_press_the_Cancel_button() {
-
+        closeKeyboard();
     }
 
     @Then("^I see the profile activity displayed$")
