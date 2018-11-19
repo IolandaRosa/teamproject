@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         setContentView(R.layout.activity_dashboard_auth);
+        markers = new LinkedList<>();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
@@ -80,12 +82,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
-        markers = new LinkedList<>();
 
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-
 
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
@@ -167,13 +167,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return new Intent(context, DashboardAuthActivity.class);
     }
 
-   @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_authenticated_dash, menu);
-        return true;
-    }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -195,9 +188,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -237,7 +228,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public  void putMarkers()
     {
-        markers.clear();
+        markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
         int freeSpots = 0;
@@ -285,5 +276,16 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public static List<Marker> getMarkers() {
         return markers;
     }
+
+    private void showErrorMessage(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(message);
+
+        builder.setNeutralButton(R.string.OK, null);
+
+        builder.show();
+    }
+
 
 }

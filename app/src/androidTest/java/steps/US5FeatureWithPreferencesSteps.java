@@ -1,5 +1,7 @@
 package steps;
 
+import android.support.test.espresso.Espresso;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
@@ -9,9 +11,12 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.R;
+import helpers.DrawerHelper;
 
 import static android.os.SystemClock.sleep;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
@@ -23,14 +28,15 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
 
     @When("^I am in the dashboard authenticated screen$")
     public void i_am_in_the_dashboard_authenticated_screen() {
-        //todo mudar para carregar ver o auth dashboard
-        //onViewWithId(R.id.btnProfile).isDisplayed().check(matches(withText(string(R.string.btnProfile))));
+        onViewWithId(R.id.mapFragment).isDisplayed();
+        onViewWithId(R.id.spinner);
+        onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
-
-        //onViewWithId(R.id.btnProfile).click();
+        Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        Espresso.onView(withText("Profile")).perform(click());
     }
 
     @When("^I am in the Profile screen$")

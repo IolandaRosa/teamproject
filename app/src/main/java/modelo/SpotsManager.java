@@ -79,6 +79,8 @@ public class SpotsManager {
                 freeSpotsParkD = 0;
                 ocuppiedSpotsParkA = 0;
                 ocuppiedSpotsParkD = 0;
+                parkingSpotsA = new LinkedList<>();
+                parkingSpotsD = new LinkedList<>();
 
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 

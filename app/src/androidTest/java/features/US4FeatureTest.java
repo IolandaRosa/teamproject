@@ -15,14 +15,16 @@ import com.mauriciotogneri.greencoffee.ScenarioConfig;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import groupf.taes.ipleiria.spots.LoginActivity;
+import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
+import steps.US4FeatureSteps;
 
 import static android.os.SystemClock.sleep;
 
@@ -30,7 +32,7 @@ import static android.os.SystemClock.sleep;
 @RunWith(Parameterized.class)
 public class US4FeatureTest extends GreenCoffeeTest {
     @Rule
-    public ActivityTestRule activityTestRule = new ActivityTestRule(LoginActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
     public US4FeatureTest(ScenarioConfig scenario) {
         super(scenario);
@@ -39,6 +41,11 @@ public class US4FeatureTest extends GreenCoffeeTest {
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS4.feature").scenarios();
+    }
+
+    @Test
+    public void test() {
+        start(new US4FeatureSteps());
     }
 
     @BeforeClass

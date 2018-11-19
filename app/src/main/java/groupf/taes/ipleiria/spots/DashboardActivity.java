@@ -75,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkA()));
-        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkD()));
+        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkA()));
 
 
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
