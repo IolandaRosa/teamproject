@@ -43,7 +43,7 @@ public class US5FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
     @When("^I am in the dashboard authenticated screen$")
     public void i_am_in_the_dashboard_authenticated_screen() {
         onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner);
+        onViewWithId(R.id.spinner).isDisplayed();
         onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 

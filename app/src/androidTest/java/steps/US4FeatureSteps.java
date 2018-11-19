@@ -37,7 +37,7 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
     @When("^I see the authenticated user dashboard$")
     public void i_see_the_authenticated_user_dashboard() {
         onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner);
+        onViewWithId(R.id.spinner).isDisplayed();
     }
 
     @When("^I see the free spots markers on the map$")
