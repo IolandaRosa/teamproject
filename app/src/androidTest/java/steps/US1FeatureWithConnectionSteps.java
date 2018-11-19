@@ -35,15 +35,15 @@ public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
     @Then("^I see the number of free and occupied sports $")
     public void i_see_the_number_of_free_and_occupied_sports() {
         onViewWithId(R.id.txtNumberFreeSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getFreeSpots()));
+        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkA()));
 
         onViewWithId(R.id.txtNumberOcuppiedSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpots()));
+        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkA()));
     }
 
     @Then("^I see the markers of free spots displayed on the map$")
     public void i_see_the_markers_of_free_spots_displayed_on_the_map() {
-        Assert.assertEquals(DashboardActivity.getMarkers().size(), SpotsManager.getINSTANCE().getFreeSpots());
+        Assert.assertEquals(DashboardActivity.getMarkers().size(), SpotsManager.getINSTANCE().getFreeSpotsParkA());
     }
 
     @Then("^I see the last update date$")

@@ -39,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
         this.editPassword=findViewById(R.id.editTextPassword);
         this.editName=findViewById(R.id.editTextName);
         this.editConfirmationPassword=findViewById(R.id.editTextConfirmationPassword);
+
+
     }
 
     public void onClick_btnRegister(View view) {

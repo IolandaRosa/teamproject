@@ -128,4 +128,11 @@ public enum UsersManager {
     public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
     }
+
+    public void logoutUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+        {
+            FirebaseAuth.getInstance().signOut();
+        }
+    }
 }
