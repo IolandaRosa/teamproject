@@ -188,36 +188,51 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I confirm the authentication email is now \"([^\"]*)\"$")
     public void i_confirm_the_authentication_email_is_now(String arg1) {
-
+        sleep(1000);
+        Assert.assertTrue(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(arg1));
     }
 
     @When("^I click on the spinner$")
     public void i_click_on_the_spinner() {
         closeKeyboard();
+        onViewWithId(R.id.spinnerFindPreference).click();
     }
 
     @When("^I choose the option \"([^\"]*)\"$")
     public void i_choose_the_option(String arg1) {
-
+        onData(is(arg1)).perform(click());
     }
 
     @Then("^I see the profile activity with my new preference dispalyed$")
     public void i_see_the_profile_activity_with_my_new_preference_dispalyed() {
-
+        sleep(1000);
+        onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("My Favourite Spots")));
     }
 
     @Then("^I see the profile activity with my new information dispalyed$")
     public void i_see_the_profile_activity_with_my_new_information_dispalyed() {
-
+        sleep(1000);
+        onViewWithText(R.string.name).isDisplayed();
+        onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Juventina")));
+        onViewWithText(R.string.email).isDisplayed();
+        onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_juventina@email.com")));
+        onViewWithText(R.string.findMeASpotPreference).isDisplayed();
+        onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("None")));
     }
 
     @Then("^I press the Cancel button$")
     public void i_press_the_Cancel_button() {
         closeKeyboard();
+        onViewWithId(R.id.btnCancel).click();
     }
 
     @Then("^I see the profile activity displayed$")
     public void i_see_the_profile_activity_displayed() {
-
+        onViewWithText(R.string.name).isDisplayed();
+        onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Juventina")));
+        onViewWithText(R.string.email).isDisplayed();
+        onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_juventina@email.com")));
+        onViewWithText(R.string.findMeASpotPreference).isDisplayed();
+        onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("None")));
     }
 }
