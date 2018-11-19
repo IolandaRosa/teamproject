@@ -35,11 +35,11 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnFavouriteSpots).isDisplayed().check(matches(withText(R.string.btnFavouriteSpots)));
         onViewWithId(R.id.btnUpdateMyProfile).isDisplayed().check(matches(withText(R.string.btnUpdateMyProfile)));
         onViewWithText(R.string.name).isDisplayed();
-        onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Leopoldina")));
+        onViewWithId(R.id.txtViewName).isDisplayed();
         onViewWithText(R.string.email).isDisplayed();
-        onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_leopoldina@email.pt")));
+        onViewWithId(R.id.txtViewEmail).isDisplayed();
         onViewWithText(R.string.findMeASpotPreference).isDisplayed();
-        onViewWithId(R.id.textViewPreference).isDisplayed().check(matches(withText("None")));
+        onViewWithId(R.id.textViewPreference).isDisplayed();
     }
 
     @When("^I click on the \"([^\"]*)\" button$")
@@ -151,7 +151,11 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the profile activity with my new name displayed$")
     public void i_see_the_profile_activity_with_my_new_name_displayed() {
-
+        onViewWithId(R.id.btnMyPreferences).isDisplayed().check(matches(withText(R.string.btnMyPreferences)));
+        onViewWithId(R.id.btnFavouriteSpots).isDisplayed().check(matches(withText(R.string.btnFavouriteSpots)));
+        onViewWithId(R.id.btnUpdateMyProfile).isDisplayed().check(matches(withText(R.string.btnUpdateMyProfile)));
+        onViewWithText(R.string.name).isDisplayed();
+        onViewWithId(R.id.txtViewName).isDisplayed().check(matches(withText("Maria Jesus")));
     }
 
     @When("^I type new email \"([^\"]*)\" on email field$")
