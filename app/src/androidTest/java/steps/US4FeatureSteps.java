@@ -8,18 +8,14 @@ import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
-import com.mauriciotogneri.greencoffee.interactions.ActionableObject;
 
 import org.junit.Assert;
-
-
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
-import modelo.Spot;
 import modelo.SpotsManager;
+
 
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -37,7 +33,7 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
     @When("^I see the authenticated user dashboard$")
     public void i_see_the_authenticated_user_dashboard() {
         onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner);
+        onViewWithId(R.id.spinner).isDisplayed();
     }
 
     @When("^I see the free spots markers on the map$")

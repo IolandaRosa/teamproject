@@ -6,7 +6,7 @@
     tools:context=".DashboardActivity">
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnSignup"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_alignParentStart="true"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/btnLogin"
+        android:layout_toEndOf="@+id/btnSignup"
         android:text="@string/anonParkTitle"
         android:textAlignment="center"
         android:textSize="24sp" />
@@ -30,7 +30,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="362dp"
-        android:layout_below="@+id/btnLogin"
+        android:layout_below="@+id/btnSignup"
         map:cameraBearing="48"
         map:cameraTargetLat="39.734994"
         map:cameraTargetLng="-8.820697"

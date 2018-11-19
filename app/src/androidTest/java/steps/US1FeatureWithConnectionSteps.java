@@ -54,8 +54,8 @@ public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
 
     @Then("^I see the button to Login$")
     public void i_see_the_button_to_Login() {
-        onViewWithId(R.id.btnLogin).isDisplayed();
-        onViewWithId(R.id.btnLogin).contains(string(R.string.signUpButton));
+        onViewWithId(R.id.btnSignup).isDisplayed();
+        onViewWithId(R.id.btnSignup).contains(string(R.string.signUpButton));
     }
 
 

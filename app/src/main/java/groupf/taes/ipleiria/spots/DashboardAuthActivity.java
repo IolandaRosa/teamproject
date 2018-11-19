@@ -133,8 +133,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         break;
                 }
 
-
-                Toast.makeText(DashboardAuthActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
             }
         });
     }
