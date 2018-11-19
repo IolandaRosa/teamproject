@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,8 +27,6 @@ import java.util.Locale;
 
 import groupf.taes.ipleiria.spots.LoginActivity;
 import steps.US3FeatureSteps;
-
-import static android.os.SystemClock.sleep;
 
 @RunWith(Parameterized.class)
 public class US3FeatureTest extends GreenCoffeeTest {
@@ -81,15 +80,19 @@ public class US3FeatureTest extends GreenCoffeeTest {
 
         //2º - Ver se o utilizador já existe (em principio não deve existir)
         Task<AuthResult> registerTask = FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678");
-        //todo tratar caso do sleep para sincronização de threads
-        sleep(5000);
+
+        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        while(!registerTask.isComplete())
+            Thread.sleep(1);
+
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
         if(registerTask.isSuccessful()){
             if(FirebaseAuth.getInstance().getCurrentUser()!=null)
                 FirebaseAuth.getInstance().signOut();
         }
         else{
-            //Se não for successfull significa que email ja existia e podemos fazer login
+            Exception exception = registerTask.getException();
+            Log.println(1,"Exception set Up",exception.getMessage());
             //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
         }
     }
@@ -101,8 +104,12 @@ public class US3FeatureTest extends GreenCoffeeTest {
             FirebaseAuth.getInstance().signOut();
         }
         //Destruir o utilizador test@test.test com password "12345678"
-        FirebaseAuth.getInstance().signInWithEmailAndPassword("test@test.test","12345678");
-        sleep(5000);
+        Task<AuthResult> authResultTask = FirebaseAuth.getInstance().signInWithEmailAndPassword("test@test.test", "12345678");
+
+        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        while(!authResultTask.isComplete())
+            Thread.sleep(1);
+
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             FirebaseAuth.getInstance().getCurrentUser().delete();
         }

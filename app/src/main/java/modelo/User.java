@@ -1,12 +1,18 @@
 package modelo;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.security.spec.MGF1ParameterSpec.SHA1;
 
 public class User {
     private String id;
     private String name;
     private String email;
+    //private String password;
     private List<Spot> favouriteSpots;
     private FindPreference findPreference;
 
@@ -14,10 +20,11 @@ public class User {
 
     }
 
-    public User(String id,String name, String email, FindPreference preference) {
+    public User(String id,String name, String email, FindPreference preference/*, String password*/) {
         this.name = name;
         this.email = email;
         this.id = id;
+        //this.password=UsersManager.INSTANCE.md5_Hash(password);
         this.favouriteSpots=new ArrayList<>();
         this.findPreference=preference;
     }
@@ -29,6 +36,10 @@ public class User {
     public String getName() {
         return name;
     }
+
+    /*public String getPassword () {
+        return this.password;
+    }*/
 
     public String getEmail() {
         return email;

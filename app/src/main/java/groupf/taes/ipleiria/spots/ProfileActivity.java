@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtfindMeAPreference;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        this.user=null;
         txtName=findViewById(R.id.txtViewName);
         txtEmail=findViewById(R.id.txtViewEmail);
         txtfindMeAPreference=findViewById(R.id.textViewPreference);
@@ -45,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                User user =dataSnapshot.getValue(User.class);
+                user =dataSnapshot.getValue(User.class);
 
                 txtName.setText(user.getName());
                 txtEmail.setText(user.getEmail());
@@ -59,4 +63,15 @@ public class ProfileActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         });
     }
+
+    public void onClick_updateMyProfile(View view) {
+        if(user!=null){
+            startActivity(UpdateProfileActivity.getIntent(this, user));
+        }
+        else{
+            Toast.makeText(this,"The user is null",Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }

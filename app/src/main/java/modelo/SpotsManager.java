@@ -72,6 +72,8 @@ public class SpotsManager {
 
     public void readSpotsDataFromDatabase() {
         // Attach a listener to read the data at our posts reference
+
+
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

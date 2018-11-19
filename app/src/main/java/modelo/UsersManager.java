@@ -7,7 +7,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +64,6 @@ public enum UsersManager {
 
         if(password.length()<8){
             errorMap.put("password",R.string.invalidPasswordLength);
-
         }
 
         return errorMap;
@@ -71,8 +72,6 @@ public enum UsersManager {
     public Map<String,Integer> validateUserCredentialsAndName(String email, String password, String name,String confirmationPass) {
 
         Map<String,Integer> errorMap=this.validadeUserCredentials(email,password);
-
-        //boolean flag = false;
 
         if(confirmationPass.isEmpty())
         {
@@ -87,11 +86,8 @@ public enum UsersManager {
         if(!confirmationPass.isEmpty() && !password.equals(confirmationPass))
         {
             errorMap.put("confirmationPass",R.string.errorConfirmationPass);
-
+            return errorMap;
         }
-
-
-
 
         if(android.text.TextUtils.isDigitsOnly(name)){
             errorMap.put("name",R.string.invalidName);
@@ -104,9 +100,9 @@ public enum UsersManager {
         return mAuth.createUserWithEmailAndPassword(email, password);
     }
 
-    public void addUserToDatabase(String name, String email) {
+    public void addUserToDatabase(String name, String email/*, String password*/) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null);
+        User user=new User(id,name,email,null/*, password*/);
         mDatabase.child(id).setValue(user);
     }
 
@@ -122,11 +118,81 @@ public enum UsersManager {
         if(preference==FindPreference.BEST_RATED)
             return "Best Rated Place";
 
-        return "My Favourite Spots";
+        if(preference==FindPreference.FAVOURITE_SPOTS)
+            return "My Favourite Spots";
+
+        return "None";
+    }
+
+    public FindPreference getFindPreferenceByPreferenceString(String preference){
+        if(preference.equalsIgnoreCase("Closer To My Location"))
+            return FindPreference.CLOSER_LOCATION;
+
+        if(preference.equalsIgnoreCase("Best Rated Place"))
+            return FindPreference.BEST_RATED;
+
+        if(preference.equalsIgnoreCase("My Favourite Spots"))
+            return FindPreference.FAVOURITE_SPOTS;
+
+        return null;
     }
 
     public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
+    }
+
+    public Map<String, Integer> validateNameAndEmail(String name, String email) {
+
+        Map<String,Integer> errorMap=new HashMap<>();
+
+        if(name.trim().isEmpty() && email.trim().isEmpty()){
+            errorMap.put("email", R.string.emptyEmail);
+            errorMap.put("name",R.string.emptyName);
+            return errorMap;
+        }
+
+        if(name.trim().isEmpty()){
+            errorMap.put("name",R.string.emptyName);
+            return errorMap;
+        }
+
+        if(email.trim().isEmpty()){
+            errorMap.put("email", R.string.emptyEmail);
+            return errorMap;
+        }
+
+        if(android.text.TextUtils.isDigitsOnly(name)) {
+            errorMap.put("name",R.string.invalidName);
+            return errorMap;
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            errorMap.put("email",R.string.invalidEmail);
+        }
+        return errorMap;
+    }
+
+    public void updateUserNameInDatabase(String name) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("name").setValue(name);
+    }
+
+    public void updateUserEmailInDatabase(String email) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("email").setValue(email);
+    }
+
+    public void updateUserFindPreferenceInDatabase(String selectPreference) {
+        String id=mAuth.getCurrentUser().getUid();
+        FindPreference findPreference = this.getFindPreferenceByPreferenceString(selectPreference);
+
+        if(findPreference==null){
+            mDatabase.child(id).child("findPreference").removeValue();
+        }
+        else{
+            mDatabase.child(id).child("findPreference").setValue(findPreference);
+        }
+
     }
 
     public void logoutUser() {
@@ -134,5 +200,26 @@ public enum UsersManager {
         {
             FirebaseAuth.getInstance().signOut();
         }
+    }
+
+    //Não utilizados
+    public DatabaseReference getCurrentUserPasswordReference() {
+        String id=mAuth.getCurrentUser().getUid();
+
+        return mDatabase.child(id).child("password");
+    }
+
+    public String md5_Hash(String s) {
+        MessageDigest m = null;
+
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        m.update(s.getBytes(),0,s.length());
+        String hash = new BigInteger(1, m.digest()).toString(16);
+        return hash;
     }
 }

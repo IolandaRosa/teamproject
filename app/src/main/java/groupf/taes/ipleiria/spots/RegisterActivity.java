@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         final String email=editEmail.getText().toString().trim();
-        final String password=editPassword.getText().toString().trim();
+        String password=editPassword.getText().toString().trim();
         final String name=editName.getText().toString().trim();
         final String confirmationPass=editConfirmationPassword.getText().toString().trim();
 
@@ -93,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                         //#############################
-                        UsersManager.INSTANCE.addUserToDatabase(name,email);
+                        UsersManager.INSTANCE.addUserToDatabase(name,email/*,password*/);
                         //#############################
 
                         startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));

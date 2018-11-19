@@ -63,6 +63,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
       // SpotsManager.getINSTANCE().writeSpotsOnDatabase();

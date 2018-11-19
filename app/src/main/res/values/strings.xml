@@ -37,32 +37,27 @@
     <string name="emptyConfirmationPass">The confirmation password can\'t be empty</string>
     <string name="errorConfirmationPass">The password must be equal to the password</string>
     <string name="none">None</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirmPassword">Please insert your password to confirm:</string>
+    <string name="invalidPassword">The password does not match</string>
+    <string name="noChanges">Nothing was changed</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="hamburgerTitle">Options</string>
-    <string-array name="dashboradIems">
-        <item>
-            Profile
-        </item>
-        <item>
-            Find me a spot
-        </item>
-        <item>
-            My favourite spots
-        </item>
-        <item>
-            My spot
-        </item>
-        <item>
-            Statistics
-        </item>
-        <item>
-            Change my password
-        </item>
-        <item>
-            Logout
-        </item>
+    <string-array name="findPreferencesOptions">
+        <item>None</item>
+        <item>Closer To My Location</item>
+        <item>Best Rated Place</item>
+        <item>My Favourite Spots</item>
     </string-array>
-
-
+    <string-array name="dashboradIems">
+        <item>Profile</item>
+        <item>Find me a spot</item>
+        <item>My favourite spots</item>
+        <item>My spot</item>
+        <item>Statistics</item>
+        <item>Change my password</item>
+        <item>Logout</item>
+    </string-array>
 </resources>
