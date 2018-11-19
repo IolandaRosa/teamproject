@@ -7,7 +7,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -194,6 +193,13 @@ public enum UsersManager {
             mDatabase.child(id).child("findPreference").setValue(findPreference);
         }
 
+    }
+
+    public void logoutUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+        {
+            FirebaseAuth.getInstance().signOut();
+        }
     }
 
     //Não utilizados

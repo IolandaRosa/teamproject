@@ -39,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
         this.editPassword=findViewById(R.id.editTextPassword);
         this.editName=findViewById(R.id.editTextName);
         this.editConfirmationPassword=findViewById(R.id.editTextConfirmationPassword);
+
+
     }
 
     public void onClick_btnRegister(View view) {
@@ -88,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
+
 
                         //#############################
                         UsersManager.INSTANCE.addUserToDatabase(name,email/*,password*/);
