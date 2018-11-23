@@ -58,7 +58,6 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 
-
     @When("^I click on the hambuguer button$")
     public void i_click_on_the_hambuguer_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
@@ -71,7 +70,6 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
             onViewWithText(s).isDisplayed();
         }
     }
-
 
     @When("^I choose other park on the spinner$")
     public void i_choose_other_park_on_the_spinner() {
