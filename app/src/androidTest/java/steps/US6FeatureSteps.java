@@ -34,6 +34,7 @@ public class US6FeatureSteps extends GreenCoffeeSteps {
     @When("^I press the hamburguer button$")
     public void i_press_the_hamburguer_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+
     }
 
     @When("^I press the logout button$")
@@ -45,6 +46,7 @@ public class US6FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I am in the anonymous dashboard page$")
     public void i_am_in_the_anonymous_dashboard_page() {
+        sleep(200);
         onViewWithId(R.id.btnSignup).isDisplayed();
          onViewWithId(R.id.spinner).doesNotExist();
          onViewWithId(R.id.drawer_layout).doesNotExist();
