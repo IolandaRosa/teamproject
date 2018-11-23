@@ -8,18 +8,14 @@ import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
-import com.mauriciotogneri.greencoffee.interactions.ActionableObject;
 
 import org.junit.Assert;
-
-
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
-import modelo.Spot;
 import modelo.SpotsManager;
+
 
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -62,7 +58,6 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 
-
     @When("^I click on the hambuguer button$")
     public void i_click_on_the_hambuguer_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
@@ -75,7 +70,6 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
             onViewWithText(s).isDisplayed();
         }
     }
-
 
     @When("^I choose other park on the spinner$")
     public void i_choose_other_park_on_the_spinner() {

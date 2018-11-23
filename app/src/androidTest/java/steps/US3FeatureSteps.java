@@ -110,7 +110,7 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
     @Then("^I see the autheticated user dashboard$")
     public void i_see_the_autheticated_user_dashboard() {
         onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner);
+        onViewWithId(R.id.spinner).isDisplayed();
         onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 

@@ -51,6 +51,7 @@ public class US5FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
     public void i_press_the_My_Profile_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
         Espresso.onView(withText("Profile")).perform(click());
+        sleep(5000);
     }
 
     @When("^I am in the Profile screen$")
