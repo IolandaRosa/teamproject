@@ -45,6 +45,10 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="hamburgerTitle">Options</string>
+    <string name="chooseWhatSpotYouWantToSee">Please, choose what spot you want.</string>
+    <string name="theBestRatedSpotAvailable">The best rated spot available</string>
+    <string name="theSpotCloserToMe">The spot closer to me</string>
+    <string name="oneOfMyFavouriteSpotAvailable">One of my favourite spot available</string>
     <string name="current_password">Please. insert your current password:</string>
     <string name="new_password">New Password</string>
     <string name="new_password_confirmation">New Password Confirmation</string>
@@ -58,7 +62,7 @@
         <item>Best Rated Place</item>
         <item>My Favourite Spots</item>
     </string-array>
-    <string-array name="dashboradIems">
+    <string-array name="dashboardIems">
         <item>Profile</item>
         <item>Find me a spot</item>
         <item>My favourite spots</item>

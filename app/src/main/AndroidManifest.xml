@@ -46,8 +46,9 @@
         <activity android:name=".DashboardAuthActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".UpdateProfileActivity" />
+        <activity android:name=".ChooseAPreferenceActivity"></activity>
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".UpdateProfileActivity"></activity>
     </application>
 
 </manifest>

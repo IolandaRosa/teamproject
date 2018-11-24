@@ -5,8 +5,12 @@ import android.util.Patterns;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +24,7 @@ public enum UsersManager {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private User currentUser;
 
     UsersManager() {
 
@@ -137,7 +142,7 @@ public enum UsersManager {
         return null;
     }
 
-    public void addFinPreferenceToAUser(String id, FindPreference findPreference) {
+    public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
     }
 
@@ -269,5 +274,23 @@ public enum UsersManager {
         m.update(s.getBytes(),0,s.length());
         String hash = new BigInteger(1, m.digest()).toString(16);
         return hash;
+    }
+
+    public void loadCurrentUser (DatabaseReference ref) {
+        //DatabaseReference ref = this.getUserProfileInfo();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentUser = dataSnapshot.getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 }

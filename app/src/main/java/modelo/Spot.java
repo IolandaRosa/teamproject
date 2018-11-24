@@ -5,16 +5,18 @@ public class Spot {
     private String park;
     private String locationGeo;
     private int status;
+    private int rating;
 
     public Spot(){
 
     }
 
-    public Spot(String spotId, String park, String locationGeo, int status) {
+    public Spot(String spotId, String park, String locationGeo, int status, int rating) {
         this.spotId = spotId;
         this.locationGeo = locationGeo;
         this.status = status;
         this.park = park;
+        this.rating = rating;
     }
 
     public String getSpotId() {
@@ -31,6 +33,10 @@ public class Spot {
 
     public int getStatus() {
         return status;
+    }
+
+    public int getRating() {
+        return rating;
     }
 
 }
