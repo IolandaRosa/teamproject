@@ -40,6 +40,7 @@ import java.util.List;
 
 import modelo.Spot;
 import modelo.SpotsManager;
+import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -58,6 +59,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
+
+    private User currentUser;
 
     private int currentPark;
 
@@ -87,6 +90,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
+
+        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
 
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
@@ -123,10 +128,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentUser = UsersManager.INSTANCE.getCurrentUser();
                 switch (position)
                 {
                     case 0:
                         showProfile();
+                        break;
+                    case 1:
+                        findMeASpot();
                         break;
                     case 6:
                         UsersManager.INSTANCE.logoutUser();
@@ -276,6 +285,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return markers;
     }
 
+    public void findMeASpot() {
+        if (currentUser.getFindPreference() == null) {
+            startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
+        }
+    }
 
 
 }

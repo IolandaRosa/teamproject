@@ -1,5 +1,6 @@
 package modelo;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static java.security.spec.MGF1ParameterSpec.SHA1;
 
-public class User {
+public class User implements Serializable {
     private String id;
     private String name;
     private String email;
@@ -17,7 +18,7 @@ public class User {
     private FindPreference findPreference;
 
     public User(){
-
+        this.favouriteSpots=new ArrayList<>();
     }
 
     public User(String id,String name, String email, FindPreference preference/*, String password*/) {
@@ -55,5 +56,9 @@ public class User {
 
     public void setFindPreference(FindPreference findPreference) {
         this.findPreference = findPreference;
+    }
+
+    public void addFavouriteSpot(Spot spot) {
+        favouriteSpots.add(spot);
     }
 }

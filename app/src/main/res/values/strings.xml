@@ -45,6 +45,10 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="hamburgerTitle">Options</string>
+    <string name="chooseWhatSpotYouWantToSee">Please, choose what spot you want.</string>
+    <string name="theBestRatedSpotAvailable">The best rated spot available</string>
+    <string name="theSpotCloserToMe">The spot closer to me</string>
+    <string name="oneOfMyFavouriteSpotAvailable">One of my favourite spot available</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

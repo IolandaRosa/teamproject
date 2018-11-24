@@ -31,18 +31,29 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        this.user=null;
+        this.user = (User) this.getIntent().getSerializableExtra("user");
+
+    //    this.user=null;
         txtName=findViewById(R.id.txtViewName);
         txtEmail=findViewById(R.id.txtViewEmail);
         txtfindMeAPreference=findViewById(R.id.textViewPreference);
 
-        this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
+        txtName.setText(user.getName());
+        txtEmail.setText(user.getEmail());
+
+        if(user.getFindPreference()!=null){
+            txtfindMeAPreference.setText(UsersManager.INSTANCE.toStringPreference(user.getFindPreference()));
+        }
+
+    //    this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
     }
 
     public static Intent getIntent(Context context) {
         return new Intent(context, ProfileActivity.class);
     }
 
+
+    /*
     public void getProfile(DatabaseReference ref) {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -62,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-    }
+    } */
 
     public void onClick_updateMyProfile(View view) {
         if(user!=null){

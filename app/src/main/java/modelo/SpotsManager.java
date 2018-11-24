@@ -52,14 +52,14 @@ public class SpotsManager {
     public void writeSpotsOnDatabase() {
         List<Spot> spots = new LinkedList<>();
 
-        spots.add(new Spot("A-1", "A", "39.734859,-8.820784", 0));
-        spots.add(new Spot("A-2", "A", "39.734884,-8.820745", 1));
-        spots.add(new Spot("A-3", "A", "39.734909,-8.820708", 0));
-        spots.add(new Spot("A-4", "A", "39,734905,-8.820718", 1));
-        spots.add(new Spot("D-1", "D", "39.734915,-8.820784", 0));
-        spots.add(new Spot("D-2", "D", "39.734922,-8.820745", 1));
-        spots.add(new Spot("D-3", "D", "39.734931,-8.820708", 0));
-        spots.add(new Spot("D-4", "D", "39,734942,-8.820718", 1));
+        spots.add(new Spot("A-1", "A", "39.734859,-8.820784", 0, 2));
+        spots.add(new Spot("A-2", "A", "39.734884,-8.820745", 1, 3));
+        spots.add(new Spot("A-3", "A", "39.734909,-8.820708", 0, 1));
+        spots.add(new Spot("A-4", "A", "39,734905,-8.820718", 1, 4));
+        spots.add(new Spot("D-1", "D", "39.733888,-8.821332", 0, 5));
+        spots.add(new Spot("D-2", "D", "39.733917,-8.821326", 1, 2));
+        spots.add(new Spot("D-3", "D", "39.733937,-8.821340", 0, 1));
+        spots.add(new Spot("D-4", "D", "39,734942,-8.821347", 1, 4));
 
 
         for(Spot s : spots) {
@@ -67,6 +67,7 @@ public class SpotsManager {
             dbRef.child(s.getSpotId()).child("Park").setValue(s.getPark());
             dbRef.child(s.getSpotId()).child("LocationGeo").setValue(s.getLocationGeo());
             dbRef.child(s.getSpotId()).child("Status").setValue(s.getStatus());
+            dbRef.child(s.getSpotId()).child("Rating").setValue(s.getRating());
         }
     }
 
@@ -87,7 +88,7 @@ public class SpotsManager {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
                 for (DataSnapshot d : children) {
-                    Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()));
+                    Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()), Integer.parseInt(d.child("Rating").getValue().toString()));
                     if (spot.getPark().equalsIgnoreCase("A")) {
                         parkingSpotsA.add(spot);
                         if (spot.getStatus() == 0) {

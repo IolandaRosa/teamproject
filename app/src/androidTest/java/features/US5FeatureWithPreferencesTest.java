@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeConfig;
 import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
-import com.mauriciotogneri.greencoffee.Scenario;
 import com.mauriciotogneri.greencoffee.ScenarioConfig;
 
 import org.junit.AfterClass;
@@ -68,7 +67,7 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
         if(registerTask.isSuccessful()){
             UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
             //Colocar as preferencias no Manel
-            UsersManager.INSTANCE.addFinPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
+            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
             //todo tratar caso do sleep para sincronização de threads
             sleep(1000);
         }
@@ -89,7 +88,7 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
                 if(users==null){
                     UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
                     //Colocar as preferencias no Manel
-                    UsersManager.INSTANCE.addFinPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
+                    UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
                     //todo tratar caso do sleep para sincronização de threads
                     sleep(1000);
                 }
