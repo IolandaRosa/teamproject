@@ -46,12 +46,12 @@ public class US9FeatureWithoutFavouritesSteps extends GreenCoffeeSteps {
         Espresso.onView(withText(options[1])).perform(click());
     }
 
-    @Then("^I see the buttons with the options The best spot available and The spot closer to me$")
+    @Then("^I see buttons with the options The best spot available and The spot closer to me$")
     public void i_see_buttons_with_the_options_The_best_spot_available_and_The_spot_closer_to_me() {
-        onViewWithText(R.id.btnBestRatedSpot).isDisplayed();
+        onViewWithId(R.id.btnBestRatedSpot).isDisplayed();
         onViewWithId(R.id.btnCloserToMe).isDisplayed();
-        onViewWithText(R.id.btnBestRatedSpot).contains(string(R.string.theBestRatedSpotAvailable));
-        onViewWithText(R.id.btnCloserToMe).contains(string(R.string.theSpotCloserToMe));
+        onViewWithId(R.id.btnBestRatedSpot).contains(string(R.string.theBestRatedSpotAvailable));
+        onViewWithId(R.id.btnCloserToMe).contains(string(R.string.theSpotCloserToMe));
     }
 
     @Then("^I don't see the buttonn with the option One of my favourite spot available$")
