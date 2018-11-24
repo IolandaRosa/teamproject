@@ -134,6 +134,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 1:
                         findMeASpot();
                         break;
+                    case 5:
+                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        break;
                     case 6:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));

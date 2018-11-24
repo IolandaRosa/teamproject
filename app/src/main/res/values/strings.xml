@@ -35,12 +35,12 @@
     <string name="txtLastInfoDate">Latest data obtained at:</string>
     <string name="OK">Ok</string>
     <string name="emptyConfirmationPass">The confirmation password can\'t be empty</string>
-    <string name="errorConfirmationPass">The password must be equal to the password</string>
+    <string name="errorConfirmationPass">The confirmation password must be equal to the password</string>
     <string name="none">None</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="confirmPassword">Please insert your password to confirm:</string>
-    <string name="invalidPassword">The password does not match</string>
+    <string name="invalidPassword">The password inserted does not match with your current password</string>
     <string name="noChanges">Nothing was changed</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -49,6 +49,13 @@
     <string name="theBestRatedSpotAvailable">The best rated spot available</string>
     <string name="theSpotCloserToMe">The spot closer to me</string>
     <string name="oneOfMyFavouriteSpotAvailable">One of my favourite spot available</string>
+    <string name="current_password">Please. insert your current password:</string>
+    <string name="new_password">New Password</string>
+    <string name="new_password_confirmation">New Password Confirmation</string>
+    <string name="errorNewPasswordEquals">The new password must be different from the current password</string>
+    <string name="btnReturn">Return to Dashboard</string>
+    <string name="delete">Delete</string>
+    <string name="emptySpotsList">Your favourite spots list is empty</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

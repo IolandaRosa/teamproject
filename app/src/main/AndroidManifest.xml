@@ -48,6 +48,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ChooseAPreferenceActivity"></activity>
+        <activity android:name=".ChangePasswordActivity" />
     </application>
 
 </manifest>
