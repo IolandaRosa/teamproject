@@ -10,9 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +19,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -121,7 +118,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void addDrawerItems() {
-        mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboradIems, android.R.layout.simple_list_item_1);
+        mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -278,7 +275,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void showProfile() {
-        startActivity(ProfileActivity.getIntent(this));
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
+        startActivity(ProfileActivity.getIntent(this).putExtra("user", currentUser));
     }
 
     public static List<Marker> getMarkers() {

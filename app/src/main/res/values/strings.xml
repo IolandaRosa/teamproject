@@ -55,7 +55,7 @@
         <item>Best Rated Place</item>
         <item>My Favourite Spots</item>
     </string-array>
-    <string-array name="dashboradIems">
+    <string-array name="dashboardIems">
         <item>Profile</item>
         <item>Find me a spot</item>
         <item>My favourite spots</item>

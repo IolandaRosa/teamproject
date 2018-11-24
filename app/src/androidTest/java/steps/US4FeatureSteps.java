@@ -65,7 +65,7 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the options: Profile, Find me a spot, My favourite Spots, My Spot, Statistics, Change My Password, Logout, Dashboard$")
     public void i_see_the_options_Profile_Find_me_a_spot_My_favourite_Spots_My_Spot_Statistics_Change_My_Password_Logout_Dashboard() {
-        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboradIems);
+        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
         for (String s : options) {
             onViewWithText(s).isDisplayed();
         }
