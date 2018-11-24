@@ -2,7 +2,7 @@ Feature: Updated Profile for an authenticate user
   As a user I want to update my profile information
 
   Background:
-  Given I am an authenticate user
+    Given I am an authenticate user
     When I am in my profile screen
     And I click on the "Update my profile" button
     Then I am on update my profile screen
@@ -72,7 +72,7 @@ Feature: Updated Profile for an authenticate user
     And I see the password confirmation displayed
     And I type "111111111" on password field
     And I press the Ok button
-    Then I see an error message displayed saying "The password does not match"
+    Then I see an error message displayed saying "The password inserted does not match with your current password"
 
   Scenario: Update profile change email (Happy Path)
     When I type "maria_jesus@email.com" on email
@@ -98,7 +98,7 @@ Feature: Updated Profile for an authenticate user
     And I see the password confirmation displayed
     And I type "111111111" on password field
     And I press the Ok button
-    Then I see an error message displayed saying "The password does not match"
+    Then I see an error message displayed saying "The password inserted does not match with your current password"
 
   Scenario: Update profile preference (Happy Path)
     When I click on the spinner
@@ -122,5 +122,5 @@ Feature: Updated Profile for an authenticate user
     And I confirm the authentication email is now "maria_juventina@email.com"
 
   Scenario: Update profile cancel
-      And I press the Cancel button
-      Then I see the profile activity displayed
+    And I press the Cancel button
+    Then I see the profile activity displayed

@@ -92,5 +92,9 @@ Feature: Register as an anonymous user
     And I type my password "123456677" on password field
     And I type my confirmation password "123456678" on confirmation password field
     And I click the register button in the register screen
-    And I see the error message "The password must be equal to the password" on the confirmation password field
+    And I see the error message "The confirmation password must be equal to the password" on the confirmation password field
     Then The application assert that no user was authenticated and added on database
+
+  Scenario: Cancel the register
+    Given I click on the already authenticated button
+    Then I see the login screen displayed

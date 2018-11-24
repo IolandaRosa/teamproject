@@ -202,6 +202,54 @@ public enum UsersManager {
         }
     }
 
+    public Map<String, Integer> validateChangePassword(String oldPassword, String newPassword, String newPasswordConfirmation) {
+
+        Map<String,Integer> errorMap=new HashMap<>();
+
+        if(oldPassword.trim().isEmpty() && newPassword.trim().isEmpty() && newPasswordConfirmation.trim().isEmpty()){
+            errorMap.put("emptyFields",R.string.emptyFields);
+            return errorMap;
+        }
+
+        if(oldPassword.trim().isEmpty()){
+            errorMap.put("currentPassword",R.string.emptyPassword);
+            return errorMap;
+        }
+
+        if(oldPassword.length() < 8){
+            errorMap.put("currentPassword",R.string.invalidPasswordLength);
+            return errorMap;
+        }
+
+        if(newPassword.trim().isEmpty()){
+            errorMap.put("newPassword",R.string.emptyPassword);
+            return errorMap;
+        }
+
+        if(newPassword.length() < 8){
+            errorMap.put("newPassword",R.string.invalidPasswordLength);
+            return errorMap;
+        }
+
+        if(newPasswordConfirmation.trim().isEmpty()){
+            errorMap.put("newPasswordConfirmation",R.string.emptyConfirmationPass);
+            return errorMap;
+        }
+
+
+        if(!newPassword.equals(newPasswordConfirmation)){
+            errorMap.put("passwordMismatch",R.string.errorConfirmationPass);
+            return errorMap;
+        }
+
+        if(oldPassword.equals(newPassword)){
+            errorMap.put("newInvalidPassword",R.string.errorNewPasswordEquals);
+            return errorMap;
+        }
+
+        return errorMap;
+    }
+
     //Não utilizados
     public DatabaseReference getCurrentUserPasswordReference() {
         String id=mAuth.getCurrentUser().getUid();

@@ -110,7 +110,7 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
     @Then("^I see the autheticated user dashboard$")
     public void i_see_the_autheticated_user_dashboard() {
         onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner).isDisplayed();
+        onViewWithId(R.id.spinner);
         onViewWithId(R.id.drawer_layout).isDisplayed();
     }
 
@@ -143,6 +143,20 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
     @When("^I see the error message \"([^\"]*)\" on the password field$")
     public void i_see_the_error_message_on_the_password_field(String arg1) {
         onViewWithId(R.id.editTextPassword).hasErrorText(arg1);
+    }
+
+    @Given("^I click on the already authenticated button$")
+    public void i_click_on_the_already_authenticated_button() {
+        closeKeyboard();
+        onViewWithId(R.id.btnAlreadyAuth).isDisplayed().click();
+    }
+
+    @Then("^I see the login screen displayed$")
+    public void i_see_the_login_screen_displayed() {
+        onViewWithId(R.id.buttonLogin).isDisplayed().check(matches(withText(R.string.btnLogin)));
+        onViewWithId(R.id.buttonRegister).isDisplayed().check(matches(withText(R.string.btnRegister)));
+        onViewWithText("Email").isDisplayed();
+        onViewWithText("Password").isDisplayed();
     }
 
 

@@ -6,6 +6,10 @@ public class Spot {
     private String locationGeo;
     private int status;
 
+    public Spot(){
+
+    }
+
     public Spot(String spotId, String park, String locationGeo, int status) {
         this.spotId = spotId;
         this.locationGeo = locationGeo;
@@ -28,4 +32,5 @@ public class Spot {
     public int getStatus() {
         return status;
     }
+
 }
