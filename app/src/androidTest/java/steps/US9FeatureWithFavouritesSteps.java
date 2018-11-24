@@ -20,7 +20,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class US9FeatureWithoutFavouritesSteps extends GreenCoffeeSteps {
+public class US9FeatureWithFavouritesSteps extends GreenCoffeeSteps {
     private User currentUser;
 
     @Given("^I am an authenticated user $")
@@ -34,9 +34,9 @@ public class US9FeatureWithoutFavouritesSteps extends GreenCoffeeSteps {
         Assert.assertNull(currentUser.getFindPreference());
     }
 
-    @Given("^I don't have favourites spots$")
-    public void i_don_t_have_favourites_spots() {
-        Assert.assertEquals(0, currentUser.getFavouriteSpots().size());
+    @Given("^I have favourites spots$")
+    public void i_have_favourites_spots() {
+        Assert.assertNotEquals(0, currentUser.getFavouriteSpots().size());
     }
 
     @When("^I press the Find Me a Spot on the menu $")
@@ -46,19 +46,16 @@ public class US9FeatureWithoutFavouritesSteps extends GreenCoffeeSteps {
         Espresso.onView(withText(options[1])).perform(click());
     }
 
-    @Then("^I see buttons with the options The best spot available and The spot closer to me$")
-    public void i_see_buttons_with_the_options_The_best_spot_available_and_The_spot_closer_to_me() {
+    @Then("^I see buttons with the options The best spot available, The spot closer to me and One of my favourite spot available$")
+    public void i_see_buttons_with_the_options_The_best_spot_available_The_spot_closer_to_me_and_One_of_my_favourite_spot_available() {
         onViewWithId(R.id.btnBestRatedSpot).isDisplayed();
         onViewWithId(R.id.btnCloserToMe).isDisplayed();
         onViewWithId(R.id.btnBestRatedSpot).contains(string(R.string.theBestRatedSpotAvailable));
         onViewWithId(R.id.btnCloserToMe).contains(string(R.string.theSpotCloserToMe));
-    }
-
-    @Then("^I don't see the button with the option One of my favourite spot available$")
-    public void i_don_t_see_the_button_with_the_option_One_of_my_favourite_spot_available() {
-        onViewWithId(R.id.btnOneOfFavourites).isNotDisplayed();
+        onViewWithId(R.id.btnOneOfFavourites).isDisplayed();
         onViewWithId(R.id.btnOneOfFavourites).contains(string(R.string.oneOfMyFavouriteSpotAvailable));
     }
+
 
 
 }
