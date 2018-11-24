@@ -134,10 +134,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
             startActivity(ProfileActivity.getIntent(this));
         }
-
-
-
-
     }
 
 
@@ -169,111 +165,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
-
-
-
-            /*DatabaseReference passwordRef=UsersManager.INSTANCE.getCurrentUserPasswordReference();
-
-
-
-            passwordRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    final String userPass=dataSnapshot.getValue(String.class);
-
-                    if(!userPass.equals(UsersManager.INSTANCE.md5_Hash(password))){
-                        InternetConnectionManager.INSTANCE.showErrorMessage(UpdateProfileActivity.this,R.string.invalidPassword);
-                    }
-                    else{
-                        final String email = editTextEmail.getText().toString();
-                        final String selectPreference = spinnerPreferences.getSelectedItem().toString();
-
-                        Toast.makeText(UpdateProfileActivity.this,userPass,Toast.LENGTH_LONG).show();*/
-
-                        /*AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
-                        Task<Void> task = FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credentials);
-
-                        try{
-                            Tasks.await(task);
-
-                            Tasks.await(FirebaseAuth.getInstance().getCurrentUser().updateEmail(email));
-
-                            UsersManager.INSTANCE.updateUserEmailInDatabase(email);
-                            UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }*/
-
-                        /*
-                        Task<Void> voidTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
-
-                        //todo - change
-                        sleep(5000);
-
-                        voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    //Toast.makeText(UpdateProfileActivity.this,"1 - Email Updated",Toast.LENGTH_LONG).show();
-                                    UsersManager.INSTANCE.updateUserEmailInDatabase(email);
-                                    UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
-                                    startActivity(ProfileActivity.getIntent(UpdateProfileActivity.this));
-                                }else{
-
-                                    AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
-                                    Task<Void> reauthenticate = FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credentials);
-
-                                    //todo - change
-                                    sleep(5000);
-
-                                    reauthenticate.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                Task<Void> updateTask = FirebaseAuth.getInstance().getCurrentUser().updateEmail(email);
-
-                                                //todo - change
-                                                sleep(5000);
-
-                                                updateTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful()){
-                                                            //Toast.makeText(UpdateProfileActivity.this,"2 - Email Updated",Toast.LENGTH_LONG).show();
-                                                            UsersManager.INSTANCE.updateUserEmailInDatabase(email);
-                                                            UsersManager.INSTANCE.updateUserFindPreferenceInDatabase(selectPreference);
-                                                            startActivity(ProfileActivity.getIntent(UpdateProfileActivity.this));
-                                                        }
-                                                        else{
-                                                            Toast.makeText(UpdateProfileActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                                });
-
-
-                                            }
-                                            else{
-                                                Toast.makeText(UpdateProfileActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });*/
-
-                   /* }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });*/
         }
     }
 }
