@@ -21,7 +21,7 @@ public class SpotsManager {
 
     private List<Spot> parkingSpotsA;
     private List<Spot> parkingSpotsD;
-    //private List<Spot> parkingSpots;
+    private List<Spot> parkingSpots;
 
    /* private int freeSpots = 0;
     private int ocuppiedSpots = 0; */
@@ -40,9 +40,10 @@ public class SpotsManager {
 //        database.setPersistenceEnabled(true);
         dbRef = database.getReference().child("ParkingSpots");
         dbRef.keepSynced(true);
-       // parkingSpots = new LinkedList<>();
+        parkingSpots = new LinkedList<>();
         parkingSpotsA = new LinkedList<>();
         parkingSpotsD= new LinkedList<>();
+
 
 
         //writeSpotsOnDatabase();
@@ -155,6 +156,15 @@ public class SpotsManager {
         return ocuppiedSpotsParkD;
     }
 
+
+    public List<Spot> getFreeParkingSpots() {
+
+        parkingSpots.clear();
+        parkingSpots.addAll(parkingSpotsA);
+        parkingSpots.addAll(parkingSpotsD);
+
+        return parkingSpots;
+    }
 }
 
 

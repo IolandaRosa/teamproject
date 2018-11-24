@@ -2,12 +2,17 @@ package groupf.taes.ipleiria.spots;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
@@ -38,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -64,6 +72,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private int currentPark;
 
+
+
+    private LocationManager lm = null;
+    LatLng currentLocation = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
        // FirebaseAuth.getInstance().signOut();
@@ -90,6 +102,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
+
+
+
 
         UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
 
@@ -232,6 +247,16 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             editor.commit();
         }
 
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+            @Override
+            public void onMyLocationChange(Location arg0) {
+                // TODO Auto-generated method stub
+                currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
+                //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+            }
+        });
+
     }
 
     public  void putMarkers()
@@ -278,18 +303,129 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void showProfile() {
-        startActivity(ProfileActivity.getIntent(this));
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
+        startActivity(ProfileActivity.getIntent(this).putExtra("user",currentUser));
     }
 
     public static List<Marker> getMarkers() {
         return markers;
     }
 
+
+
+    //mudar aqui se ele ja tiver preferencias entao, nao mostrra a atividade
     public void findMeASpot() {
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
+        }else{
+            //
+            LatLng choosenSpot = null;
+            //LatLng currentLocation = null;
+
+               switch (currentUser.getFindPreference())
+               {
+                   case BEST_RATED:
+
+                       break;
+
+                   case CLOSER_LOCATION:
+                       choosenSpot = closestSpot(currentLocation);
+                       //chamar o gMap ou o here para das as indicações
+
+                       break;
+
+                   case FAVOURITE_SPOTS:
+
+                       break;
+
+
+
+               }
+
         }
     }
 
+    public float distance (double lat_a, double lng_a, double lat_b, double lng_b )
+    {
+        double earthRadius = 3958.75;
+        double latDiff = Math.toRadians(lat_b-lat_a);
+        double lngDiff = Math.toRadians(lng_b-lng_a);
+        double a = Math.sin(latDiff /2) * Math.sin(latDiff /2) +
+                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
+                        Math.sin(lngDiff /2) * Math.sin(lngDiff /2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double distance = earthRadius * c;
 
+        int meterConversion = 1609;
+
+        return new Float(distance * meterConversion).floatValue();
+    }
+
+
+    private LatLng closestSpot(LatLng currentLocation) {
+
+        Spot choosenSpot = null;
+        LatLng spotCoordenates = null;
+        float smallerDistance = Float.MAX_VALUE;
+        float currentDistance = 0;
+        for (Spot spot: SpotsManager.getINSTANCE().getFreeParkingSpots())
+        {
+
+            spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
+
+            currentDistance =distance(currentLocation.latitude,currentLocation.longitude,spotCoordenates.latitude,spotCoordenates.longitude);
+           if(currentDistance < smallerDistance)
+           {
+               smallerDistance = currentDistance;
+               choosenSpot = spot;
+           }
+
+        }
+        return getCoordenatesFromSting(choosenSpot.getLocationGeo());
+
+    }
+    private LatLng getCoordenatesFromSting(String s)
+    {
+        String[] coordenates = s.split(",");
+        return new LatLng(Double.parseDouble(coordenates[0]),Double.parseDouble(coordenates[1]));
+    }
+
+
+
+
+    /*   PolylineOptions rectOptions = new PolylineOptions()
+                            .add(new LatLng(39.735235, Float.parseFloat(a)))
+                            .add(new LatLng(39.735187, -8.820460))
+                            .add(new LatLng(39.735132, -8.820341)).width(2f).color(Color.RED);
+                    mMap.addPolyline(rectOptions);*/
+
+           /* if (canGetLocation() == false) {
+                showSettingsAlert();
+                //DO SOMETHING USEFUL HERE. ALL GPS PROVIDERS ARE CURRENTLY ENABLED
+            } else {
+
+
+
+
+            }*/
+
+
+                 /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+
+            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.app_name);
+            PolylineOptions rectOptions = new PolylineOptions()
+                    .add(new LatLng(longitude, latitude))
+                    .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
+                    .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
+                    .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
+                    .add(new LatLng(37.35, -122.0)); // Closes the polyline.
+
+                // Get back the mutable Polyline
+            Polyline polyline = mMap.addPolyline(rectOptions);
+
+        */
 }
