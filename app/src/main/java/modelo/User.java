@@ -61,4 +61,8 @@ public class User implements Serializable {
     public void addFavouriteSpot(Spot spot) {
         favouriteSpots.add(spot);
     }
+
+    public void setFavouriteSpots(List<Spot> favouriteSpots) {
+        this.favouriteSpots = favouriteSpots;
+    }
 }

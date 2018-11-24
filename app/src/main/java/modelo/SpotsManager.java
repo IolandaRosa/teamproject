@@ -155,6 +155,10 @@ public class SpotsManager {
         return ocuppiedSpotsParkD;
     }
 
+    public String toStringStatus(int status) {
+        return status==0?"Free":"Occupied";
+    }
+
 }
 
 

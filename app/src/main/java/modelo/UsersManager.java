@@ -14,7 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import groupf.taes.ipleiria.spots.R;
@@ -281,8 +283,25 @@ public enum UsersManager {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.getValue(User.class);
+            public void onDataChange(DataSnapshot ds) {
+               // currentUser = dataSnapshot.getValue(User.class);
+                FindPreference preference;
+                Object ob = ds.child("findPreference").getValue();
+                if (ob == null) {
+                    preference = null;
+                } else {
+                    preference = UsersManager.INSTANCE.getFindPreferenceByPreferenceString(ob.toString());
+                }
+
+                currentUser = new User(ds.child("id").getValue().toString(), ds.child("name").getValue().toString(), ds.child("email").getValue().toString(), preference);
+                ArrayList<Spot> favouriteSpots = new ArrayList<Spot>();
+
+                for (DataSnapshot d : ds.child("favouriteSpots").getChildren()) {
+                    Spot s = d.getValue(Spot.class);
+
+                    favouriteSpots.add(s);
+                }
+                currentUser.setFavouriteSpots(favouriteSpots);
             }
 
             @Override
@@ -293,4 +312,12 @@ public enum UsersManager {
     public User getCurrentUser() {
         return currentUser;
     }
+
+    public DatabaseReference getFavouriteSpotsList() {
+
+        String id=mAuth.getCurrentUser().getUid();
+
+        return mDatabase.child(id).child("favouriteSpots");
+    }
+
 }
