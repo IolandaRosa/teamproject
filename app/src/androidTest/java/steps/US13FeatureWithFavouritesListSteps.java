@@ -75,7 +75,6 @@ public class US13FeatureWithFavouritesListSteps extends GreenCoffeeSteps {
         onData(anything()).atPosition(0).onChildView(withId(R.id.spotPark)).check(matches(withText("Park: D")));
         onData(anything()).atPosition(0).onChildView(withId(R.id.spotStatus)).check(matches(withText("Status: Free    ")));
         onData(anything()).atPosition(0).onChildView(withId(R.id.spotRate)).check(matches(withText("Rate: "+Integer.toString(arg2))));
-
     }
 
     @Then("^I see the name A-(\\d+), park D, status Occupied and the rate (\\d+) displayed on the list$")
