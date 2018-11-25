@@ -67,7 +67,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         currentPark = 0;
       // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+        SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if(FirebaseAuth.getInstance().getCurrentUser()==null){
             startActivity(DashboardActivity.getIntent(this));
@@ -80,6 +80,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
+        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
@@ -88,7 +90,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+
 
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
@@ -133,6 +135,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         break;
                     case 1:
                         findMeASpot();
+                        break;
+                    case 2:
+                        startActivity(FavouriteSpotsListActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 5:
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
@@ -210,7 +215,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        SpotsManager.getINSTANCE().getParkingSpotsD();
+        SpotsManager.INSTANCE.getParkingSpotsD();
 
         putMarkers();
 
@@ -221,14 +226,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         if (!checkInternetConnection() && sharedPref.contains("dateLastInfo")) {
             String str = sharedPref.getString("dateLastInfo", null);
-            SpotsManager.getINSTANCE().setDateOfData(str);
+            SpotsManager.INSTANCE.setDateOfData(str);
             lastInfoDateTxt.setText(str);
             //  String date = df.format(sharedPref.)
             //  lastInfoDateTxt.setText(date);
         } else{
             //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
-            lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
-            editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
+            lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
+            editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
         }
 
@@ -244,15 +249,15 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         if (currentPark == 0) {
             LatLng parkD = new LatLng(39.734994, -8.820697);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-            spots = SpotsManager.getINSTANCE().getParkingSpotsA();
-            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkA();
-            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkA();
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+            freeSpots = SpotsManager.INSTANCE.getFreeSpotsParkA();
+            ocuppiedSpots = SpotsManager.INSTANCE.getOcuppiedSpotsParkA();
         } else {
             LatLng parkD = new LatLng(39.733890, -8.821281);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-            spots = SpotsManager.getINSTANCE().getParkingSpotsD();
-            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkD();
-            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkD();
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+            freeSpots = SpotsManager.INSTANCE.getFreeSpotsParkD();
+            ocuppiedSpots = SpotsManager.INSTANCE.getOcuppiedSpotsParkD();
         }
 
         for(Spot s : spots) {
@@ -278,7 +283,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void showProfile() {
-        currentUser = UsersManager.INSTANCE.getCurrentUser();
+      //  currentUser = UsersManager.INSTANCE.getCurrentUser();
         startActivity(ProfileActivity.getIntent(this).putExtra("user", currentUser));
     }
 

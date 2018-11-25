@@ -25,31 +25,26 @@ import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.Spot;
-import modelo.SpotsManager;
-import modelo.User;
 import modelo.UsersManager;
-import steps.US9FeatureWithFavouritesSteps;
-import steps.US9FeatureWithoutFavouritesSteps;
-
-import static android.os.SystemClock.sleep;
+import steps.US13FeatureWithFavouritesListSteps;
 
 @RunWith(Parameterized.class)
-public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
+public class US13FeatureWithFavouritesListTest extends GreenCoffeeTest {
     @Rule
-    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
+    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US9FeatureWithFavouritesTest(ScenarioConfig scenario) {
+    public US13FeatureWithFavouritesListTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS9WithFavourites.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS13WithFavouriteSpotsList.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US9FeatureWithFavouritesSteps());
+        start(new US13FeatureWithFavouritesListSteps());
     }
 
     @BeforeClass
@@ -84,7 +79,7 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
         }
     }
 
-    //Apagar esse user de teste da BD auth e da BD de Users
+
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
@@ -94,10 +89,13 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
+            //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();
@@ -107,7 +105,4 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
             }
         }
     }
-
-
-
 }

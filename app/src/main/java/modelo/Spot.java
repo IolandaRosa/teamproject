@@ -1,6 +1,8 @@
 package modelo;
 
-public class Spot {
+import java.io.Serializable;
+
+public class Spot implements Serializable {
     private String spotId;
     private String park;
     private String locationGeo;

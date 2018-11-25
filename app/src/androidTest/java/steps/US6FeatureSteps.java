@@ -34,6 +34,7 @@ public class US6FeatureSteps extends GreenCoffeeSteps {
     @When("^I press the hamburguer button$")
     public void i_press_the_hamburguer_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
     }
 
     @When("^I press the logout button$")

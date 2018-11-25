@@ -32,7 +32,7 @@ public class US1FeatureWithoutConnectionSteps extends GreenCoffeeSteps {
     @Then("^I see the date that the information was last updated$")
     public void i_see_the_date_that_the_information_was_last_updated() {
         onViewWithId(R.id.lastInfoDate).isNotEmpty();
-        onViewWithId(R.id.lastInfoDate).contains(SpotsManager.getINSTANCE().getDateOfData());
+        onViewWithId(R.id.lastInfoDate).contains(SpotsManager.INSTANCE.getDateOfData());
     }
 
 }
