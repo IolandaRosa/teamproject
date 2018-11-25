@@ -30,7 +30,6 @@ public class ChooseAPreferenceActivity extends AppCompatActivity {
         return new Intent(context, ChooseAPreferenceActivity.class);
     }
 
-
     public void onClickBtnBestRatedSpot(View view) {
     }
 
