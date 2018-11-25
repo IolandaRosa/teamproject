@@ -44,7 +44,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             return;
         }
 
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+        SpotsManager.INSTANCE.readSpotsDataFromDatabase();
         setContentView(R.layout.activity_dashboard);
 
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
@@ -64,7 +64,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-       for(Spot s : SpotsManager.getINSTANCE().getParkingSpotsA()) {
+       for(Spot s : SpotsManager.INSTANCE.getParkingSpotsA()) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
@@ -74,8 +74,8 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
 
-        freeSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkA()));
-        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkA()));
+        freeSpotsTxt.setText(String.valueOf(SpotsManager.INSTANCE.getFreeSpotsParkA()));
+        occupiedSpotsTxt.setText(String.valueOf(SpotsManager.INSTANCE.getOcuppiedSpotsParkA()));
 
 
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
@@ -83,11 +83,11 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
 
         if (!checkInternetConnection() && sharedPref.contains("dateLastInfo")) {
             String str = sharedPref.getString("dateLastInfo", null);
-            SpotsManager.getINSTANCE().setDateOfData(str);
+            SpotsManager.INSTANCE.setDateOfData(str);
             lastInfoDateTxt.setText(str);
         } else {
-            lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
-            editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
+            lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
+            editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
         }
 

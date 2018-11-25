@@ -19,10 +19,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.Spot;
+import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 import steps.US9FeatureWithFavouritesSteps;
@@ -51,41 +54,34 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
 
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
-        //Criar um utilizador maria@email.pt com password "12345678"
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        //2º - Ver se o utilizador já existe (em principio não deve existir)
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
-        //todo tratar caso do sleep para sincronização de threads
-        sleep(5000);
-        //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
+        //regista o utilizador
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots1@email.pt", "12345678");
+
+        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        while(!registerTask.isComplete())
+            Thread.sleep(1);
+
+        List<Spot> spots=new ArrayList<>();
+        spots.add(new Spot("A-1","D","1,2",0,4));
+        spots.add(new Spot("A-2","D","-1,5",1,0));
+
         if(registerTask.isSuccessful()){
-            //Quer dizer que utilizador não existia então acrescenta utilizador na BD
-            UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
-            //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
+            //Coloca utilizador na BD sem spots
+            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots1@email.pt", spots);
         }
-   /*     else{
-            //Se não for successfull significa que email ja existia e podemos fazer login
-            //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
+        else{
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots1@email.pt", "12345678");
 
-            //Fazemos login
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
+            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
-            if(loginTask.isSuccessful()){
-                //Temos de ver se utilizador já existe na Bd e se não existir acrescentar
-                DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                if(users==null){
-                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
-                }
-                //se não é porque já existe e não temos de fazer nada
-
-            }
-        } */
-
+            //Coloca utilizador na BD sem spots
+            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots1@email.pt", spots);
+        }
     }
 
     //Apagar esse user de teste da BD auth e da BD de Users

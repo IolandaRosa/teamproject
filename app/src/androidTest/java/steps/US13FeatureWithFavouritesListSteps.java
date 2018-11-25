@@ -14,6 +14,7 @@ import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.SpotsManager;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -38,6 +39,7 @@ public class US13FeatureWithFavouritesListSteps extends GreenCoffeeSteps {
     @Then("^I open the menu$")
     public void i_open_the_menu() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
     }
 
     @Given("^I press the \"([^\"]*)\" option$")

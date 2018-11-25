@@ -146,6 +146,19 @@ public enum UsersManager {
         return "None";
     }
 
+    public FindPreference getFindPreference(String preference){
+        if(preference.equalsIgnoreCase("CLOSER_LOCATION"))
+            return FindPreference.CLOSER_LOCATION;
+
+        if(preference.equalsIgnoreCase("BEST_RATED"))
+            return FindPreference.BEST_RATED;
+
+        if(preference.equalsIgnoreCase("FAVOURITE_SPOTS"))
+            return FindPreference.FAVOURITE_SPOTS;
+
+        return null;
+    }
+
     public FindPreference getFindPreferenceByPreferenceString(String preference){
         if(preference.equalsIgnoreCase("Closer To My Location"))
             return FindPreference.CLOSER_LOCATION;
@@ -322,7 +335,8 @@ public enum UsersManager {
 
                 Object preferenceObject = ds.child("findPreference").getValue();
                 if (preferenceObject != null) {
-                    preference = UsersManager.INSTANCE.getFindPreferenceByPreferenceString(preferenceObject.toString());
+                   // String str = preferenceObject.toString();
+                    preference = UsersManager.INSTANCE.getFindPreference(preferenceObject.toString());
                 }
 
                 currentUser = new User(id, name, email, preference);
@@ -350,5 +364,11 @@ public enum UsersManager {
         String id=mAuth.getCurrentUser().getUid();
 
         return mDatabase.child(id).child("favouriteSpots");
+    }
+
+    public void addFavouriteSpotsList(User user, Spot spot) {
+        user.addFavouriteSpot(spot);
+        List<Spot> userSpots = user.getFavouriteSpots();
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("favouriteSpots").setValue(userSpots);
     }
 }

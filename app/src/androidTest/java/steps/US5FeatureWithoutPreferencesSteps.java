@@ -50,12 +50,15 @@ public class US5FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        Espresso.onView(withText("Profile")).perform(click());
-        sleep(5000);
+        sleep(500);
+        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
+        Espresso.onView(withText(options[0])).perform(click());
+        //sleep(5000);
     }
 
     @When("^I am in the Profile screen$")
     public void i_am_in_the_Profile_screen() {
+        sleep(500);
         onViewWithId(R.id.btnMyPreferences).isDisplayed().check(matches(withText(R.string.btnMyPreferences)));
         onViewWithId(R.id.btnFavouriteSpots).isDisplayed().check(matches(withText(R.string.btnFavouriteSpots)));
         onViewWithId(R.id.btnUpdateMyProfile).isDisplayed().check(matches(withText(R.string.btnUpdateMyProfile)));

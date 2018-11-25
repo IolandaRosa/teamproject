@@ -29,8 +29,9 @@ public class US8FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I select the menu option \"([^\"]*)\" the dashboard autheticated screen$")
     public void i_select_the_menu_option_the_dashboard_autheticated_screen(String arg1) {
-        sleep(700);
+        //sleep(700);
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         onView(withText(arg1)).perform(click());
     }
 
