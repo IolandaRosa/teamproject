@@ -72,6 +72,7 @@ public class SpotAdapter extends ArrayAdapter<Spot> {
 
                 spots.remove(position);
                 notifyDataSetChanged();
+                spots.clear();
 
             }
         });
