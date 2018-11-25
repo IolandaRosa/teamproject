@@ -18,7 +18,6 @@ public class ChooseAPreferenceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_apreference);
 
         User user = (User) this.getIntent().getSerializableExtra("user");
-        //  user.addFavouriteSpot(new Spot("AAS", "smk", "98310", 0));
         btnFavouriteSpot = findViewById(R.id.btnOneOfFavourites);
         if (user.getFavouriteSpots().size() == 0) {
             btnFavouriteSpot.setVisibility(View.INVISIBLE);
