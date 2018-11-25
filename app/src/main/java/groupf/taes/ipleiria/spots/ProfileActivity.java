@@ -31,21 +31,21 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        this.user = (User) this.getIntent().getSerializableExtra("user");
+        //this.user = (User) this.getIntent().getSerializableExtra("user");
 
-    //    this.user=null;
+        this.user=null;
         txtName=findViewById(R.id.txtViewName);
         txtEmail=findViewById(R.id.txtViewEmail);
         txtfindMeAPreference=findViewById(R.id.textViewPreference);
 
-        txtName.setText(user.getName());
+        /*txtName.setText(user.getName());
         txtEmail.setText(user.getEmail());
 
         if(user.getFindPreference()!=null){
             txtfindMeAPreference.setText(UsersManager.INSTANCE.toStringPreference(user.getFindPreference()));
-        }
+        }*/
 
-    //    this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
+        this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
     }
 
     public static Intent getIntent(Context context) {
@@ -53,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    /*
     public void getProfile(DatabaseReference ref) {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -73,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-    } */
+    }
 
     public void onClick_updateMyProfile(View view) {
         if(user!=null){
@@ -85,4 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    public void onClick_btnFavouriteSpots(View view) {
+        startActivity(FavouriteSpotsListActivity.getIntent(this));
+    }
 }

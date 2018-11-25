@@ -156,7 +156,7 @@ public class SpotsManager {
     }
 
     public String toStringStatus(int status) {
-        return status==0?"Free":"Occupied";
+        return status==0?"Free    ":"Occupied";
     }
 
 }

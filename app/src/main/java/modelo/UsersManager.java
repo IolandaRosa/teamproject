@@ -16,7 +16,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import groupf.taes.ipleiria.spots.R;
@@ -30,7 +30,6 @@ public enum UsersManager {
 
     UsersManager() {
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
         //mDatabase.keepSynced(true);
 
@@ -110,6 +109,22 @@ public enum UsersManager {
     public void addUserToDatabase(String name, String email/*, String password*/) {
         String id=mAuth.getCurrentUser().getUid();
         User user=new User(id,name,email,null/*, password*/);
+        /*List<Spot> spots=new ArrayList<>();
+        spots.add(new Spot("A-1","D","1,2",0,4));
+        spots.add(new Spot("A-2","D","1,2",0,0));
+        spots.add(new Spot("A-3","D","1,2",0,4));
+        spots.add(new Spot("A-4","D","1,2",0,0));
+        spots.add(new Spot("A-5","D","1,2",0,4));
+        spots.add(new Spot("A-6","D","1,2",0,0));
+        user.setFavouriteSpots(spots);*/
+        mDatabase.child(id).setValue(user);
+    }
+
+    //Usado apenas para testes
+    public void addUserWithSpotsToDatabase(String name,String email,List<Spot> spots){
+        String id=mAuth.getCurrentUser().getUid();
+        User user=new User(id,name,email,null/*, password*/);
+        user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
     }
 
@@ -285,15 +300,32 @@ public enum UsersManager {
             @Override
             public void onDataChange(DataSnapshot ds) {
                // currentUser = dataSnapshot.getValue(User.class);
-                FindPreference preference;
-                Object ob = ds.child("findPreference").getValue();
-                if (ob == null) {
-                    preference = null;
-                } else {
-                    preference = UsersManager.INSTANCE.getFindPreferenceByPreferenceString(ob.toString());
+                FindPreference preference=null;
+                String id=null;
+                String name=null;
+                String email=null;
+
+                Object idObject = ds.child("id").getValue();
+                if (idObject != null) {
+                    id = idObject.toString();
                 }
 
-                currentUser = new User(ds.child("id").getValue().toString(), ds.child("name").getValue().toString(), ds.child("email").getValue().toString(), preference);
+                Object nameObject = ds.child("name").getValue();
+                if (nameObject != null) {
+                    name = nameObject.toString();
+                }
+
+                Object emailObject = ds.child("email").getValue();
+                if (emailObject != null) {
+                    email = emailObject.toString();
+                }
+
+                Object preferenceObject = ds.child("findPreference").getValue();
+                if (preferenceObject != null) {
+                    preference = UsersManager.INSTANCE.getFindPreferenceByPreferenceString(preferenceObject.toString());
+                }
+
+                currentUser = new User(id, name, email, preference);
                 ArrayList<Spot> favouriteSpots = new ArrayList<Spot>();
 
                 for (DataSnapshot d : ds.child("favouriteSpots").getChildren()) {
@@ -319,5 +351,4 @@ public enum UsersManager {
 
         return mDatabase.child(id).child("favouriteSpots");
     }
-
 }

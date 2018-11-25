@@ -45,7 +45,7 @@ public class SpotAdapter extends ArrayAdapter<Spot> {
         spotId.setText("Name: "+spot.getSpotId());
         spotPark.setText("Park: "+spot.getPark());
         spotStatus.setText("Status: "+SpotsManager.getINSTANCE().toStringStatus(spot.getStatus()));
-        spotRate.setText("Rate: ");
+        spotRate.setText("Rate: "+String.valueOf(spot.getRating()));
 
 
         Button button=convertView.findViewById(R.id.btnDelete);

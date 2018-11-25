@@ -10,18 +10,20 @@ import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
 
-public class US13FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
+public class US13FeatureWithoutFavouritesListSteps extends GreenCoffeeSteps {
     @Given("^I am an authenticated user with no favourite spots$")
     public void i_am_an_authenticated_user_with_no_favourite_spots() {
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
-        //have no favourite spots
     }
 
     @When("^I am in the profile screen$")
