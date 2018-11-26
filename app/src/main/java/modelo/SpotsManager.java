@@ -19,7 +19,7 @@ public enum SpotsManager {
 
     private List<Spot> parkingSpotsA;
     private List<Spot> parkingSpotsD;
-    //private List<Spot> parkingSpots;
+    private List<Spot> parkingSpots;
 
    /* private int freeSpots = 0;
     private int ocuppiedSpots = 0; */
@@ -38,7 +38,7 @@ public enum SpotsManager {
 //        database.setPersistenceEnabled(true);
         dbRef = database.getReference().child("ParkingSpots");
         dbRef.keepSynced(true);
-       // parkingSpots = new LinkedList<>();
+        parkingSpots = new LinkedList<>();
         parkingSpotsA = new LinkedList<>();
         parkingSpotsD= new LinkedList<>();
 
@@ -153,6 +153,15 @@ public enum SpotsManager {
         return status==0?"Free    ":"Occupied";
     }
 
+
+    public List<Spot> getFreeParkingSpots() {
+
+        parkingSpots.clear();
+        parkingSpots.addAll(parkingSpotsA);
+        parkingSpots.addAll(parkingSpotsD);
+
+        return parkingSpots;
+    }
 }
 
 

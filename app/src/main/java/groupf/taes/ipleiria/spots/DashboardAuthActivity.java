@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +24,10 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
@@ -60,6 +70,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private int currentPark;
+    private LatLng currentLocation = null;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +81,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
       // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
-        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
             return;
         }
@@ -86,14 +98,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
 
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
 
 
         spinner = findViewById(R.id.spinner);
-        spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.maps,android.R.layout.simple_spinner_item);
+        spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maps, android.R.layout.simple_spinner_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -117,6 +129,21 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         setupDrawer();
 
         //mapFragment.getMapAsync(this);
+
+        // Para saber a localização do dispositivo
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+            @Override
+            public void onMyLocationChange(Location arg0) {
+                // TODO Auto-generated method stub
+                currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
+                int a = 2;
+                //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+            }
+        });*/
     }
 
     private void addDrawerItems() {
@@ -230,7 +257,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             lastInfoDateTxt.setText(str);
             //  String date = df.format(sharedPref.)
             //  lastInfoDateTxt.setText(date);
-        } else{
+        } else {
             //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
             lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
             editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
@@ -260,7 +287,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             ocuppiedSpots = SpotsManager.INSTANCE.getOcuppiedSpotsParkD();
         }
 
-        for(Spot s : spots) {
+        for (Spot s : spots) {
             if (s.getStatus() == 0) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
@@ -283,7 +310,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void showProfile() {
-      //  currentUser = UsersManager.INSTANCE.getCurrentUser();
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
         startActivity(ProfileActivity.getIntent(this).putExtra("user", currentUser));
     }
 
@@ -291,11 +318,174 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return markers;
     }
 
+
+    //mudar aqui se ele ja tiver preferencias entao, nao mostrra a atividade
     public void findMeASpot() {
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
+        } else {
+            //
+            LatLng choosenSpot = null;
+            //LatLng currentLocation = null;
+
+
+            switch (currentUser.getFindPreference()) {
+                case BEST_RATED:
+
+                    break;
+
+                case CLOSER_LOCATION:
+                    choosenSpot = closestSpot(currentLocation);
+                    //chamar o gMap ou o here para das as indicações
+                       /*Uri gmmIntentUri = Uri.parse("google.navigation:q=Taronga+Zoo,+Sydney+Australia");
+                       Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                       mapIntent.setPackage("com.google.android.apps.maps");
+                       startActivity(mapIntent);*/
+
+                    String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    startActivity(intent);
+
+                    break;
+
+                case FAVOURITE_SPOTS:
+
+                    break;
+
+
+            }
+
         }
     }
 
+    public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double earthRadius = 3958.75;
+        double latDiff = Math.toRadians(lat_b - lat_a);
+        double lngDiff = Math.toRadians(lng_b - lng_a);
+        double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
+                        Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = earthRadius * c;
 
+        int meterConversion = 1609;
+
+        return new Float(distance * meterConversion).floatValue();
+    }
+
+
+    private LatLng closestSpot(LatLng currentLocation) {
+        LatLng location;
+        Spot choosenSpot = null;
+        LatLng spotCoordenates = null;
+        float smallerDistance = Float.MAX_VALUE;
+        float currentDistance = 0;
+        for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
+            spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
+
+            // NOVO CÓDIGO PARA SABER A LOCALIZAçAO
+            // ISTO É ASSINCRINO R PORQUE NÃO TEM TEMPO!! ESTA A ESOIRA
+
+            Task<Location> loc = mFusedLocationClient.getLastLocation();
+
+            while (!loc.isComplete()) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
+                    if (location != null) {
+                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
+                    }
+                }
+            });
+
+            // Código retirado de : https://developers.google.com/android/guides/tasks
+
+            /*
+            int numCores = Runtime.getRuntime().availableProcessors();
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(numCores * 2, numCores *2,
+                    60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+            // PUUUUUUMMMMMM !!! SSSSSSHHHHHHH !!!
+            loc.addOnCompleteListener(executor, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    String ola  = " CHEGUE AQUI ";
+                }
+            });
+
+
+            //loc.getResult().getLatitude();
+            //loc.getResult().getLongitude();
+
+            // END DO NOVO CÓDIGO
+
+
+            // Estoira aqui -- currentLocation is null
+            /*if (currentLocation == null){
+                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+                    @Override
+                    public void onMyLocationChange(Location arg0) {
+                        // TODO Auto-generated method stub
+                        currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
+                        int a = 2;
+                        //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+                    }
+                });
+            }*/
+            currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
+            if (currentDistance < smallerDistance) {
+                smallerDistance = currentDistance;
+                choosenSpot = spot;
+            }
+
+        }
+        return getCoordenatesFromSting(choosenSpot.getLocationGeo());
+
+    }
+
+    private LatLng getCoordenatesFromSting(String s) {
+        String[] coordenates = s.split(",");
+        return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
+    }
+
+    /*   PolylineOptions rectOptions = new PolylineOptions()
+                            .add(new LatLng(39.735235, Float.parseFloat(a)))
+                            .add(new LatLng(39.735187, -8.820460))
+                            .add(new LatLng(39.735132, -8.820341)).width(2f).color(Color.RED);
+                    mMap.addPolyline(rectOptions);*/
+
+           /* if (canGetLocation() == false) {
+                showSettingsAlert();
+                //DO SOMETHING USEFUL HERE. ALL GPS PROVIDERS ARE CURRENTLY ENABLED
+            } else {
+            }*/
+
+                 /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+
+            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.app_name);
+            PolylineOptions rectOptions = new PolylineOptions()
+                    .add(new LatLng(longitude, latitude))
+                    .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
+                    .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
+                    .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
+                    .add(new LatLng(37.35, -122.0)); // Closes the polyline.
+
+                // Get back the mutable Polyline
+            Polyline polyline = mMap.addPolyline(rectOptions);
+
+        */
 }
