@@ -38,19 +38,19 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I see the free spots markers on the map$")
     public void i_see_the_free_spots_markers_on_the_map() {
-        Assert.assertEquals(DashboardAuthActivity.getMarkers().size(), SpotsManager.getINSTANCE().getFreeSpotsParkA());
+        Assert.assertEquals(DashboardAuthActivity.getMarkers().size(), SpotsManager.INSTANCE.getFreeSpotsParkA());
     }
 
     @When("^I see the information of total free spots, total of ocupied spots and the date of update$")
     public void i_see_the_information_of_total_free_spots_total_of_ocupied_spots_and_the_date_of_update() {
         onViewWithId(R.id.txtNumberFreeSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkA()));
+        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.INSTANCE.getFreeSpotsParkA()));
 
         onViewWithId(R.id.txtNumberOcuppiedSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkA()));
+        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.INSTANCE.getOcuppiedSpotsParkA()));
 
         onViewWithId(R.id.lastInfoDate).isDisplayed();
-        onViewWithId(R.id.lastInfoDate).contains(String.valueOf(SpotsManager.getINSTANCE().getDateOfData()));
+        onViewWithId(R.id.lastInfoDate).contains(String.valueOf(SpotsManager.INSTANCE.getDateOfData()));
     }
 
     @When("^I see the hamburger button for the menu $")
@@ -65,7 +65,7 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the options: Profile, Find me a spot, My favourite Spots, My Spot, Statistics, Change My Password, Logout, Dashboard$")
     public void i_see_the_options_Profile_Find_me_a_spot_My_favourite_Spots_My_Spot_Statistics_Change_My_Password_Logout_Dashboard() {
-        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboradIems);
+        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
         for (String s : options) {
             onViewWithText(s).isDisplayed();
         }
@@ -86,20 +86,20 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I see the free spots markers on the map of the other park$")
     public void i_see_the_free_spots_markers_on_the_map_of_the_other_park() {
-        Assert.assertEquals(DashboardAuthActivity.getMarkers().size(), SpotsManager.getINSTANCE().getFreeSpotsParkD());
+        Assert.assertEquals(DashboardAuthActivity.getMarkers().size(), SpotsManager.INSTANCE.getFreeSpotsParkD());
     }
 
 
     @Then("^the information of total free spots and total of ocupied spots for that park$")
     public void the_information_of_total_free_spots_and_total_of_ocupied_spots_for_that_park() {
         onViewWithId(R.id.txtNumberFreeSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getFreeSpotsParkD()));
+        onViewWithId(R.id.txtNumberFreeSpots).contains(String.valueOf(SpotsManager.INSTANCE.getFreeSpotsParkD()));
 
         onViewWithId(R.id.txtNumberOcuppiedSpots).isDisplayed();
-        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.getINSTANCE().getOcuppiedSpotsParkD()));
+        onViewWithId(R.id.txtNumberOcuppiedSpots).contains(String.valueOf(SpotsManager.INSTANCE.getOcuppiedSpotsParkD()));
 
         onViewWithId(R.id.lastInfoDate).isDisplayed();
-        onViewWithId(R.id.lastInfoDate).contains(String.valueOf(SpotsManager.getINSTANCE().getDateOfData()));
+        onViewWithId(R.id.lastInfoDate).contains(String.valueOf(SpotsManager.INSTANCE.getDateOfData()));
     }
 
 }

@@ -14,7 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import groupf.taes.ipleiria.spots.R;
@@ -28,7 +30,6 @@ public enum UsersManager {
 
     UsersManager() {
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
         //mDatabase.keepSynced(true);
 
@@ -108,6 +109,22 @@ public enum UsersManager {
     public void addUserToDatabase(String name, String email/*, String password*/) {
         String id=mAuth.getCurrentUser().getUid();
         User user=new User(id,name,email,null/*, password*/);
+        /*List<Spot> spots=new ArrayList<>();
+        spots.add(new Spot("A-1","D","1,2",0,4));
+        spots.add(new Spot("A-2","D","1,2",0,0));
+        spots.add(new Spot("A-3","D","1,2",0,4));
+        spots.add(new Spot("A-4","D","1,2",0,0));
+        spots.add(new Spot("A-5","D","1,2",0,4));
+        spots.add(new Spot("A-6","D","1,2",0,0));
+        user.setFavouriteSpots(spots);*/
+        mDatabase.child(id).setValue(user);
+    }
+
+    //Usado apenas para testes
+    public void addUserWithSpotsToDatabase(String name,String email,List<Spot> spots){
+        String id=mAuth.getCurrentUser().getUid();
+        User user=new User(id,name,email,null/*, password*/);
+        user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
     }
 
@@ -127,6 +144,19 @@ public enum UsersManager {
             return "My Favourite Spots";
 
         return "None";
+    }
+
+    public FindPreference getFindPreference(String preference){
+        if(preference.equalsIgnoreCase("CLOSER_LOCATION"))
+            return FindPreference.CLOSER_LOCATION;
+
+        if(preference.equalsIgnoreCase("BEST_RATED"))
+            return FindPreference.BEST_RATED;
+
+        if(preference.equalsIgnoreCase("FAVOURITE_SPOTS"))
+            return FindPreference.FAVOURITE_SPOTS;
+
+        return null;
     }
 
     public FindPreference getFindPreferenceByPreferenceString(String preference){
@@ -207,6 +237,54 @@ public enum UsersManager {
         }
     }
 
+    public Map<String, Integer> validateChangePassword(String oldPassword, String newPassword, String newPasswordConfirmation) {
+
+        Map<String,Integer> errorMap=new HashMap<>();
+
+        if(oldPassword.trim().isEmpty() && newPassword.trim().isEmpty() && newPasswordConfirmation.trim().isEmpty()){
+            errorMap.put("emptyFields",R.string.emptyFields);
+            return errorMap;
+        }
+
+        if(oldPassword.trim().isEmpty()){
+            errorMap.put("currentPassword",R.string.emptyPassword);
+            return errorMap;
+        }
+
+        if(oldPassword.length() < 8){
+            errorMap.put("currentPassword",R.string.invalidPasswordLength);
+            return errorMap;
+        }
+
+        if(newPassword.trim().isEmpty()){
+            errorMap.put("newPassword",R.string.emptyPassword);
+            return errorMap;
+        }
+
+        if(newPassword.length() < 8){
+            errorMap.put("newPassword",R.string.invalidPasswordLength);
+            return errorMap;
+        }
+
+        if(newPasswordConfirmation.trim().isEmpty()){
+            errorMap.put("newPasswordConfirmation",R.string.emptyConfirmationPass);
+            return errorMap;
+        }
+
+
+        if(!newPassword.equals(newPasswordConfirmation)){
+            errorMap.put("passwordMismatch",R.string.errorConfirmationPass);
+            return errorMap;
+        }
+
+        if(oldPassword.equals(newPassword)){
+            errorMap.put("newInvalidPassword",R.string.errorNewPasswordEquals);
+            return errorMap;
+        }
+
+        return errorMap;
+    }
+
     //Não utilizados
     public DatabaseReference getCurrentUserPasswordReference() {
         String id=mAuth.getCurrentUser().getUid();
@@ -233,8 +311,43 @@ public enum UsersManager {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.getValue(User.class);
+            public void onDataChange(DataSnapshot ds) {
+               // currentUser = dataSnapshot.getValue(User.class);
+                FindPreference preference=null;
+                String id=null;
+                String name=null;
+                String email=null;
+
+                Object idObject = ds.child("id").getValue();
+                if (idObject != null) {
+                    id = idObject.toString();
+                }
+
+                Object nameObject = ds.child("name").getValue();
+                if (nameObject != null) {
+                    name = nameObject.toString();
+                }
+
+                Object emailObject = ds.child("email").getValue();
+                if (emailObject != null) {
+                    email = emailObject.toString();
+                }
+
+                Object preferenceObject = ds.child("findPreference").getValue();
+                if (preferenceObject != null) {
+                   // String str = preferenceObject.toString();
+                    preference = UsersManager.INSTANCE.getFindPreference(preferenceObject.toString());
+                }
+
+                currentUser = new User(id, name, email, preference);
+                ArrayList<Spot> favouriteSpots = new ArrayList<Spot>();
+
+                for (DataSnapshot d : ds.child("favouriteSpots").getChildren()) {
+                    Spot s = d.getValue(Spot.class);
+
+                    favouriteSpots.add(s);
+                }
+                currentUser.setFavouriteSpots(favouriteSpots);
             }
 
             @Override
@@ -244,5 +357,18 @@ public enum UsersManager {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public DatabaseReference getFavouriteSpotsList() {
+
+        String id=mAuth.getCurrentUser().getUid();
+
+        return mDatabase.child(id).child("favouriteSpots");
+    }
+
+    public void addFavouriteSpotsList(User user, Spot spot) {
+        user.addFavouriteSpot(spot);
+        List<Spot> userSpots = user.getFavouriteSpots();
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("favouriteSpots").setValue(userSpots);
     }
 }

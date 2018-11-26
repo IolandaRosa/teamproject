@@ -1,7 +1,5 @@
 package modelo;
 
-import android.provider.ContactsContract;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,8 +12,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SpotsManager {
-    private static final SpotsManager INSTANCE = new SpotsManager();
+public enum SpotsManager {
+    INSTANCE;
     private FirebaseDatabase database;
     private DatabaseReference dbRef;
 
@@ -33,7 +31,7 @@ public class SpotsManager {
 
 
 
-    public SpotsManager() {
+    SpotsManager() {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
 
@@ -43,7 +41,6 @@ public class SpotsManager {
         parkingSpots = new LinkedList<>();
         parkingSpotsA = new LinkedList<>();
         parkingSpotsD= new LinkedList<>();
-
 
 
         //writeSpotsOnDatabase();
@@ -119,10 +116,6 @@ public class SpotsManager {
 
     }
 
-    public static SpotsManager getINSTANCE() {
-        return INSTANCE;
-    }
-
     public String getDateOfData() {
         return dateOfData;
     }
@@ -154,6 +147,10 @@ public class SpotsManager {
 
     public int getOcuppiedSpotsParkD() {
         return ocuppiedSpotsParkD;
+    }
+
+    public String toStringStatus(int status) {
+        return status==0?"Free    ":"Occupied";
     }
 
 

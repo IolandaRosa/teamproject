@@ -34,13 +34,14 @@ public class US6FeatureSteps extends GreenCoffeeSteps {
     @When("^I press the hamburguer button$")
     public void i_press_the_hamburguer_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-
+        sleep(500);
     }
 
     @When("^I press the logout button$")
     public void i_press_the_logout_button() {
-
-        Espresso.onView(withText("Logout")).perform(click());
+        //Espresso.onView(withText("Logout")).perform(click());
+        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
+        Espresso.onView(withText(options[6])).perform(click());
         sleep(2000);
     }
 

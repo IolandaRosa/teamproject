@@ -13,7 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -49,6 +52,7 @@ import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -56,23 +60,26 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
+
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
+
     private User currentUser;
+
     private int currentPark;
     private LatLng currentLocation = null;
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // FirebaseAuth.getInstance().signOut();
+       // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-        // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
-        SpotsManager.getINSTANCE().readSpotsDataFromDatabase();
+      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+        SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
@@ -85,6 +92,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
+        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
@@ -93,7 +102,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+
 
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maps, android.R.layout.simple_spinner_item);
@@ -112,7 +121,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
             }
         });
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -139,7 +147,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void addDrawerItems() {
-        mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboradIems, android.R.layout.simple_list_item_1);
+        mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -147,15 +155,19 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentUser = UsersManager.INSTANCE.getCurrentUser();
-                switch (position) {
+                switch (position)
+                {
                     case 0:
                         showProfile();
                         break;
                     case 1:
                         findMeASpot();
                         break;
+                    case 2:
+                        startActivity(FavouriteSpotsListActivity.getIntent(DashboardAuthActivity.this));
+                        break;
                     case 5:
-                        //startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 6:
                         UsersManager.INSTANCE.logoutUser();
@@ -217,6 +229,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         int id = item.getItemId();
 
 
+
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -229,7 +242,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        SpotsManager.getINSTANCE().getParkingSpotsD();
+        SpotsManager.INSTANCE.getParkingSpotsD();
 
         putMarkers();
 
@@ -240,22 +253,21 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         if (!checkInternetConnection() && sharedPref.contains("dateLastInfo")) {
             String str = sharedPref.getString("dateLastInfo", null);
-            SpotsManager.getINSTANCE().setDateOfData(str);
+            SpotsManager.INSTANCE.setDateOfData(str);
             lastInfoDateTxt.setText(str);
             //  String date = df.format(sharedPref.)
             //  lastInfoDateTxt.setText(date);
         } else {
             //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
-            lastInfoDateTxt.setText(SpotsManager.getINSTANCE().getDateOfData());
-            editor.putString("dateLastInfo", SpotsManager.getINSTANCE().getDateOfData());
+            lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
+            editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
         }
 
-
     }
 
-
-    public void putMarkers() {
+    public  void putMarkers()
+    {
         markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
@@ -264,15 +276,15 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         if (currentPark == 0) {
             LatLng parkD = new LatLng(39.734994, -8.820697);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-            spots = SpotsManager.getINSTANCE().getParkingSpotsA();
-            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkA();
-            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkA();
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+            freeSpots = SpotsManager.INSTANCE.getFreeSpotsParkA();
+            ocuppiedSpots = SpotsManager.INSTANCE.getOcuppiedSpotsParkA();
         } else {
             LatLng parkD = new LatLng(39.733890, -8.821281);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(parkD));
-            spots = SpotsManager.getINSTANCE().getParkingSpotsD();
-            freeSpots = SpotsManager.getINSTANCE().getFreeSpotsParkD();
-            ocuppiedSpots = SpotsManager.getINSTANCE().getOcuppiedSpotsParkD();
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+            freeSpots = SpotsManager.INSTANCE.getFreeSpotsParkD();
+            ocuppiedSpots = SpotsManager.INSTANCE.getOcuppiedSpotsParkD();
         }
 
         for (Spot s : spots) {
@@ -369,7 +381,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         LatLng spotCoordenates = null;
         float smallerDistance = Float.MAX_VALUE;
         float currentDistance = 0;
-        for (Spot spot : SpotsManager.getINSTANCE().getFreeParkingSpots()) {
+        for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
             spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
 
             // NOVO CÓDIGO PARA SABER A LOCALIZAçAO
