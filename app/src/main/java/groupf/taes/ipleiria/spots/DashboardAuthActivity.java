@@ -1,22 +1,14 @@
 package groupf.taes.ipleiria.spots;
 
-
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,27 +34,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
 import modelo.Spot;
-import modelo.SpotAdapter;
 import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -70,7 +54,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
-
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
@@ -80,7 +63,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private int currentPark;
-    private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -143,17 +125,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-            @Override
-            public void onMyLocationChange(Location arg0) {
-                // TODO Auto-generated method stub
-                currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-                int a = 2;
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-            }
-        });*/
     }
 
     public static Task<Location> getLocation() {
@@ -248,14 +219,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-
-
-        // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -271,8 +235,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         putMarkers();
 
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
-
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -280,10 +242,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             String str = sharedPref.getString("dateLastInfo", null);
             SpotsManager.INSTANCE.setDateOfData(str);
             lastInfoDateTxt.setText(str);
-            //  String date = df.format(sharedPref.)
-            //  lastInfoDateTxt.setText(date);
+
         } else {
-            //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
+
             lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
             editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
@@ -367,16 +328,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 case FAVOURITE_SPOTS:
                     //startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
                     //break;
-                    List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
-                    if(favouriteSpots.isEmpty()){
-                        InternetConnectionManager.INSTANCE.showErrorMessage(DashboardAuthActivity.this,R.string.emptySpotsList);
-                        return;
-                    }
-                    Spot bestRatedSpot = getBestRatedSpot(favouriteSpots);
-                    System.out.println(bestRatedSpot.getRating() + bestRatedSpot.getSpotId());
-                    LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
-                    startMapsActivityWithChoosenSpot(bestRatedCoordinates.latitude, bestRatedCoordinates.longitude);
-                    break;
+                startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
+
+                break;
             }
 
         }
@@ -384,23 +338,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     //Do meu
 
-    private void startMapsActivityWithChoosenSpot(double latitude, double longitude) {
-        String uri = "http://maps.google.com/maps?&daddr=" + latitude + "," + longitude;
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setPackage("com.google.android.apps.maps");
-        startActivity(intent);
-    }
 
-    public static Spot getBestRatedSpot(List<Spot> spots) {
-        Spot best = spots.get(0);
-        for (Spot s : spots) {
-            if (s.getStatus()==0 && s.getRating() >= best.getRating()) {
-                best = s;
-            }
-        }
-
-        return best;
-    }
 
 
     //------------------------

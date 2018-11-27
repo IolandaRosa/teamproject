@@ -11,6 +11,7 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 import junit.framework.Assert;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.Spot;
@@ -35,7 +36,7 @@ public class US12FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see that the spot returned from my list is the best rated free spot$")
     public void i_see_that_the_spot_returned_from_my_list_is_the_best_rated_free_spot() {
-        Spot bestRatedSpot = DashboardAuthActivity.getBestRatedSpot(UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots());
+        Spot bestRatedSpot = FindMeASpotActivity.getBestRatedSpot(UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots());
         Assert.assertEquals(bestRatedSpot.getSpotId(),"A-1");
     }
 }
