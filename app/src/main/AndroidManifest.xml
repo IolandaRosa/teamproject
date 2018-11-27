@@ -49,7 +49,8 @@
         <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ChooseAPreferenceActivity" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".FavouriteSpotsListActivity"></activity>
+        <activity android:name=".FavouriteSpotsListActivity" />
+        <activity android:name=".FindMeASpotActivity" />
     </application>
 
 </manifest>
