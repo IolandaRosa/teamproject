@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +22,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,19 +36,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.InternetConnectionManager;
 import modelo.Spot;
+import modelo.SpotAdapter;
 import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
-
 
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
@@ -75,10 +78,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // FirebaseAuth.getInstance().signOut();
+        //FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -87,9 +90,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         setContentView(R.layout.activity_dashboard_auth);
+
         markers = new LinkedList<>();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
+
         mapFragment.getMapAsync(this);
 
         UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
@@ -97,12 +103,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
-
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-
-
 
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maps, android.R.layout.simple_spinner_item);
@@ -118,7 +121,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //empty
-
             }
         });
 
@@ -132,20 +134,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-
-        /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-            @Override
-            public void onMyLocationChange(Location arg0) {
-                // TODO Auto-generated method stub
-                currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-                int a = 2;
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-            }
-        });*/
     }
 
+    //Menu Hamburguer
     private void addDrawerItems() {
         mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
@@ -155,8 +146,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentUser = UsersManager.INSTANCE.getCurrentUser();
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         showProfile();
                         break;
@@ -174,7 +164,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
                 }
-
             }
         });
     }
@@ -202,11 +191,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
-
     public static Intent getIntent(Context context) {
         return new Intent(context, DashboardAuthActivity.class);
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -226,9 +213,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
+        //int id = item.getItemId();
 
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -246,7 +231,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         putMarkers();
 
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
+        //DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
 
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -263,11 +248,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
         }
-
     }
 
-    public  void putMarkers()
-    {
+    public void putMarkers() {
         markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
@@ -324,16 +307,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
-            //
             LatLng choosenSpot = null;
             //LatLng currentLocation = null;
 
-
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
-
                     break;
-
                 case CLOSER_LOCATION:
                     choosenSpot = closestSpot(currentLocation);
                     //chamar o gMap ou o here para das as indicações
@@ -342,21 +321,38 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                        mapIntent.setPackage("com.google.android.apps.maps");
                        startActivity(mapIntent);*/
 
-                    String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    intent.setPackage("com.google.android.apps.maps");
-                    startActivity(intent);
+                    startMapsActivityWithChoosenSpot(choosenSpot.latitude, choosenSpot.longitude);
 
                     break;
 
                 case FAVOURITE_SPOTS:
-
+                    List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
+                    Spot bestRatedSpot = getBestRatedSpot(favouriteSpots);
+                    System.out.println(bestRatedSpot.getRating() + bestRatedSpot.getSpotId());
+                    LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
+                    startMapsActivityWithChoosenSpot(bestRatedCoordinates.latitude, bestRatedCoordinates.longitude);
                     break;
-
-
             }
 
         }
+    }
+
+    private void startMapsActivityWithChoosenSpot(double latitude, double longitude) {
+        String uri = "http://maps.google.com/maps?&daddr=" + latitude + "," + longitude;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
+
+    private static Spot getBestRatedSpot(List<Spot> spots) {
+        Spot best = spots.get(0);
+        for (Spot s : spots) {
+            if (s.getStatus()==0 && s.getRating() >= best.getRating()) {
+                best = s;
+            }
+        }
+
+        return best;
     }
 
     public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
@@ -384,11 +380,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
             spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
 
-            // NOVO CÓDIGO PARA SABER A LOCALIZAçAO
-            // ISTO É ASSINCRINO R PORQUE NÃO TEM TEMPO!! ESTA A ESOIRA
-
             Task<Location> loc = mFusedLocationClient.getLastLocation();
 
+            //Como é assincrono espera que calcule a location antes de prosseguir
             while (!loc.isComplete()) {
                 try {
                     Thread.sleep(1);
@@ -396,52 +390,18 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     e.printStackTrace();
                 }
             }
+
             loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     // Got last known location. In some rare situations this can be null.
                     //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
                     if (location != null) {
-                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
+                        System.out.println("location: " + location.getLatitude() + location.getLongitude());
                     }
                 }
             });
 
-            // Código retirado de : https://developers.google.com/android/guides/tasks
-
-            /*
-            int numCores = Runtime.getRuntime().availableProcessors();
-            ThreadPoolExecutor executor = new ThreadPoolExecutor(numCores * 2, numCores *2,
-                    60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-
-            // PUUUUUUMMMMMM !!! SSSSSSHHHHHHH !!!
-            loc.addOnCompleteListener(executor, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    String ola  = " CHEGUE AQUI ";
-                }
-            });
-
-
-            //loc.getResult().getLatitude();
-            //loc.getResult().getLongitude();
-
-            // END DO NOVO CÓDIGO
-
-
-            // Estoira aqui -- currentLocation is null
-            /*if (currentLocation == null){
-                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        // TODO Auto-generated method stub
-                        currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-                        int a = 2;
-                        //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-                    }
-                });
-            }*/
             currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
             if (currentDistance < smallerDistance) {
                 smallerDistance = currentDistance;

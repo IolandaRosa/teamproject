@@ -31,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        this.user = (User) this.getIntent().getSerializableExtra("user");
+        //this.user = (User) this.getIntent().getSerializableExtra("user");
 
 
       //  this.user=null;
@@ -39,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtEmail=findViewById(R.id.txtViewEmail);
         txtfindMeAPreference=findViewById(R.id.textViewPreference);
 
-        if (user != null) {
+        /*if (user != null) {
             txtName.setText(user.getName());
             txtEmail.setText(user.getEmail());
 
@@ -48,9 +48,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         } else {  // principalmente por causa dos testes
             this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
-        }
+        }*/
 
-     //   this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
+        this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
     }
 
     public static Intent getIntent(Context context) {
