@@ -10,7 +10,6 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import junit.framework.Assert;
 
-import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;

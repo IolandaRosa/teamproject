@@ -2,7 +2,7 @@ package steps;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
@@ -16,8 +16,9 @@ import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.SpotsManager;
 
-
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
+;
 
 public class US4FeatureSteps extends GreenCoffeeSteps {
     @Given("^I am an authenticated user$")

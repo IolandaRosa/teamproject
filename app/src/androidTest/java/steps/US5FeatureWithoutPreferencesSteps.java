@@ -1,12 +1,7 @@
 package steps;
 
-import android.app.ActionBar;
-import android.support.annotation.NavigationRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
@@ -16,22 +11,14 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import junit.framework.Assert;
 
-import groupf.taes.ipleiria.spots.DashboardActivity;
-import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 public class US5FeatureWithoutPreferencesSteps extends GreenCoffeeSteps {
 

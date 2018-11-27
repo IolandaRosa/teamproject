@@ -24,7 +24,6 @@ import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
-import steps.US4FeatureSteps;
 import steps.US6FeatureSteps;
 
 import static android.os.SystemClock.sleep;
@@ -54,10 +53,11 @@ public class US6FeatureTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        //2º - Ver se o utilizador já existe (em principio não deve existir)
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("mariaTest@email.pt", "12345678");
-        //todo tratar caso do sleep para sincronização de threads
-        sleep(5000);
+
+        //todo - aplicar sincronização
+        while(!registerTask.isComplete())
+            Thread.sleep(1);
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
         if(registerTask.isSuccessful()){
             //Quer dizer que utilizador não existia então acrescenta utilizador na BD
@@ -65,23 +65,19 @@ public class US6FeatureTest extends GreenCoffeeTest {
             //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
         }
         else{
-            //Se não for successfull significa que email ja existia e podemos fazer login
-            //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
-
-            //Fazemos login
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("mariaTest@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - aplicar sincronização
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
-                //Temos de ver se utilizador já existe na Bd e se não existir acrescentar
+
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                 if(users==null){
                     UsersManager.INSTANCE.addUserToDatabase("Maria Pt","mariaTest@email.pt");
                 }
-                //se não é porque já existe e não temos de fazer nada
-
             }
         }
     }
@@ -98,8 +94,10 @@ public class US6FeatureTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - aplicar sincronização
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();

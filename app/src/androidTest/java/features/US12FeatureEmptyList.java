@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,13 +26,15 @@ import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.FindPreference;
 import modelo.UsersManager;
 import steps.US12FeatureEmptyListSteps;
-import steps.US12FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US12FeatureEmptyList extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US12FeatureEmptyList(ScenarioConfig scenario) {
         super(scenario);

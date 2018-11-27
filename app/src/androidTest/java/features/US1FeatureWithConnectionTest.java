@@ -20,7 +20,6 @@ import java.util.Locale;
 import groupf.taes.ipleiria.spots.DashboardActivity;
 import steps.US1FeatureWithConnectionSteps;
 
-
 @RunWith(Parameterized.class)
 public class US1FeatureWithConnectionTest extends GreenCoffeeTest {
 
@@ -46,5 +45,4 @@ public class US1FeatureWithConnectionTest extends GreenCoffeeTest {
         super.beforeScenarioStarts(scenario, locale);
         FirebaseAuth.getInstance().signOut();
     }
-
 }

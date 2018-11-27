@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,23 +20,21 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.FindPreference;
-import modelo.Spot;
-import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US11FeatureSteps;
-import steps.US12FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US11FeatureTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US11FeatureTest(ScenarioConfig scenario) {
         super(scenario);
@@ -63,17 +62,11 @@ public class US11FeatureTest extends GreenCoffeeTest {
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-        List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","-1,4",1,0));
-        spots.add(new Spot("A-3","A","1,3",0,3));
-        spots.add(new Spot("A-4","A","-1,5",1,5));
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.CLOSER_LOCATION);
-            SpotsManager.INSTANCE.setParkingSpotsTest(spots);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
@@ -83,9 +76,8 @@ public class US11FeatureTest extends GreenCoffeeTest {
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.CLOSER_LOCATION);
-            SpotsManager.INSTANCE.setParkingSpotsTest(spots);
         }
     }
 
