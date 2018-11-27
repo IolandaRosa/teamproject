@@ -45,6 +45,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
         } */
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
+      //  mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         checkPermission();
     }
 
@@ -69,15 +71,30 @@ public class FindMeASpotActivity extends AppCompatActivity {
             // ISTO É ASSINCRINO R PORQUE NÃO TEM TEMPO!! ESTA A ESOIRA
 
             // verificação feita antes
-            @SuppressLint("MissingPermission") Task<Location> loc = this.mFusedLocationClient.getLastLocation();
 
-            while (!loc.isComplete()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+
+//            Task<Location> loc = this.mFusedLocationClient.getLastLocation();
+//
+//            while (!loc.isComplete()) {
+//                try {
+//                    Thread.sleep(1);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                @Override
+//                public void onSuccess(Location location) {
+//                    // Got last known location. In some rare situations this can be null.
+//                    //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
+//                    if (location != null) {
+//                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
+//                    }
+//                }
+//            });
+
+            Task<Location> loc = DashboardAuthActivity.getLocation();
+
             loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -88,7 +105,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     }
                 }
             });
-
 
             currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
             if (currentDistance < smallerDistance) {
@@ -148,7 +164,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
         } else {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             showSpot();
         }
     }
@@ -159,9 +174,9 @@ public class FindMeASpotActivity extends AppCompatActivity {
             case PERMISSION_LOCATION_REQUEST: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permissão granted
-                    mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                    showSpot();
-                   // return;
+                    //mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                     showSpot();
+                     return;
                 } else {
                     // permissão denied
                     showErrorMessage(R.string.errorPermissionLocationDenied);

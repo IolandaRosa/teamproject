@@ -74,7 +74,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private int currentPark;
     private LatLng currentLocation = null;
-    private FusedLocationProviderClient mFusedLocationClient;
+    private static FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +134,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         //mapFragment.getMapAsync(this);
 
         // Para saber a localização do dispositivo
-      //  mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -147,6 +147,20 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
             }
         });*/
+    }
+
+    public static Task<Location> getLocation() {
+        Task<Location> loc = mFusedLocationClient.getLastLocation();
+
+        while (!loc.isComplete()) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return loc;
     }
 
     private void addDrawerItems() {
