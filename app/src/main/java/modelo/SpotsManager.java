@@ -20,7 +20,7 @@ public enum SpotsManager {
     private List<Spot> parkingSpotsA;
     private List<Spot> parkingSpotsD;
     private List<Spot> parkingSpots;
-
+    private List<Spot> parkingSpotsTest;
    /* private int freeSpots = 0;
     private int ocuppiedSpots = 0; */
     private String dateOfData = null;
@@ -28,7 +28,6 @@ public enum SpotsManager {
     private int ocuppiedSpotsParkA = 0;
     private int freeSpotsParkD = 0;
     private int ocuppiedSpotsParkD = 0;
-
 
 
     SpotsManager() {
@@ -40,8 +39,8 @@ public enum SpotsManager {
         dbRef.keepSynced(true);
         parkingSpots = new LinkedList<>();
         parkingSpotsA = new LinkedList<>();
-        parkingSpotsD= new LinkedList<>();
-
+        parkingSpotsD = new LinkedList<>();
+        parkingSpotsTest = new LinkedList<>();
 
         //writeSpotsOnDatabase();
        // readSpotsDataFromDatabase();
@@ -161,6 +160,22 @@ public enum SpotsManager {
         parkingSpots.addAll(parkingSpotsD);
 
         return parkingSpots;
+    }
+
+    //teste
+    public void setParkingSpotsTest(List<Spot> spots)
+    {
+        parkingSpotsTest.addAll(spots);
+    }
+
+    public List<Spot> getParkingSpotsTest() {
+
+        for (Spot spot:parkingSpotsTest) {
+            if(spot.getStatus() == 1)
+                parkingSpotsTest.remove(spot);
+        }
+
+        return parkingSpotsTest;
     }
 }
 

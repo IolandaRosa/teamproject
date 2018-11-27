@@ -59,25 +59,19 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
         //Criar um utilizador manel@email.pt com password "12345678"
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("manel@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        //todo - aplicar sincronização
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
         //apos obter a resposta se correu como esperado adicionar user à database (era porque utilizador não existia)
         if(registerTask.isSuccessful()){
             UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
-            //Colocar as preferencias no Manel
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(1000);
         }
         else{
-            //Se não for successfull significa que email ja existia e podemos fazer login
-            //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
-
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("manel@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            //todo - aplicar sincronização
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
@@ -87,18 +81,12 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
 
                 if(users==null){
                     UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
-                    //Colocar as preferencias no Manel
                     UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
-                    //todo tratar caso do sleep para sincronização de threads
-                    sleep(1000);
                 }
-                //se não é porque já existe e não temos de fazer nada
-
             }
         }
     }
 
-    //Apagar esse user de teste da BD auth e da BD de Users
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         //Se utilizador estiver logado então simplesmente eliminar

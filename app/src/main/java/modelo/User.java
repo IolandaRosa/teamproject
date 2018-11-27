@@ -1,13 +1,8 @@
 package modelo;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.security.spec.MGF1ParameterSpec.SHA1;
 
 public class User implements Serializable {
     private String id;

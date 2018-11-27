@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,42 +51,50 @@ public class FindMeASpotActivity extends AppCompatActivity {
     }
 
     private LatLng closestSpot() {
-        Spot choosenSpot = null;
-        LatLng spotCoordenates = null;
+
+        Task<Location> loc = DashboardAuthActivity.getLocation();
+
+        loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    System.out.println("location: "+location.getLatitude()+location.getLongitude());
+                }
+            }
+        });
+
+        return getCoordenatesFromString(getCloserSpot(loc.getResult().getLatitude(),loc.getResult().getLongitude(),SpotsManager.INSTANCE.getFreeParkingSpots()).getLocationGeo());
+
+    }
+
+    public static Spot getCloserSpot(double latitude, double longitude, List<Spot> freeParkingSpots) {
+        Spot choosenSpot=null;
+        LatLng spotCoordenates;
         float smallerDistance = Float.MAX_VALUE;
         float currentDistance = 0;
-        for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
+        for (Spot spot : freeParkingSpots) {
             spotCoordenates = getCoordenatesFromString(spot.getLocationGeo());
 
             //vai buscar o private static FusedLocationProviderClient mFusedLocationClient;
-            Task<Location> loc = DashboardAuthActivity.getLocation();
 
-            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
-                    }
-                }
-            });
-
-            currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
-            if (currentDistance < smallerDistance) {
+            currentDistance = distance(latitude, longitude, spotCoordenates.latitude, spotCoordenates.longitude);
+            if (currentDistance < smallerDistance && spot.getStatus()==0) {
                 smallerDistance = currentDistance;
                 choosenSpot = spot;
             }
 
         }
-        return getCoordenatesFromString(choosenSpot.getLocationGeo());
 
+        return choosenSpot;
     }
 
-    private LatLng getCoordenatesFromString(String s) {
+
+    private static LatLng getCoordenatesFromString(String s) {
         String[] coordenates = s.split(",");
         return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
 
-    public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
+    private static float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
         double earthRadius = 3958.75;
         double latDiff = Math.toRadians(lat_b - lat_a);
         double lngDiff = Math.toRadians(lng_b - lng_a);
@@ -156,7 +163,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
                      return;
                 } else {
                     // permissão denied
-                    showErrorMessage(R.string.errorPermissionLocationDenied);
+                    InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.errorPermissionLocationDenied);
+                    //showErrorMessage(R.string.errorPermissionLocationDenied);
                 }
             }
         }
@@ -201,6 +209,4 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         return getBestRatedSpot(spots);
     }
-
-
 }

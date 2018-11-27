@@ -10,15 +10,12 @@ import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 
 public class US13FeatureWithoutFavouritesListSteps extends GreenCoffeeSteps {
     @Given("^I am an authenticated user with no favourite spots$")

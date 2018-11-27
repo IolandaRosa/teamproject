@@ -20,18 +20,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.FindPreference;
-import modelo.Spot;
 import modelo.UsersManager;
-import steps.US12FeatureSteps;
+import steps.US11FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US12FeatureTest extends GreenCoffeeTest {
+public class US11FeatureTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
@@ -39,18 +36,18 @@ public class US12FeatureTest extends GreenCoffeeTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-    public US12FeatureTest(ScenarioConfig scenario) {
+    public US11FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS12.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS11.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US12FeatureSteps());
+        start(new US11FeatureSteps());
     }
 
     @BeforeClass
@@ -65,16 +62,11 @@ public class US12FeatureTest extends GreenCoffeeTest {
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-        List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","-1,5",1,0));
-        spots.add(new Spot("A-3","A","1,2",0,3));
-        spots.add(new Spot("A-4","A","-1,5",1,5));
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
-            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.FAVOURITE_SPOTS);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.CLOSER_LOCATION);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
@@ -84,8 +76,8 @@ public class US12FeatureTest extends GreenCoffeeTest {
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
-            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.FAVOURITE_SPOTS);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.CLOSER_LOCATION);
         }
     }
 

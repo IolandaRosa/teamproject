@@ -63,7 +63,7 @@ public class US2FeatureTest extends GreenCoffeeTest {
 
         Task<AuthResult> registerTask = FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        //todo - aplicar sincronização
         while (!registerTask.isComplete())
             Thread.sleep(1);
 
@@ -86,7 +86,7 @@ public class US2FeatureTest extends GreenCoffeeTest {
         //Destruir o utilizador test@test.test com password "12345678"
         Task<AuthResult> authResultTask = FirebaseAuth.getInstance().signInWithEmailAndPassword("test@test.test", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        //todo - aplicar sincronização
         while(!authResultTask.isComplete())
             Thread.sleep(1);
 

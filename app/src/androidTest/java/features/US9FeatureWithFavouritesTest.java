@@ -25,11 +25,8 @@ import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.Spot;
-import modelo.SpotsManager;
-import modelo.User;
 import modelo.UsersManager;
 import steps.US9FeatureWithFavouritesSteps;
-import steps.US9FeatureWithoutFavouritesSteps;
 
 import static android.os.SystemClock.sleep;
 
@@ -96,8 +93,10 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo tratar caso do sleep para sincronização de threads
-            sleep(5000);
+            //todo - aplicar sincronização
+            while(!loginTask.isComplete())
+                Thread.sleep(1);
+
             if(loginTask.isSuccessful()){
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();

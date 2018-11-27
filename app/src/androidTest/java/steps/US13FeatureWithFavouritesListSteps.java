@@ -12,7 +12,6 @@ import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
-import modelo.SpotsManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;

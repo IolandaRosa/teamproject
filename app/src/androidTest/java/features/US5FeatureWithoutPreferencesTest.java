@@ -46,7 +46,6 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         start(new US5FeatureWithoutPreferencesSteps());
     }
 
-    //Assegurar que existe o utilizador de teste na BD Auth e na BD de Users
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
         //Criar um utilizador maria@email.pt com password "12345678"
@@ -56,7 +55,7 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         //2º - Ver se o utilizador já existe (em principio não deve existir)
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        //todo - aplicar sincronização
         while(!registerTask.isComplete())
             Thread.sleep(1);
         //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
@@ -66,13 +65,9 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
             //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
         }
         else{
-            //Se não for successfull significa que email ja existia e podemos fazer login
-            //todo Temos de tratar da excepção caso a password não seja  a mesma ou podemos supor que este é um utilizador de teste apenas e que é assim??
-
-            //Fazemos login
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            //todo - aplicar sincronização
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
@@ -83,13 +78,10 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
                 if(users==null){
                     UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt"/*,"12345678"*/);
                 }
-                //se não é porque já existe e não temos de fazer nada
-
             }
         }
     }
 
-    //Apagar esse user de teste da BD auth e da BD de Users
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
@@ -101,7 +93,7 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+            //todo - aplicar sincronização
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
