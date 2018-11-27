@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,11 +18,16 @@ import com.google.firebase.database.ValueEventListener;
 import modelo.User;
 import modelo.UsersManager;
 
+import static modelo.FindPreference.BEST_RATED;
+import static modelo.FindPreference.CLOSER_LOCATION;
+import static modelo.FindPreference.FAVOURITE_SPOTS;
+
 public class ProfileActivity extends AppCompatActivity {
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtfindMeAPreference;
     private User user;
+    private int currentPark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         //this.user = (User) this.getIntent().getSerializableExtra("user");
+        currentPark = this.getIntent().getIntExtra("currentPark", -1);
 
 
       //  this.user=null;
@@ -83,13 +90,39 @@ public class ProfileActivity extends AppCompatActivity {
         if(user!=null){
             startActivity(UpdateProfileActivity.getIntent(this, user));
         }
-        else{
-            Toast.makeText(this,"The user is null",Toast.LENGTH_LONG).show();
-        }
     }
 
 
     public void onClick_btnFavouriteSpots(View view) {
         startActivity(FavouriteSpotsListActivity.getIntent(this));
+    }
+
+    public void onClick_findMeASpot(View view) {
+        findMeASpot();
+    }
+
+
+    public void findMeASpot() {
+        if (user.getFindPreference() == null) {
+            startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", user));
+        } else {
+            LatLng choosenSpot = null;
+            //LatLng currentLocation = null;
+            switch (user.getFindPreference()) {
+                case BEST_RATED:
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", user).putExtra("preference", 0).putExtra("park",currentPark));
+                    break;
+
+                case CLOSER_LOCATION:
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", user).putExtra("preference", 1).putExtra("park",currentPark));
+                    break;
+
+                case FAVOURITE_SPOTS:
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", user).putExtra("preference", 2).putExtra("park",currentPark));
+                    break;
+
+            }
+
+        }
     }
 }

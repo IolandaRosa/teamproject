@@ -310,7 +310,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private void showProfile() {
         currentUser = UsersManager.INSTANCE.getCurrentUser();
-        startActivity(ProfileActivity.getIntent(this).putExtra("user", currentUser));
+        startActivity(ProfileActivity.getIntent(this).putExtra("user", currentUser).putExtra("currentPark", currentPark));
     }
 
     public static List<Marker> getMarkers() {
@@ -321,7 +321,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     //mudar aqui se ele ja tiver preferencias entao, nao mostra a atividade
     public void findMeASpot() {
 
-        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+       // UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
 
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
