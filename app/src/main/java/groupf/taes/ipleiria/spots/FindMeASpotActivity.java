@@ -19,6 +19,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
+import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -26,6 +29,8 @@ import modelo.User;
 public class FindMeASpotActivity extends AppCompatActivity {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
     private int optionForSpot;
+    private int currentPark;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +38,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_me_aspot);
 
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
-        User user = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
-
+        currentUser = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
+        currentPark=this.getIntent().getIntExtra("park",0);
         checkPermission();
     }
 
@@ -105,17 +110,30 @@ public class FindMeASpotActivity extends AppCompatActivity {
     public void showSpot() {
       //  User user = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
         LatLng choosenSpot = null;
+        Spot best=null;
 
         switch (optionForSpot) {
             case 0:
-                // best rated
+                List<Spot> spots = null;
+                best = bestRatedPerPark(spots, currentPark);
+                System.out.println(best.getRating() + best.getSpotId()+best.getPark());
+                initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
+
                 break;
             case 1:
                 choosenSpot = closestSpot();
                 initializeMapsApp(choosenSpot);
                 break;
             case 2:
-                // one of favourites
+                List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
+                if(favouriteSpots.isEmpty()){
+                    InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.emptySpotsList);
+                    return;
+                }
+                best = getBestRatedSpot(favouriteSpots);
+                System.out.println(best.getRating() + best.getSpotId());
+                //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
+                initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
                 break;
         }
     }
@@ -150,7 +168,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         builder.setTitle(message);
 
-        //builder.setNeutralButton(R.string.OK, null);
         builder.setNeutralButton(R.string.OK, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -159,6 +176,30 @@ public class FindMeASpotActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    public static Spot getBestRatedSpot(List<Spot> spots) {
+        Spot best = spots.get(0);
+        for (Spot s : spots) {
+            if (s.getStatus()==0 && s.getRating() >= best.getRating()) {
+                best = s;
+            }
+        }
+
+        return best;
+    }
+
+    public Spot bestRatedPerPark(List<Spot> spots, int currentPark) {
+        // Saber qual o parque a pesquisar currentPark;
+        if (currentPark == 0) {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+        } else {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+        }
+
+        return getBestRatedSpot(spots);
     }
 
 

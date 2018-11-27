@@ -42,13 +42,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -72,14 +72,15 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private int currentPark;
+    private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // FirebaseAuth.getInstance().signOut();
+        // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+        // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -88,9 +89,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         setContentView(R.layout.activity_dashboard_auth);
+
         markers = new LinkedList<>();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
+
         mapFragment.getMapAsync(this);
 
         UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
@@ -98,7 +102,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
-
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
@@ -147,6 +150,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return loc;
     }
 
+    //Menu Hamburguer
     private void addDrawerItems() {
         mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
@@ -156,13 +160,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentUser = UsersManager.INSTANCE.getCurrentUser();
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         showProfile();
                         break;
                     case 1:
-                      //  checkPermission();
+                        //  checkPermission();
                         findMeASpot();
                         break;
                     case 2:
@@ -204,7 +207,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
-
     public static Intent getIntent(Context context) {
         return new Intent(context, DashboardAuthActivity.class);
     }
@@ -231,7 +233,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         int id = item.getItemId();
 
 
-
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -248,8 +249,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         putMarkers();
 
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
-
         SharedPreferences sharedPref = getSharedPreferences("SpotsPref", 0);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -257,10 +256,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             String str = sharedPref.getString("dateLastInfo", null);
             SpotsManager.INSTANCE.setDateOfData(str);
             lastInfoDateTxt.setText(str);
-            //  String date = df.format(sharedPref.)
-            //  lastInfoDateTxt.setText(date);
+
         } else {
-            //  String date = df.format(SpotsManager.getINSTANCE().getDateOfData());
+
             lastInfoDateTxt.setText(SpotsManager.INSTANCE.getDateOfData());
             editor.putString("dateLastInfo", SpotsManager.INSTANCE.getDateOfData());
             editor.commit();
@@ -268,8 +266,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    public  void putMarkers()
-    {
+    public void putMarkers() {
         markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
@@ -329,23 +326,23 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
-            //
             LatLng choosenSpot = null;
             //LatLng currentLocation = null;
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
-                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0));
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0).putExtra("park",currentPark));
                     break;
 
                 case CLOSER_LOCATION:
-                    // choosenSpot = closestSpot(currentLocation);
-                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1));
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1).putExtra("park",currentPark));
                     break;
 
                 case FAVOURITE_SPOTS:
-                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2).putExtra("park",currentPark));
                     break;
+
             }
+
         }
     }
 }
