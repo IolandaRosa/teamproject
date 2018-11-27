@@ -1,21 +1,25 @@
 package groupf.taes.ipleiria.spots;
 
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +28,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -51,7 +54,7 @@ import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private static final int PERMISSION_LOCATION_REQUEST = 0;
 
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
@@ -131,7 +134,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         //mapFragment.getMapAsync(this);
 
         // Para saber a localização do dispositivo
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+      //  mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -161,6 +164,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         showProfile();
                         break;
                     case 1:
+                      //  checkPermission();
                         findMeASpot();
                         break;
                     case 2:
@@ -319,45 +323,38 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
 
-    //mudar aqui se ele ja tiver preferencias entao, nao mostrra a atividade
+    //mudar aqui se ele ja tiver preferencias entao, nao mostra a atividade
     public void findMeASpot() {
+
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
             //
             LatLng choosenSpot = null;
             //LatLng currentLocation = null;
-
-
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
-
                     break;
 
                 case CLOSER_LOCATION:
-                    choosenSpot = closestSpot(currentLocation);
-                    //chamar o gMap ou o here para das as indicações
-                       /*Uri gmmIntentUri = Uri.parse("google.navigation:q=Taronga+Zoo,+Sydney+Australia");
-                       Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                       mapIntent.setPackage("com.google.android.apps.maps");
-                       startActivity(mapIntent);*/
+                    // choosenSpot = closestSpot(currentLocation);
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1));
 
-                    String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
+                   /* String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     intent.setPackage("com.google.android.apps.maps");
-                    startActivity(intent);
-
+                    startActivity(intent); */
                     break;
 
                 case FAVOURITE_SPOTS:
 
                     break;
-
-
             }
 
         }
     }
+
+
 
     public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
         double earthRadius = 3958.75;
@@ -374,7 +371,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return new Float(distance * meterConversion).floatValue();
     }
 
-
     private LatLng closestSpot(LatLng currentLocation) {
         LatLng location;
         Spot choosenSpot = null;
@@ -382,12 +378,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         float smallerDistance = Float.MAX_VALUE;
         float currentDistance = 0;
         for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
-            spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
+            spotCoordenates = getCoordenatesFromString(spot.getLocationGeo());
 
             // NOVO CÓDIGO PARA SABER A LOCALIZAçAO
             // ISTO É ASSINCRINO R PORQUE NÃO TEM TEMPO!! ESTA A ESOIRA
 
-            Task<Location> loc = mFusedLocationClient.getLastLocation();
+            Task<Location> loc = this.mFusedLocationClient.getLastLocation();
 
             while (!loc.isComplete()) {
                 try {
@@ -449,11 +445,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
 
         }
-        return getCoordenatesFromSting(choosenSpot.getLocationGeo());
+        return getCoordenatesFromString(choosenSpot.getLocationGeo());
 
     }
 
-    private LatLng getCoordenatesFromSting(String s) {
+    private LatLng getCoordenatesFromString(String s) {
         String[] coordenates = s.split(",");
         return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
@@ -488,4 +484,45 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             Polyline polyline = mMap.addPolyline(rectOptions);
 
         */
+
+    public void checkPermission() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case PERMISSION_LOCATION_REQUEST: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permissão granted
+                    return;
+                } else {
+                    // permissão denied
+                    showErrorMessage(R.string.errorPermissionLocationDenied);
+                }
+                return;
+            }
+        }
+    }
+
+
+    private void showErrorMessage(int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(message);
+
+        //builder.setNeutralButton(R.string.OK, null);
+        builder.setNeutralButton(R.string.OK, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+
+        builder.show();
+    }
+
+
 }

@@ -56,6 +56,7 @@
     <string name="btnReturn">Return to Dashboard</string>
     <string name="delete">Delete</string>
     <string name="emptySpotsList">Your favourite spots list is empty</string>
+    <string name="errorPermissionLocationDenied">\"You can\'t access this funcionality if the application don\'t have permission to access your location.\"</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
