@@ -76,10 +76,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // FirebaseAuth.getInstance().signOut();
+        // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+        // SpotsManager.INSTANCE.writeSpotsOnDatabase();
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -156,13 +156,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentUser = UsersManager.INSTANCE.getCurrentUser();
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         showProfile();
                         break;
                     case 1:
-                      //  checkPermission();
                         findMeASpot();
                         break;
                     case 2:
@@ -268,8 +266,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    public  void putMarkers()
-    {
+    public void putMarkers() {
         markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
@@ -321,49 +318,179 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
 
-    //mudar aqui se ele ja tiver preferencias entao, nao mostra a atividade
+    //mudar aqui se ele ja tiver preferencias entao, nao mostrra a atividade
     public void findMeASpot() {
-
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
             //
             LatLng choosenSpot = null;
             //LatLng currentLocation = null;
+
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
+                    List<Spot> spots = null;
+
+                    Spot spot = bestRatedSpotMethod(spots, currentPark);
+
+                    String[] lat = spot.getLocationGeo().split(",");
+
+                    // Código repedito para abrir APP com as coordenadas
+                    String uri = "http://maps.google.com/maps?&daddr=" + lat[0] + "," + lat[1];
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    startActivity(intent);
+
                     break;
 
                 case CLOSER_LOCATION:
                     // choosenSpot = closestSpot(currentLocation);
                     startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1));
+                    choosenSpot = closestSpot(currentLocation);
+                    //chamar o gMap ou o here para das as indicações
+                       /*Uri gmmIntentUri = Uri.parse("google.navigation:q=Taronga+Zoo,+Sydney+Australia");
+                       Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                       mapIntent.setPackage("com.google.android.apps.maps");
+                       startActivity(mapIntent);*/
+
+                    uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    startActivity(intent);
+
                     break;
 
                 case FAVOURITE_SPOTS:
 
                     break;
+
             }
 
         }
     }
 
+    public Spot bestRatedSpotMethod(List<Spot> spots, int currentPark) {
+        // Saber qual o parque a pesquisar currentPark;
+        if (currentPark == 0) {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+        } else {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+        }
+
+        return getBestRatedSpot(spots);
+    }
 
 
+    public static Spot getBestRatedSpot(List<Spot> spots) {
+        Spot best = spots.get(0);
 
-    private void showErrorMessage(int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(message);
-
-        //builder.setNeutralButton(R.string.OK, null);
-        builder.setNeutralButton(R.string.OK, new  DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
+        for (Spot s : spots) {
+            if (s.getStatus() == 0 && s.getRating() == 5) {
+                return s;
+            } else if (s.getStatus() == 0 && s.getRating() >= best.getRating()) {
+                best = s;
             }
-        });
+        }
+        return best;
+    }
 
-        builder.show();
+    public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double earthRadius = 3958.75;
+        double latDiff = Math.toRadians(lat_b - lat_a);
+        double lngDiff = Math.toRadians(lng_b - lng_a);
+        double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
+                        Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = earthRadius * c;
+
+        int meterConversion = 1609;
+
+        return new Float(distance * meterConversion).floatValue();
+    }
+
+
+    private LatLng closestSpot(LatLng currentLocation) {
+        LatLng location;
+        Spot choosenSpot = null;
+        LatLng spotCoordenates = null;
+        float smallerDistance = Float.MAX_VALUE;
+        float currentDistance = 0;
+        for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
+            spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
+
+
+            Task<Location> loc = mFusedLocationClient.getLastLocation();
+
+            while (!loc.isComplete()) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
+                    if (location != null) {
+                        System.out.println("location: " + location.getLatitude() + location.getLongitude());
+                    }
+                }
+            });
+
+            // Código retirado de : https://developers.google.com/android/guides/tasks
+
+            /*
+            int numCores = Runtime.getRuntime().availableProcessors();
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(numCores * 2, numCores *2,
+                    60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+            // PUUUUUUMMMMMM !!! SSSSSSHHHHHHH !!!
+            loc.addOnCompleteListener(executor, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    String ola  = " CHEGUE AQUI ";
+                }
+            });
+
+
+            //loc.getResult().getLatitude();
+            //loc.getResult().getLongitude();
+
+            // END DO NOVO CÓDIGO
+
+
+            // Estoira aqui -- currentLocation is null
+            /*if (currentLocation == null){
+                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+                    @Override
+                    public void onMyLocationChange(Location arg0) {
+                        // TODO Auto-generated method stub
+                        currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
+                        int a = 2;
+                        //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+                    }
+                });
+            }*/
+            currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
+            if (currentDistance < smallerDistance) {
+                smallerDistance = currentDistance;
+                choosenSpot = spot;
+            }
+
+        }
+        return getCoordenatesFromSting(choosenSpot.getLocationGeo());
+
+    }
+
+    private LatLng getCoordenatesFromSting(String s) {
+        String[] coordenates = s.split(",");
+        return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
 
 
