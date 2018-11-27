@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -71,7 +72,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private int currentPark;
-    private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -324,6 +324,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     //mudar aqui se ele ja tiver preferencias entao, nao mostra a atividade
     public void findMeASpot() {
 
+        UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
+
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
@@ -332,6 +334,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             //LatLng currentLocation = null;
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0));
                     break;
 
                 case CLOSER_LOCATION:
@@ -340,31 +343,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     break;
 
                 case FAVOURITE_SPOTS:
-
+                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
                     break;
             }
-
         }
     }
-
-
-
-
-    private void showErrorMessage(int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(message);
-
-        //builder.setNeutralButton(R.string.OK, null);
-        builder.setNeutralButton(R.string.OK, new  DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-
-        builder.show();
-    }
-
-
 }
