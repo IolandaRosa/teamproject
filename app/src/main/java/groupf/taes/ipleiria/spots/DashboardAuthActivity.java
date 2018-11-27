@@ -331,6 +331,17 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
+                    List<Spot> spots = null;
+
+                    Spot spot = bestRatedSpotMethod(spots, currentPark);
+
+                    String[] lat = spot.getLocationGeo().split(",");
+
+                    // Código repedito para abrir APP com as coordenadas
+                    String uri = "http://maps.google.com/maps?&daddr=" + lat[0] + "," + lat[1];
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    startActivity(intent);
 
                     break;
 
@@ -342,8 +353,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                        mapIntent.setPackage("com.google.android.apps.maps");
                        startActivity(mapIntent);*/
 
-                    String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     intent.setPackage("com.google.android.apps.maps");
                     startActivity(intent);
 
@@ -353,10 +364,42 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                     break;
 
-
             }
 
         }
+    }
+
+    public static Spot bestRatedSpotMethod(List<Spot> spots, int currentPark){
+        // Saber qual o parque a pesquisar currentPark;
+        if (currentPark == 0) {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+        }
+        else {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+        }
+
+        int bestSpotRated = -1;
+        Spot choosenSpotRated = null;
+        for (Spot spot : spots) {
+            if (spot.getRating() == 5){
+                choosenSpotRated = spot;
+                break;
+            } else {
+                if (spot.getRating() > bestSpotRated) {
+                    choosenSpotRated = spot;
+                    bestSpotRated = spot.getRating();
+                }
+            }
+        }
+
+        // TODO - If null -> é porque não existem dados de parques na BD. Protejer ?
+        // NullPointerException, julgo
+
+        return choosenSpotRated;
+        //choosenSpotRated.getLocationGeo().split(",");
+        //String[] lat = choosenSpotRated.getLocationGeo().split(",");
     }
 
     public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
