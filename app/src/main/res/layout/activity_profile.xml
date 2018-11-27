@@ -60,15 +60,15 @@
         android:id="@+id/btnMyPreferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btnMyPreferences"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:textColor="@android:color/background_light"
         android:background="@android:color/holo_blue_light"
+        android:onClick="onClick_findMeASpot"
         android:padding="20dp"
+        android:text="@string/btnMyPreferences"
+        android:textColor="@android:color/background_light"
+        android:textSize="20sp"
 
-        />
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnFavouriteSpots"
