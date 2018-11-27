@@ -1,16 +1,24 @@
 package groupf.taes.ipleiria.spots;
 
+
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +62,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
+
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
@@ -63,6 +72,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private int currentPark;
+    private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -124,7 +134,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
     }
 
     public static Task<Location> getLocation() {
@@ -219,7 +228,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
+
+
+        // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -315,11 +331,26 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         } else {
             LatLng choosenSpot = null;
             //LatLng currentLocation = null;
-
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
-                    startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0));
+                    //startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0));
+                    //break;
+
+                    //Tiago ---------------
+                    List<Spot> spots = null;
+
+                    Spot spot = bestRatedSpotMethod(spots, currentPark);
+
+                    String[] lat = spot.getLocationGeo().split(",");
+
+                    // Código repedito para abrir APP com as coordenadas
+                    String uri = "http://maps.google.com/maps?&daddr=" + lat[0] + "," + lat[1];
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    startActivity(intent);
+
                     break;
+                    //--------------------
                 case CLOSER_LOCATION:
                     // choosenSpot = closestSpot(currentLocation);
                     startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1));
@@ -331,19 +362,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
 
                 break;
+
             }
 
         }
     }
-
-    //Do meu
-
-
-
-
-    //------------------------
-
-
 
     public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
         double earthRadius = 3958.75;
@@ -359,7 +382,49 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         return new Float(distance * meterConversion).floatValue();
     }
+    public Spot bestRatedSpotMethod(List<Spot> spots, int currentPark) {
+        // Saber qual o parque a pesquisar currentPark;
+        if (currentPark == 0) {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+        } else {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+        }
 
+        return getBestRatedSpot(spots);
+    }
+
+
+    public static Spot getBestRatedSpot(List<Spot> spots) {
+        Spot best = spots.get(0);
+
+        for (Spot s : spots) {
+            if (s.getStatus() == 0 && s.getRating() == 5) {
+                return s;
+            } else if (s.getStatus() == 0 && s.getRating() >= best.getRating()) {
+                best = s;
+            }
+        }
+        return best;
+    }
+
+
+    private void showErrorMessage(int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(message);
+
+        //builder.setNeutralButton(R.string.OK, null);
+        builder.setNeutralButton(R.string.OK, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+
+        builder.show();
+    }
 
     private LatLng closestSpot(LatLng currentLocation) {
         LatLng location;
@@ -370,9 +435,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
             spotCoordenates = getCoordenatesFromSting(spot.getLocationGeo());
 
+
             Task<Location> loc = mFusedLocationClient.getLastLocation();
 
-            //Como é assincrono espera que calcule a location antes de prosseguir
             while (!loc.isComplete()) {
                 try {
                     Thread.sleep(1);
@@ -380,7 +445,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     e.printStackTrace();
                 }
             }
-
             loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -392,6 +456,41 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 }
             });
 
+            // Código retirado de : https://developers.google.com/android/guides/tasks
+
+            /*
+            int numCores = Runtime.getRuntime().availableProcessors();
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(numCores * 2, numCores *2,
+                    60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+            // PUUUUUUMMMMMM !!! SSSSSSHHHHHHH !!!
+            loc.addOnCompleteListener(executor, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    String ola  = " CHEGUE AQUI ";
+                }
+            });
+
+
+            //loc.getResult().getLatitude();
+            //loc.getResult().getLongitude();
+
+            // END DO NOVO CÓDIGO
+
+
+            // Estoira aqui -- currentLocation is null
+            /*if (currentLocation == null){
+                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+                    @Override
+                    public void onMyLocationChange(Location arg0) {
+                        // TODO Auto-generated method stub
+                        currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
+                        int a = 2;
+                        //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+                    }
+                });
+            }*/
             currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
             if (currentDistance < smallerDistance) {
                 smallerDistance = currentDistance;
@@ -408,34 +507,5 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
 
-    /*   PolylineOptions rectOptions = new PolylineOptions()
-                            .add(new LatLng(39.735235, Float.parseFloat(a)))
-                            .add(new LatLng(39.735187, -8.820460))
-                            .add(new LatLng(39.735132, -8.820341)).width(2f).color(Color.RED);
-                    mMap.addPolyline(rectOptions);*/
 
-           /* if (canGetLocation() == false) {
-                showSettingsAlert();
-                //DO SOMETHING USEFUL HERE. ALL GPS PROVIDERS ARE CURRENTLY ENABLED
-            } else {
-            }*/
-
-                 /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-
-
-            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.app_name);
-            PolylineOptions rectOptions = new PolylineOptions()
-                    .add(new LatLng(longitude, latitude))
-                    .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
-                    .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
-                    .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
-                    .add(new LatLng(37.35, -122.0)); // Closes the polyline.
-
-                // Get back the mutable Polyline
-            Polyline polyline = mMap.addPolyline(rectOptions);
-
-        */
 }
