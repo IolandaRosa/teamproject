@@ -56,31 +56,26 @@ public class US10FeatureTest extends GreenCoffeeTest {
             FirebaseAuth.getInstance().signOut();
 
         //regista o utilizador
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots4@email.pt", "12345678");
 
         //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-        List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("TESTE-1","A","1,2",0,3));
-        spots.add(new Spot("TESTE-2","A","1,2",0,4));
-        spots.add(new Spot("TESTE-3","A","1,2",0,2));
-        spots.add(new Spot("TESTE-4","A","-1,5",0,1));
-
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots4@email.pt");
+            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots4@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots4@email.pt");
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
         }
     }
@@ -96,7 +91,7 @@ public class US10FeatureTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
             //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots2@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots4@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())

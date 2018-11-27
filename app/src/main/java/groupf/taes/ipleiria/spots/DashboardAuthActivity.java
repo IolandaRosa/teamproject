@@ -75,10 +75,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // FirebaseAuth.getInstance().signOut();
+        // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-      // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+        // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -101,7 +101,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-
 
 
         spinner = findViewById(R.id.spinner);
@@ -155,8 +154,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentUser = UsersManager.INSTANCE.getCurrentUser();
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         showProfile();
                         break;
@@ -229,7 +227,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         int id = item.getItemId();
 
 
-
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -266,8 +263,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    public  void putMarkers()
-    {
+    public void putMarkers() {
         markers = new LinkedList<>();
         mMap.clear();
         List<Spot> spots = new LinkedList<>();
@@ -369,37 +365,30 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    public static Spot bestRatedSpotMethod(List<Spot> spots, int currentPark){
+    public Spot bestRatedSpotMethod(List<Spot> spots, int currentPark) {
         // Saber qual o parque a pesquisar currentPark;
         if (currentPark == 0) {
             // Ligação à BD para saber quais são com mais RATED
             spots = SpotsManager.INSTANCE.getParkingSpotsA();
-        }
-        else {
+        } else {
             // Ligação à BD para saber quais são com mais RATED
             spots = SpotsManager.INSTANCE.getParkingSpotsD();
         }
 
-        int bestSpotRated = -1;
-        Spot choosenSpotRated = null;
-        for (Spot spot : spots) {
-            if (spot.getRating() == 5){
-                choosenSpotRated = spot;
-                break;
-            } else {
-                if (spot.getRating() > bestSpotRated) {
-                    choosenSpotRated = spot;
-                    bestSpotRated = spot.getRating();
-                }
+        return getBestRatedSpot(spots);
+    }
+
+    public static Spot getBestRatedSpot(List<Spot> spots) {
+        Spot best = spots.get(0);
+
+        for (Spot s : spots) {
+            if (s.getStatus() == 0 && s.getRating() == 5) {
+                return s;
+            } else if (s.getStatus() == 0 && s.getRating() >= best.getRating()) {
+                best = s;
             }
         }
-
-        // TODO - If null -> é porque não existem dados de parques na BD. Protejer ?
-        // NullPointerException, julgo
-
-        return choosenSpotRated;
-        //choosenSpotRated.getLocationGeo().split(",");
-        //String[] lat = choosenSpotRated.getLocationGeo().split(",");
+        return best;
     }
 
     public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
@@ -445,7 +434,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     // Got last known location. In some rare situations this can be null.
                     //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
                     if (location != null) {
-                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
+                        System.out.println("location: " + location.getLatitude() + location.getLongitude());
                     }
                 }
             });
