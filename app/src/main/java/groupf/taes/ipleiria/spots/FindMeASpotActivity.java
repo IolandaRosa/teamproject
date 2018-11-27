@@ -53,7 +53,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
     private LatLng closestSpot() {
         Spot choosenSpot = null;
-        LatLng spotCoordenates = null;
+        LatLng spotCoordenates;
         float smallerDistance = Float.MAX_VALUE;
         float currentDistance = 0;
         for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
@@ -82,12 +82,12 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
     }
 
-    private LatLng getCoordenatesFromString(String s) {
+    private static LatLng getCoordenatesFromString(String s) {
         String[] coordenates = s.split(",");
         return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
 
-    public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
+    public static float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
         double earthRadius = 3958.75;
         double latDiff = Math.toRadians(lat_b - lat_a);
         double lngDiff = Math.toRadians(lng_b - lng_a);
@@ -188,6 +188,40 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         return best;
     }
+
+    public static Spot getClosestSpot(List<Spot> spots) {
+        Spot choosenSpot = null;
+        LatLng spotCoordenates;
+        float smallerDistance = Float.MAX_VALUE;
+        float currentDistance = 0;
+        for (Spot spot : spots) {
+
+
+            spotCoordenates = getCoordenatesFromString(spot.getLocationGeo());
+
+            //vai buscar o private static FusedLocationProviderClient mFusedLocationClient;
+            Task<Location> loc = DashboardAuthActivity.getLocation();
+
+            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
+                    }
+                }
+            });
+
+            currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
+            if (currentDistance < smallerDistance) {
+                smallerDistance = currentDistance;
+                choosenSpot = spot;
+            }
+
+        }
+        return choosenSpot;
+
+    }
+
 
     public Spot bestRatedPerPark(List<Spot> spots, int currentPark) {
         // Saber qual o parque a pesquisar currentPark;
