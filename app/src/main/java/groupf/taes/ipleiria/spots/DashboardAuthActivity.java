@@ -327,6 +327,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                 case FAVOURITE_SPOTS:
                     List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
+                    if(favouriteSpots.isEmpty()){
+                        InternetConnectionManager.INSTANCE.showErrorMessage(DashboardAuthActivity.this,R.string.emptySpotsList);
+                        return;
+                    }
                     Spot bestRatedSpot = getBestRatedSpot(favouriteSpots);
                     System.out.println(bestRatedSpot.getRating() + bestRatedSpot.getSpotId());
                     LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
@@ -344,7 +348,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         startActivity(intent);
     }
 
-    private static Spot getBestRatedSpot(List<Spot> spots) {
+    public static Spot getBestRatedSpot(List<Spot> spots) {
         Spot best = spots.get(0);
         for (Spot s : spots) {
             if (s.getStatus()==0 && s.getRating() >= best.getRating()) {
