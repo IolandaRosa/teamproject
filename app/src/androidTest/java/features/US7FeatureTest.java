@@ -53,7 +53,7 @@ public class US7FeatureTest extends GreenCoffeeTest {
 
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria_leopoldina@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+        //todo - sincronização threads
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
