@@ -29,6 +29,7 @@ import modelo.User;
 public class FindMeASpotActivity extends AppCompatActivity {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
     private int optionForSpot;
+    private int currentPark;
     private User currentUser;
 
     @Override
@@ -38,6 +39,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
         currentUser = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
+        currentPark=this.getIntent().getIntExtra("park",0);
         checkPermission();
     }
 
@@ -108,10 +110,15 @@ public class FindMeASpotActivity extends AppCompatActivity {
     public void showSpot() {
       //  User user = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
         LatLng choosenSpot = null;
+        Spot best=null;
 
         switch (optionForSpot) {
             case 0:
-                // best rated
+                List<Spot> spots = null;
+                best = bestRatedPerPark(spots, currentPark);
+                System.out.println(best.getRating() + best.getSpotId()+best.getPark());
+                initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
+
                 break;
             case 1:
                 choosenSpot = closestSpot();
@@ -123,7 +130,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.emptySpotsList);
                     return;
                 }
-                Spot best = getBestRatedSpot(favouriteSpots);
+                best = getBestRatedSpot(favouriteSpots);
                 System.out.println(best.getRating() + best.getSpotId());
                 //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
@@ -180,6 +187,19 @@ public class FindMeASpotActivity extends AppCompatActivity {
         }
 
         return best;
+    }
+
+    public Spot bestRatedPerPark(List<Spot> spots, int currentPark) {
+        // Saber qual o parque a pesquisar currentPark;
+        if (currentPark == 0) {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsA();
+        } else {
+            // Ligação à BD para saber quais são com mais RATED
+            spots = SpotsManager.INSTANCE.getParkingSpotsD();
+        }
+
+        return getBestRatedSpot(spots);
     }
 
 

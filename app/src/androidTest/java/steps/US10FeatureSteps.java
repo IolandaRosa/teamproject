@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.FindPreference;
@@ -63,7 +64,7 @@ public class US10FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^A spot \"([^\"]*)\" is selected$")
     public void a_spot_is_selected(String arg1) {
-        Spot spot = DashboardAuthActivity.getBestRatedSpot(spots);
+        Spot spot = FindMeASpotActivity.getBestRatedSpot(spots);
 
         Assert.assertEquals("TESTE-4", spot.getSpotId());
     }
