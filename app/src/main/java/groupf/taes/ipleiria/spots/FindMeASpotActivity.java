@@ -45,6 +45,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
         } */
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
+        User user = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
       //  mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         checkPermission();

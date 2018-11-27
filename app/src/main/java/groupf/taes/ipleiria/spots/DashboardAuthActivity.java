@@ -54,8 +54,6 @@ import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private static final int PERMISSION_LOCATION_REQUEST = 0;
-
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -105,8 +103,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-
-
         spinner = findViewById(R.id.spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maps, android.R.layout.simple_spinner_item);
         spinner.setAdapter(spinnerAdapter);
@@ -135,18 +131,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-
-        /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-            @Override
-            public void onMyLocationChange(Location arg0) {
-                // TODO Auto-generated method stub
-                currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-                int a = 2;
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-            }
-        });*/
     }
 
     public static Task<Location> getLocation() {
@@ -353,11 +337,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 case CLOSER_LOCATION:
                     // choosenSpot = closestSpot(currentLocation);
                     startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 1));
-
-                   /* String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    intent.setPackage("com.google.android.apps.maps");
-                    startActivity(intent); */
                     break;
 
                 case FAVOURITE_SPOTS:
@@ -369,157 +348,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
 
-
-    public float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
-        double earthRadius = 3958.75;
-        double latDiff = Math.toRadians(lat_b - lat_a);
-        double lngDiff = Math.toRadians(lng_b - lng_a);
-        double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
-                        Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = earthRadius * c;
-
-        int meterConversion = 1609;
-
-        return new Float(distance * meterConversion).floatValue();
-    }
-
-    private LatLng closestSpot(LatLng currentLocation) {
-        LatLng location;
-        Spot choosenSpot = null;
-        LatLng spotCoordenates = null;
-        float smallerDistance = Float.MAX_VALUE;
-        float currentDistance = 0;
-        for (Spot spot : SpotsManager.INSTANCE.getFreeParkingSpots()) {
-            spotCoordenates = getCoordenatesFromString(spot.getLocationGeo());
-
-            // NOVO CÓDIGO PARA SABER A LOCALIZAçAO
-            // ISTO É ASSINCRINO R PORQUE NÃO TEM TEMPO!! ESTA A ESOIRA
-
-            Task<Location> loc = this.mFusedLocationClient.getLastLocation();
-
-            while (!loc.isComplete()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            loc.addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    // Got last known location. In some rare situations this can be null.
-                    //location = new LatLng(location.getLatitude(), location.getLongitude())/*arg0.getLatitude(),arg0.getLongitude())*/;
-                    if (location != null) {
-                        System.out.println("location: "+location.getLatitude()+location.getLongitude());
-                    }
-                }
-            });
-
-            // Código retirado de : https://developers.google.com/android/guides/tasks
-
-            /*
-            int numCores = Runtime.getRuntime().availableProcessors();
-            ThreadPoolExecutor executor = new ThreadPoolExecutor(numCores * 2, numCores *2,
-                    60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-
-            // PUUUUUUMMMMMM !!! SSSSSSHHHHHHH !!!
-            loc.addOnCompleteListener(executor, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    String ola  = " CHEGUE AQUI ";
-                }
-            });
-
-
-            //loc.getResult().getLatitude();
-            //loc.getResult().getLongitude();
-
-            // END DO NOVO CÓDIGO
-
-
-            // Estoira aqui -- currentLocation is null
-            /*if (currentLocation == null){
-                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        // TODO Auto-generated method stub
-                        currentLocation = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-                        int a = 2;
-                        //mMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-                    }
-                });
-            }*/
-            currentDistance = distance(loc.getResult().getLatitude(), loc.getResult().getLongitude(), spotCoordenates.latitude, spotCoordenates.longitude);
-            if (currentDistance < smallerDistance) {
-                smallerDistance = currentDistance;
-                choosenSpot = spot;
-            }
-
-        }
-        return getCoordenatesFromString(choosenSpot.getLocationGeo());
-
-    }
-
-    private LatLng getCoordenatesFromString(String s) {
-        String[] coordenates = s.split(",");
-        return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
-    }
-
-    /*   PolylineOptions rectOptions = new PolylineOptions()
-                            .add(new LatLng(39.735235, Float.parseFloat(a)))
-                            .add(new LatLng(39.735187, -8.820460))
-                            .add(new LatLng(39.735132, -8.820341)).width(2f).color(Color.RED);
-                    mMap.addPolyline(rectOptions);*/
-
-           /* if (canGetLocation() == false) {
-                showSettingsAlert();
-                //DO SOMETHING USEFUL HERE. ALL GPS PROVIDERS ARE CURRENTLY ENABLED
-            } else {
-            }*/
-
-                 /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-
-
-            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.app_name);
-            PolylineOptions rectOptions = new PolylineOptions()
-                    .add(new LatLng(longitude, latitude))
-                    .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
-                    .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
-                    .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
-                    .add(new LatLng(37.35, -122.0)); // Closes the polyline.
-
-                // Get back the mutable Polyline
-            Polyline polyline = mMap.addPolyline(rectOptions);
-
-        */
-
-    public void checkPermission() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode) {
-            case PERMISSION_LOCATION_REQUEST: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permissão granted
-                    return;
-                } else {
-                    // permissão denied
-                    showErrorMessage(R.string.errorPermissionLocationDenied);
-                }
-                return;
-            }
-        }
-    }
 
 
     private void showErrorMessage(int message) {
