@@ -133,6 +133,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if(!nameEquals){
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
             startActivity(ProfileActivity.getIntent(this));
+            finish();
         }
     }
 

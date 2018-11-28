@@ -1,8 +1,10 @@
 package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -52,7 +54,7 @@ public class FavouriteSpotsListActivity extends AppCompatActivity {
 
                 if(spots.isEmpty()){
 
-                    InternetConnectionManager.INSTANCE.showErrorMessage(FavouriteSpotsListActivity.this,R.string.emptySpotsList);
+                    showErrorMessage(FavouriteSpotsListActivity.this,R.string.emptySpotsList);
                     spotsList.setVisibility(View.GONE);
                     return;
                 }
@@ -66,6 +68,23 @@ public class FavouriteSpotsListActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    public void showErrorMessage(Context context, int message) {
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+
+        builder.setIconAttribute(android.R.attr.alertDialogIcon);
+        builder.setTitle(R.string.app_name);
+        builder.setMessage(message);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                //startActivity(DashboardAuthActivity.getIntent(FavouriteSpotsListActivity.this));
+            }
+        });
+
+        builder.show();
     }
 
 
