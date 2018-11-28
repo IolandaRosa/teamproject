@@ -41,6 +41,7 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startActivity(DashboardAuthActivity.getIntent(this));
+            finish();
             return;
         }
 
