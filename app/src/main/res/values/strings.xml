@@ -56,6 +56,8 @@
     <string name="btnReturn">Return to Dashboard</string>
     <string name="delete">Delete</string>
     <string name="emptySpotsList">Your favourite spots list is empty</string>
+    <string name="noFreeSpots">No free spots available</string>
+
     <string name="errorPermissionLocationDenied">\"You can\'t access this funcionality if the application don\'t have permission to access your location.\"</string>
     <string name="noFavouriteSpotsFree">All of your favourite spots are occupied</string>
     <string name="noSpotFree">All spots are occupied</string>

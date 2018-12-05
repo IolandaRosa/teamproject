@@ -59,7 +59,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private User currentUser;
 
-    private int currentPark;
+    private  static int currentPark;
     private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
@@ -328,5 +328,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     break;
             }
         }
+    }
+
+    public static int getCurrentPark() {
+        return currentPark;
     }
 }

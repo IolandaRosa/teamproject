@@ -63,7 +63,16 @@ public class FindMeASpotActivity extends AppCompatActivity {
             }
         });
 
-        return getCoordenatesFromString(getCloserSpot(loc.getResult().getLatitude(),loc.getResult().getLongitude(),SpotsManager.INSTANCE.getFreeParkingSpots()).getLocationGeo());
+
+        //SpotsManager.INSTANCE.readFreeSpotsDataFromDatabase(DashboardAuthActivity.getCurrentPark());
+        List<Spot> freeSpots = SpotsManager.INSTANCE.getFreeParkingSpots(DashboardAuthActivity.getCurrentPark());
+        if(!freeSpots.isEmpty()){
+            return getCoordenatesFromString(getCloserSpot(loc.getResult().getLatitude(),loc.getResult().getLongitude(),freeSpots).getLocationGeo());
+
+        }else
+        {
+            return  null;
+        }
 
     }
 
@@ -128,12 +137,19 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     showErrorMessage(R.string.noSpotFree);
                     return;
                 }
+                finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
 
                 break;
             case 1:
                 choosenSpot = closestSpot();
-                initializeMapsApp(choosenSpot);
+                if(choosenSpot != null){
+                    finish();
+                    initializeMapsApp(choosenSpot);
+                }else
+                {
+                    showErrorMessage(R.string.noFreeSpots);
+                }
                 break;
             case 2:
                 List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
@@ -149,6 +165,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
                 }
                 System.out.println(best.getRating() + best.getSpotId());
                 //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
+                finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
                 break;
         }
