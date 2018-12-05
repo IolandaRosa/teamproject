@@ -31,41 +31,15 @@ import static org.hamcrest.Matchers.is;
 
 public class US10FeatureNoFreeSpotsSteps extends GreenCoffeeSteps {
 
-    private List<Spot> spots = new ArrayList<>();
-
-    private void populateSpots() {
-        spots.add(new Spot("TESTE-1", "A", "1,2", 1, 3));
-        spots.add(new Spot("TESTE-2", "A", "1,2", 1, 4));
-        spots.add(new Spot("TESTE-3", "A", "1,2", 1, 2));
-        spots.add(new Spot("TESTE-4", "A", "-1,5", 1, 4));
-    }
-
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
-        populateSpots();
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
-    @Given("^I select the menu option \"([^\"]*)\" on dashboard authenticated$")
-    public void i_select_the_menu_option_on_dashboard_authenticated(String arg1) {
-        onViewWithId(R.id.drawer_layout).isDisplayed();
-        Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        Espresso.onView(withText(arg1)).perform(click());
-    }
-
-    @When("^I have select the park 'A' on spinner option$")
-    public void i_have_select_the_park_A_on_spinner_option() {
+    @When("^I have select the park 'D' on spinner option$")
+    public void i_have_select_the_park_D_on_spinner_option() {
         onViewWithId(R.id.spinner).click();
         onData(is("Park Campus D")).perform(click());
-    }
-
-    @When("^I have no free spots avaiable$")
-    public void i_have_no_free_spots_avaiable() {
-        for (Spot s : spots) {
-            Assert.assertEquals(1, s.getStatus());
-        }
-
-        Assert.assertEquals(FindMeASpotActivity.getBestRatedSpot(spots),null);
     }
 
     @When("^I select the menu option \"([^\"]*)\" dashboard authenticated$")

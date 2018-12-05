@@ -46,45 +46,18 @@ public class US10FeatureSteps extends GreenCoffeeSteps {
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
-    @Given("^I select the menu option \"([^\"]*)\" on dashboard authenticated$")
-    public void i_select_the_menu_option_on_dashboard_authenticated(String arg1) {
-        onViewWithId(R.id.drawer_layout).isDisplayed();
-        Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        Espresso.onView(withText(arg1)).perform(click());
+
+    @When("^There are a list of spots not empy$")
+    public void there_are_a_list_of_spots_not_empy() {
+        Assert.assertTrue(!spots.isEmpty());
     }
 
-    @Then("^I have select the park 'A' on spinner option$")
-    public void i_have_select_the_park_A_on_spinner_option() {
-        onViewWithId(R.id.spinner).click();
-        onData(is("Park Campus A")).perform(click());
-    }
-
-    @Then("^A spot \"([^\"]*)\" is selected$")
-    public void a_spot_is_selected(String arg1) {
+    @Then("^A find a spot by best rated preference returns the spot \"([^\"]*)\"$")
+    public void a_find_a_spot_by_best_rated_preference_returns_the_spot(String arg1) {
         Spot spot = FindMeASpotActivity.getBestRatedSpot(spots);
 
-        Assert.assertEquals("TESTE-4", spot.getSpotId());
+        Assert.assertEquals(arg1, spot.getSpotId());
     }
 
-    @Then("^I see the error message says \"([^\"]*)\"$")
-    public void i_see_the_error_message_says(String arg1) {
-        sleep(100);
-        onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed()));
-        onView(withText(arg1)).inRoot(isDialog()).perform(click());
-    }
 
-    @Given("^I have no free spots avaiable$")
-    public void i_have_no_free_spots_avaiable() {
-        for (Spot s : spots){
-            s.setStatus(1);
-            Assert.assertEquals(1, s.getStatus());
-        }
-    }
-
-    @When("^I select the menu option \"([^\"]*)\" dashboard authenticated$")
-    public void i_select_the_menu_option_dashboard_authenticated(String arg1) {
-        onViewWithId(R.id.drawer_layout).isDisplayed();
-        Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        Espresso.onView(withText(arg1)).perform(click());
-    }
 }

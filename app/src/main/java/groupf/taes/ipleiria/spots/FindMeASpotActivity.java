@@ -132,7 +132,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
             case 0:
                 List<Spot> spots = null;
                 best = bestRatedPerPark(spots, currentPark);
-                System.out.println(best.getRating() + best.getSpotId()+best.getPark());
+                //System.out.println(best.getRating() + best.getSpotId()+best.getPark());
                 if(best==null){
                     showErrorMessage(R.string.noSpotFree);
                     return;
@@ -163,7 +163,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.noFavouriteSpotsFree);
                     return;
                 }
-                System.out.println(best.getRating() + best.getSpotId());
+                //System.out.println(best.getRating() + best.getSpotId());
                 //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
                 finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
