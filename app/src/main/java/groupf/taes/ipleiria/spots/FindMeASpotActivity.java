@@ -138,6 +138,11 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     return;
                 }
                 best = getBestRatedSpot(favouriteSpots);
+
+                if(best.getStatus()==1){
+                    InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.noFavouriteSpotsFree);
+                    return;
+                }
                 System.out.println(best.getRating() + best.getSpotId());
                 //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
@@ -189,7 +194,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
     public static Spot getBestRatedSpot(List<Spot> spots) {
         Spot best = spots.get(0);
         for (Spot s : spots) {
-            if (s.getStatus()==0 && s.getRating() >= best.getRating()) {
+            if (s.getStatus() == 0 && s.getRating() >= best.getRating()) {
                 best = s;
             }
         }
