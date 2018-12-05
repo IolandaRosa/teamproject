@@ -41,4 +41,7 @@ public class Spot implements Serializable {
         return rating;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
