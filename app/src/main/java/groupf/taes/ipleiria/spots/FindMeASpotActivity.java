@@ -139,7 +139,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
                 }
                 best = getBestRatedSpot(favouriteSpots);
 
-                if(best.getStatus()==1){
+                if(best==null){
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.noFavouriteSpotsFree);
                     return;
                 }
@@ -192,9 +192,21 @@ public class FindMeASpotActivity extends AppCompatActivity {
     }
 
     public static Spot getBestRatedSpot(List<Spot> spots) {
-        Spot best = spots.get(0);
+
+        Spot best = null;
+
+        for(Spot s:spots){
+            if(s.getStatus()==0){
+                best=s;
+                break;
+            }
+        }
+
+        if(best==null)
+            return best;
+
         for (Spot s : spots) {
-            if (s.getStatus() == 0 && s.getRating() >= best.getRating()) {
+            if (best!=null && s.getStatus()==0 && s.getRating() >= best.getRating()) {
                 best = s;
             }
         }
