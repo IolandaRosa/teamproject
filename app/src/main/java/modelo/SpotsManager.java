@@ -29,7 +29,8 @@ public enum SpotsManager {
     private int freeSpotsParkD = 0;
     private int ocuppiedSpotsParkD = 0;
 
-
+    private int freeSpotsPark = 0;
+    private List<Spot> freeParkingSpots;
     SpotsManager() {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
@@ -41,6 +42,7 @@ public enum SpotsManager {
         parkingSpotsA = new LinkedList<>();
         parkingSpotsD = new LinkedList<>();
         parkingSpotsTest = new LinkedList<>();
+        freeParkingSpots = new LinkedList<>();
 
         //writeSpotsOnDatabase();
        // readSpotsDataFromDatabase();
@@ -68,6 +70,7 @@ public enum SpotsManager {
         }
     }
 
+
     public void readSpotsDataFromDatabase() {
         // Attach a listener to read the data at our posts reference
 
@@ -79,6 +82,9 @@ public enum SpotsManager {
                 freeSpotsParkD = 0;
                 ocuppiedSpotsParkA = 0;
                 ocuppiedSpotsParkD = 0;
+                parkingSpotsA = new LinkedList<>();
+                parkingSpotsD = new LinkedList<>();
+
                 parkingSpotsA = new LinkedList<>();
                 parkingSpotsD = new LinkedList<>();
 
@@ -153,14 +159,22 @@ public enum SpotsManager {
     }
 
 
-    public List<Spot> getFreeParkingSpots() {
+   public List<Spot> getFreeParkingSpots(int park) {
 
-        parkingSpots.clear();
-        parkingSpots.addAll(parkingSpotsA);
-        parkingSpots.addAll(parkingSpotsD);
+       List<Spot> freeSpots = new LinkedList<>();
+       List<Spot> freeParkingSpotsCompare = park == 0? parkingSpotsA : parkingSpotsD;
+       if(park == 0)
+       {
+           for (Spot spot: freeParkingSpotsCompare) {
+                if(spot.getStatus() == 0)
+                {
+                    freeSpots.add(spot);
+                }
+           }
+       }
+       return freeSpots;
+   }
 
-        return parkingSpots;
-    }
 
     //teste
     public void setParkingSpotsTest(List<Spot> spots)
@@ -177,6 +191,9 @@ public enum SpotsManager {
 
         return parkingSpotsTest;
     }
+
+
+
 }
 
 
