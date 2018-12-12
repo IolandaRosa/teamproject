@@ -60,6 +60,7 @@
 
     <string name="errorPermissionLocationDenied">\"You can\'t access this funcionality if the application don\'t have permission to access your location.\"</string>
     <string name="noFavouriteSpotsFree">All of your favourite spots are occupied</string>
+    <string name="noSpotFree">All spots are occupied</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

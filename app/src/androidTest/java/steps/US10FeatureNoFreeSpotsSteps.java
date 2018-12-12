@@ -29,35 +29,30 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
-public class US10FeatureSteps extends GreenCoffeeSteps {
-
-    private List<Spot> spots=new ArrayList<>();
-
-    private void populateSpots(){
-        spots.add(new Spot("TESTE-1","A","1,2",0,3));
-        spots.add(new Spot("TESTE-2","A","1,2",1,4));
-        spots.add(new Spot("TESTE-3","A","1,2",0,2));
-        spots.add(new Spot("TESTE-4","A","-1,5",0,4));
-    }
+public class US10FeatureNoFreeSpotsSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
-        populateSpots();
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
-
-    @When("^There are a list of spots not empy$")
-    public void there_are_a_list_of_spots_not_empy() {
-        Assert.assertTrue(!spots.isEmpty());
+    @When("^I have select the park 'D' on spinner option$")
+    public void i_have_select_the_park_D_on_spinner_option() {
+        onViewWithId(R.id.spinner).click();
+        onData(is("Park Campus D")).perform(click());
     }
 
-    @Then("^A find a spot by best rated preference returns the spot \"([^\"]*)\"$")
-    public void a_find_a_spot_by_best_rated_preference_returns_the_spot(String arg1) {
-        Spot spot = FindMeASpotActivity.getBestRatedSpot(spots);
-
-        Assert.assertEquals(arg1, spot.getSpotId());
+    @When("^I select the menu option \"([^\"]*)\" dashboard authenticated$")
+    public void i_select_the_menu_option_dashboard_authenticated(String arg1) {
+        onViewWithId(R.id.drawer_layout).isDisplayed();
+        Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        Espresso.onView(withText(arg1)).perform(click());
     }
 
-
+    @Then("^I see the error message says \"([^\"]*)\"$")
+    public void i_see_the_error_message_says(String arg1) {
+        sleep(100);
+        onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText(arg1)).inRoot(isDialog()).perform(click());
+    }
 }

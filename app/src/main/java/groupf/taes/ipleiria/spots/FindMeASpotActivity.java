@@ -132,7 +132,11 @@ public class FindMeASpotActivity extends AppCompatActivity {
             case 0:
                 List<Spot> spots = null;
                 best = bestRatedPerPark(spots, currentPark);
-                System.out.println(best.getRating() + best.getSpotId()+best.getPark());
+                //System.out.println(best.getRating() + best.getSpotId()+best.getPark());
+                if(best==null){
+                    showErrorMessage(R.string.noSpotFree);
+                    return;
+                }
                 finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
 
@@ -150,7 +154,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
             case 2:
                 List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
                 if(favouriteSpots.isEmpty()){
-                    InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.emptySpotsList);
+                    showErrorMessage(R.string.emptySpotsList);
                     return;
                 }
                 best = getBestRatedSpot(favouriteSpots);
@@ -159,7 +163,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.noFavouriteSpotsFree);
                     return;
                 }
-                System.out.println(best.getRating() + best.getSpotId());
+                //System.out.println(best.getRating() + best.getSpotId());
                 //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
                 finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
@@ -212,6 +216,9 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         Spot best = null;
 
+        if(spots.isEmpty())
+            return null;
+
         for(Spot s:spots){
             if(s.getStatus()==0){
                 best=s;
@@ -220,7 +227,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
         }
 
         if(best==null)
-            return best;
+            return null;
 
         for (Spot s : spots) {
             if (best!=null && s.getStatus()==0 && s.getRating() >= best.getRating()) {
