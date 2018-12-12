@@ -38,7 +38,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
         currentUser = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
-        currentPark=this.getIntent().getIntExtra("park",0);
+        //currentPark=this.getIntent().getIntExtra("park",0);
+        currentPark = DashboardAuthActivity.getCurrentPark();
         checkPermission();
     }
 

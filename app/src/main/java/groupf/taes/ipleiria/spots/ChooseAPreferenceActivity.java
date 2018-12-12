@@ -47,7 +47,7 @@ public class ChooseAPreferenceActivity extends AppCompatActivity {
     }
 
     public void onClickBtnBestRatedSpot(View view) {
-
+        startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0));
     }
 
     public void onClickBtnCloserToMe(View view) {
@@ -56,7 +56,7 @@ public class ChooseAPreferenceActivity extends AppCompatActivity {
 
 
     public void onClickBtnOneOfFavouriteSpots(View view) {
-
+        startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 2));
     }
 
 
