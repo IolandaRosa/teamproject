@@ -62,7 +62,7 @@ public enum SpotsManager {
 
 
         for(Spot s : spots) {
-            // dbRef.child("ParkingSpots").child(s.getSpotId()).child("Park").setValue(s.getPark());
+            // dbRef.child("ParkingSpots").child(s.getSpotParked()).child("Park").setValue(s.getPark());
             dbRef.child(s.getSpotId()).child("Park").setValue(s.getPark());
             dbRef.child(s.getSpotId()).child("LocationGeo").setValue(s.getLocationGeo());
             dbRef.child(s.getSpotId()).child("Status").setValue(s.getStatus());
@@ -175,6 +175,15 @@ public enum SpotsManager {
        return freeSpots;
    }
 
+    public void setSpotStatusToOccupied(String id) {
+        dbRef.child(id).child("Status").setValue(1);
+    }
+
+   /*
+   public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
+        mDatabase.child(id).child("findPreference").setValue(findPreference);
+    }
+    */
 
     //teste
     public void setParkingSpotsTest(List<Spot> spots)
@@ -192,8 +201,19 @@ public enum SpotsManager {
         return parkingSpotsTest;
     }
 
+    public void addSpotToDatabase(String spotId, String park, String locationGeo, int status, int rating) {
+      //  Spot spot = new Spot(spotId, park, locationGeo, status, rating);
+   //     dbRef.child(spotId).setValue(spot);
+        dbRef.child(spotId).child("Park").setValue(park);
+        dbRef.child(spotId).child("LocationGeo").setValue(locationGeo);
+        dbRef.child(spotId).child("Status").setValue(status);
+        dbRef.child(spotId).child("Rating").setValue(rating);
+    }
 
 
+    public void removeSpotFromDatabase(String spotId) {
+        dbRef.child(spotId).removeValue();
+    }
 }
 
 

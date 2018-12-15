@@ -11,18 +11,20 @@ public class User implements Serializable {
     //private String password;
     private List<Spot> favouriteSpots;
     private FindPreference findPreference;
+    private String spotParked;
 
     public User(){
         this.favouriteSpots=new ArrayList<>();
     }
 
-    public User(String id,String name, String email, FindPreference preference/*, String password*/) {
+    public User(String id,String name, String email, FindPreference preference, String spotParked) {
         this.name = name;
         this.email = email;
         this.id = id;
         //this.password=UsersManager.INSTANCE.md5_Hash(password);
         this.favouriteSpots=new ArrayList<>();
         this.findPreference=preference;
+        this.spotParked = spotParked;
     }
 
     public String getId() {
@@ -59,5 +61,13 @@ public class User implements Serializable {
 
     public void setFavouriteSpots(List<Spot> favouriteSpots) {
         this.favouriteSpots = favouriteSpots;
+    }
+
+    public String getSpotParked() {
+        return spotParked;
+    }
+
+    public void setSpotParked(String spotParked) {
+        this.spotParked = spotParked;
     }
 }

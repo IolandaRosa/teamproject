@@ -2,15 +2,18 @@ package groupf.taes.ipleiria.spots;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -37,12 +41,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
-public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -62,6 +67,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private  static int currentPark;
     private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
+
+    private Marker choosenMarker = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,17 +167,33 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 2:
                         startActivity(FavouriteSpotsListActivity.getIntent(DashboardAuthActivity.this));
                         break;
-                    case 5:
-                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                    case 3:
+                  //      setClickListenerForMarker();
+
+                        mDrawerLayout.closeDrawers();
+                        setClickListenerForMarker();
+
+                        //   mMap.setOnMarkerClickListener(this);
                         break;
                     case 6:
+                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 7:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
                 }
-
             }
         });
+    }
+
+    private void setClickListenerForMarker () {
+        if (SpotsManager.INSTANCE.getFreeParkingSpots(currentPark).size() == 0) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.noFreeSpots);
+        } else {
+            mMap.setOnMarkerClickListener(this);
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.infoForUserParkManually);
+        }
     }
 
     private void setupDrawer() {
@@ -215,11 +239,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -333,4 +352,62 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public static int getCurrentPark() {
         return currentPark;
     }
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // Retrieve the data from the marker.
+
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        this.choosenMarker = marker;
+
+        for (Marker m : markers) {
+            if (!m.getTitle().equalsIgnoreCase(marker.getTitle())) {
+                // coloca os outros a verde caso o user clique em marcadores spots de seguida
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            }
+        }
+
+        askUserIfWantToParkInSpot(R.string.msgAskUserIfWantToPark);
+
+        //  initializeMapsApp(marker.getPosition());
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+    }
+
+    private void initializeMapsApp(LatLng choosenSpot) {
+        String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
+
+
+    private void askUserIfWantToParkInSpot(int msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(msg);
+        builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                initializeMapsApp(choosenMarker.getPosition());
+            }
+        });
+
+        builder.setNegativeButton(R.string.No, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
 }
