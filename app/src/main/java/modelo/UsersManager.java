@@ -379,6 +379,7 @@ public enum UsersManager {
     }
 
     public void setSpotUserIsParked(String spotId) {
+      //  mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
     }
 
