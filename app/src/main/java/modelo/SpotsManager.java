@@ -62,7 +62,7 @@ public enum SpotsManager {
 
 
         for(Spot s : spots) {
-            // dbRef.child("ParkingSpots").child(s.getSpotId()).child("Park").setValue(s.getPark());
+            // dbRef.child("ParkingSpots").child(s.getSpotParked()).child("Park").setValue(s.getPark());
             dbRef.child(s.getSpotId()).child("Park").setValue(s.getPark());
             dbRef.child(s.getSpotId()).child("LocationGeo").setValue(s.getLocationGeo());
             dbRef.child(s.getSpotId()).child("Status").setValue(s.getStatus());

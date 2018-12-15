@@ -33,7 +33,7 @@
     <string name="confirmationPassword">Confirmation Password</string>
     <string name="noInternetConnection">No Internet connection</string>
     <string name="txtLastInfoDate">Latest data obtained at:</string>
-    <string name="OK">Ok</string>
+    <string name="OK">OK</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     <string name="emptyConfirmationPass">The confirmation password can\'t be empty</string>
@@ -63,7 +63,8 @@
     <string name="errorPermissionLocationDenied">\"You can\'t access this funcionality if the application don\'t have permission to access your location.\"</string>
     <string name="noFavouriteSpotsFree">All of your favourite spots are occupied</string>
     <string name="noSpotFree">All spots are occupied</string>
-    <string name="infoForUserParkManually">Please, select the spot where you want to park</string>
+    <string name="infoForUserParkManually">Please, select the spot where you want to park.</string>
+    <string name="msgAskUserIfWantToPark">Do you want to park in the spot selected?</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

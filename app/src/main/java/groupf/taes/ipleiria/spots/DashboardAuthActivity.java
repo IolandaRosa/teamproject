@@ -368,7 +368,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         }
 
-        askUserIfWantToParkInSpot("Do you want to park in the spot selected (" + marker.getTitle() + ") ?");
+        askUserIfWantToParkInSpot(R.string.msgAskUserIfWantToPark);
 
         //  initializeMapsApp(marker.getPosition());
 
@@ -385,19 +385,16 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         startActivity(intent);
     }
 
-    private void changeSpotStatus() {
 
-    }
-
-    private void askUserIfWantToParkInSpot(String msg) {
+    private void askUserIfWantToParkInSpot(int msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        //builder.setTitle(message);
         builder.setMessage(msg);
         builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
                 initializeMapsApp(choosenMarker.getPosition());
             }
         });
