@@ -8,7 +8,7 @@ Feature: Park manually
     And I select a marker on the map
     And I see a message asking "Do you want to park in the spot selected?"
     And I select select the option "Yes"
-
+    And The spot status is occupied
 
   Scenario: User doesn't park on the spot
     Given I am authenticated user
@@ -18,4 +18,9 @@ Feature: Park manually
     And I see a message asking "Do you want to park in the spot selected?"
     And I select select the option "No"
     And I am on the dashboard auth
+    And The spot status is free
 
+  Scenario: No free spots available
+    Given I am authenticated user
+    When I select the Park D and I press the Park Manually on the menu
+    Then I see a dialog box saying that there's no free spots

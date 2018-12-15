@@ -29,9 +29,6 @@ import modelo.SpotsManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -61,20 +58,12 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see a dialog box saying \"([^\"]*)\"$")
     public void i_see_a_dialog_box_saying(String arg1) {
-       // sleep(1000);
         onViewWithText(string(R.string.infoForUserParkManually)).isDisplayed();
-       /*Espresso.onView(withText(string(R.string.infoForUserParkManually)))
-            .inRoot(RootMatchers.isDialog()).check(matches(isDisplayed()));*/
         onViewWithText(string(R.string.OK)).click();
-
-      /*  Espresso.onView(withText(string(R.string.OK)))
-                .inRoot(RootMatchers.isDialog()).perform(click()); */
     }
 
     @Then("^I select a marker on the map$")
     public void i_select_a_marker_on_the_map() {
-    /*    sleep(1000);
-        Espresso.onView(withContentDescription("A-1")).perform(click()); */
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains("TestSpot"));
         try {
@@ -92,8 +81,6 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I select other marker on the map$")
     public void i_select_other_marker_on_the_map() {
-    /*    sleep(1000);
-        Espresso.onView(withContentDescription("A-1")).perform(click()); */
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains("TestSpot1"));
         try {
@@ -117,10 +104,32 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
     }
 
 
+    @Then("^The spot status is occupied$")
+    public void the_spot_status_is_occupied() {
+        List<Spot> parkingSpotsA = SpotsManager.INSTANCE.getParkingSpotsA();
+        Spot spotTest = null;
+        for (Spot s : parkingSpotsA) {
+            if (s.getSpotId().equalsIgnoreCase("TestSpot")) {
+                spotTest = s;
+            }
+        }
+
+        Assert.assertEquals(1, spotTest.getStatus());
+    }
 
 
+    @Then("^The spot status is free$")
+    public void the_spot_status_is_free() {
+        List<Spot> parkingSpotsA = SpotsManager.INSTANCE.getParkingSpotsA();
+        Spot spotTest = null;
+        for (Spot s : parkingSpotsA) {
+            if (s.getSpotId().equalsIgnoreCase("TestSpot1")) {
+                spotTest = s;
+            }
+        }
 
-
+        Assert.assertEquals(0, spotTest.getStatus());
+    }
 
 
 
