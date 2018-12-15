@@ -175,6 +175,15 @@ public enum SpotsManager {
        return freeSpots;
    }
 
+    public void setSpotStatusToOccupied(String id) {
+        dbRef.child(id).child("Status").setValue(1);
+    }
+
+   /*
+   public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
+        mDatabase.child(id).child("findPreference").setValue(findPreference);
+    }
+    */
 
     //teste
     public void setParkingSpotsTest(List<Spot> spots)
