@@ -22,5 +22,6 @@ Feature: Park manually
 
   Scenario: No free spots available
     Given I am authenticated user
-    When I select the Park D and I press the Park Manually on the menu
+    When I select the Park D
+    When I press the "Park Manually" on the menu
     Then I see a dialog box saying that there's no free spots
