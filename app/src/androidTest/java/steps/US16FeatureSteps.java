@@ -25,6 +25,7 @@ import androidx.test.uiautomator.UiSelector;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.Spot;
+import modelo.SpotsManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -75,26 +76,45 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
     /*    sleep(1000);
         Espresso.onView(withContentDescription("A-1")).perform(click()); */
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("A-2"));
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("TestSpot"));
         try {
             marker.click();
         } catch (UiObjectNotFoundException e) {
 
         }
-
     }
+
 
     @Then("^I see a message asking \"([^\"]*)\"$")
     public void i_see_a_message_asking(String arg1) {
         onViewWithText(string(R.string.msgAskUserIfWantToPark)).isDisplayed();
     }
 
-    @Then("^I select select the option \"([^\"]*)\"$")
-    public void i_select_select_the_option(String arg1) {
-        onViewWithText(string(R.string.Yes)).click();
+    @Then("^I select other marker on the map$")
+    public void i_select_other_marker_on_the_map() {
+    /*    sleep(1000);
+        Espresso.onView(withContentDescription("A-1")).perform(click()); */
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("TestSpot1"));
+        try {
+            marker.click();
+        } catch (UiObjectNotFoundException e) {
+
+        }
     }
 
 
+    @Then("^I select select the option \"([^\"]*)\"$")
+    public void i_select_select_the_option(String arg1) {
+        onViewWithText(arg1).click();
+    }
+
+
+    @Then("^I am on the dashboard auth$")
+    public void i_am_on_the_dashboard_auth() {
+        onViewWithId(R.id.mapFragment).isDisplayed();
+        onViewWithId(R.id.spinner).isDisplayed();
+    }
 
 
 

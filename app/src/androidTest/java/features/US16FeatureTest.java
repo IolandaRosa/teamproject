@@ -27,6 +27,7 @@ import java.util.List;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.FindPreference;
 import modelo.Spot;
+import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US14FeatureSteps;
 import steps.US16FeatureSteps;
@@ -78,6 +79,9 @@ public class US16FeatureTest extends GreenCoffeeTest {
             //Coloca utilizador na BD sem spots
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
         }
+
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735008,-8.820593", 0, 0);
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735008,-8.820593", 0, 0);
     }
 
 
@@ -103,8 +107,12 @@ public class US16FeatureTest extends GreenCoffeeTest {
                 currentUser.delete();
 
                 FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
+
             }
         }
+
+        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
+        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot1");
     }
 
 

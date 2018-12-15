@@ -201,8 +201,19 @@ public enum SpotsManager {
         return parkingSpotsTest;
     }
 
+    public void addSpotToDatabase(String spotId, String park, String locationGeo, int status, int rating) {
+      //  Spot spot = new Spot(spotId, park, locationGeo, status, rating);
+   //     dbRef.child(spotId).setValue(spot);
+        dbRef.child(spotId).child("Park").setValue(park);
+        dbRef.child(spotId).child("LocationGeo").setValue(locationGeo);
+        dbRef.child(spotId).child("Status").setValue(status);
+        dbRef.child(spotId).child("Rating").setValue(rating);
+    }
 
 
+    public void removeSpotFromDatabase(String spotId) {
+        dbRef.child(spotId).removeValue();
+    }
 }
 
 
