@@ -518,7 +518,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 for (Marker m :markers) {
-                    System.out.println(m.getTitle());
                     m.getId();
                     if (m.getTitle().compareTo(idSpotChanged) == 0){
                         m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
