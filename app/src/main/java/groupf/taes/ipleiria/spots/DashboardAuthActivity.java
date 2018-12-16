@@ -1,10 +1,12 @@
 package groupf.taes.ipleiria.spots;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -13,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +48,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -55,6 +60,7 @@ import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    private static final int PERMISSION_LOCATION_REQUEST = 0;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -77,7 +83,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private Marker choosenMarker = null;
 
-
+    private String occupiedParkId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // FirebaseAuth.getInstance().signOut();
@@ -132,6 +138,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         addDrawerItems();
         setupDrawer();
+
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
+        }
+
         onChangeSpotStatus();
 
         //mapFragment.getMapAsync(this);
@@ -141,96 +152,86 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void onChangeSpotStatus(){
+
+        //final List<Spot> spotsBeforeChange = SpotsManager.INSTANCE.getFreeParkingSpots(0);
+
+        //System.out.println("before change: "+ spotsBeforeChange);
+        //spotsBeforeChange.addAll(SpotsManager.INSTANCE.getFreeParkingSpots(1));
+
         FirebaseDatabase firebase = FirebaseDatabase.getInstance();
 
         DatabaseReference reference = firebase.getReference();
-        reference.child("ParkingSpots").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+        reference.child("ParkingSpots").addValueEventListener(new ValueEventListener() {
+
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+            //na primeira vez que se corre a app a old fica sempre igual a new nao percebo porquê(Estao a ser atualizadas so spots manager)
+            // a partir da segunda a old fica com o seu suposto valor e ja funciona tudo bem
+            System.out.println(("old: " + SpotsManager.INSTANCE.getParkingSpotsOld() + "size: " + SpotsManager.INSTANCE.getParkingSpotsOld().size()  ));
+            System.out.println(("new: " + SpotsManager.INSTANCE.getParkingSpots() + "size: " + SpotsManager.INSTANCE.getParkingSpots().size()));
+           List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
+
+
+            //Task<Location> lastLocation = getLocation();
+
+            String[] location = null;
+
+            for (Spot spot: spotsWithStateChanged) {
+                location = spot.getLocationGeo().split(",");
+
+                //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
+                //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
+
+               System.out.println("distancia: " + FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888));
+               if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < 60
+                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals("")) //ou seja so se nao tiver ja estacionado
+               {
+
+                   System.out.println("park id: " + spot.getSpotId());
+                 setParkingInSpot(spot.getSpotId());
+                 break;
+               }
             }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                // Devolve todos os atributos daquele estacionamento
-                Iterable<DataSnapshot> spot = dataSnapshot.getChildren();
-                putMarkers();
+            putMarkers();
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
 
 
-                String id = dataSnapshot.getKey();
+    }
 
-                // Saber o estado do parque:
-                Object infoPark = dataSnapshot.getValue();
-                System.out.println(infoPark);
+    private List<Spot> getOcuppiedSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
 
-                System.out.println(dataSnapshot.child("Status").getValue().toString());
-
-
-                // Devolve chave-valor com a location do que foi mudado
-                // Usar loc.getValue() para devolver valor "-39.xxxxx, 8.xxxxx"
-                DataSnapshot loc = spot.iterator().next();
-
-                // Apenas para saber as coordenadas de GPS do spot que mudou de estado
-                String[] location = loc.getValue().toString().split(",");
-
-                for (DataSnapshot child : spot) {
-                    Toast.makeText(DashboardAuthActivity.this, "Mudou o spot: " + child.getValue(), Toast.LENGTH_LONG).show();
+        List<Spot> spotsResult = new LinkedList<>();
+        //System.out.println("before change:  " + spotsBeforeChange);
+        for (Spot spotBeforeChange: spotsBeforeChange) {
+            for (Spot spotChanged: spotsChanged) {
+                if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 0 && spotChanged.getStatus() == 1)
+                {
+                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
+                    spotsResult.add(spotChanged);
                 }
 
 
-
-                // Saber a minha localização física
-                Task<Location> lastLocation = getLocation();
-
-                // Calculo da distancia
-
-                float distance = FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude());
-
-                // Verificar se a a distancia do ponto infeiror a 5
-                if (distance < 20){
-                    setParkingInSpot(id);
-                }
             }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+        }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        /*
-        reference.child("ParkingSpots")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        listSpotsNew = dataSnapshot.getChildren();
-                        for (DataSnapshot child : listSpotsNew) {
-
-                            Toast.makeText(DashboardAuthActivity.this, "Mudou o spot: " + child.getValue(), Toast.LENGTH_LONG).show();
-                        }
-                        putMarkers();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-*/
+        return spotsResult;
     }
 
     private void setParkingInSpot(String idSpotChanged) {
-        askUserIfHeParkInSpot("Do you park in this spot?", idSpotChanged);
+        askUserIfHeParkInSpot("Did you park in this spot?", idSpotChanged);
     }
 
     public static Task<Location> getLocation() {
@@ -393,12 +394,35 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         for (Spot s : spots) {
-            if (s.getStatus() == 0) {
+            if (s.getStatus() == 0 ) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
                 LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
                 Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 markers.add(marker);
+
+
+                //pode estar mais otimizado
+                //primeira vez
+            }else if(s.getSpotId().equals(occupiedParkId))
+            {
+                String location = s.getLocationGeo();
+                String[] geo = location.split(",");
+                LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                markers.add(marker);
+
+                //sempre que o user sai da app para conseguir ver o seu spot de uma cor diferente
+            }else if(UsersManager.INSTANCE.getCurrentUser() != null)
+            {
+                if( s.getSpotId().equals(UsersManager.INSTANCE.getCurrentUser().getSpotParked()))
+                {
+                    String location = s.getLocationGeo();
+                    String[] geo = location.split(",");
+                    LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    markers.add(marker);
+                }
             }
         }
 
@@ -517,10 +541,15 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+                occupiedParkId = idSpotChanged;
+                putMarkers();
                 for (Marker m :markers) {
                     m.getId();
                     if (m.getTitle().compareTo(idSpotChanged) == 0){
+
                         m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        UsersManager.INSTANCE.setSpotUserIsParked(m.getTitle());
                     }
                 }
             }
