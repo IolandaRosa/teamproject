@@ -65,6 +65,7 @@
     <string name="noSpotFree">All spots are occupied</string>
     <string name="infoForUserParkManually">Please, select the spot where you want to park.</string>
     <string name="msgAskUserIfWantToPark">Do you want to park in the spot selected?</string>
+    <string name="mySpotErrorUserNotParked">You aren\'t parked.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

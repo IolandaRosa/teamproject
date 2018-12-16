@@ -1,7 +1,6 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,36 +19,31 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.FindPreference;
-import modelo.Spot;
-import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US14FeatureSteps;
-import steps.US16FeatureSteps;
+import steps.US17FeatureNotParkedSteps;
+import steps.US17FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US16FeatureTest extends GreenCoffeeTest {
+public class US17FeatureNotParkedTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US16FeatureTest(ScenarioConfig scenario) {
+    public US17FeatureNotParkedTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Test
     public void test() {
-        start(new US16FeatureSteps());
+        start(new US17FeatureNotParkedSteps());
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS16.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS17NotParked.feature").scenarios();
     }
 
     @BeforeClass
@@ -58,32 +52,27 @@ public class US16FeatureTest extends GreenCoffeeTest {
             FirebaseAuth.getInstance().signOut();
 
         //regista o utilizador
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots@email.pt", "12345678");
 
         //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots@email.pt"/*,"12345678"*/);
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots@email.pt"/*,"12345678"*/);
         }
-
-        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735066, -8.820434", 0, 0);
-        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735008,-8.820593", 0, 0);
     }
-
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
@@ -95,7 +84,7 @@ public class US16FeatureTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
             //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
@@ -107,12 +96,8 @@ public class US16FeatureTest extends GreenCoffeeTest {
                 currentUser.delete();
 
                 FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
-
             }
         }
-
-        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
-        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot1");
     }
 
 
