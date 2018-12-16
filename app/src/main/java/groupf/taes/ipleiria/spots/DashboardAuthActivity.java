@@ -69,6 +69,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private static FusedLocationProviderClient mFusedLocationClient;
 
     private Marker choosenMarker = null;
+    private static Marker userSpotMarker = null;
 
     //private Marker spotParked
 
@@ -259,6 +260,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         String[] geo = location.split(",");
         LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
         Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(spotParked.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        userSpotMarker = marker;
 
         for(Marker m : markers) {
             m.setVisible(false);
@@ -453,5 +455,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         builder.show();
     }
+
+    public static Marker getUserSpotMarker() {
+        return userSpotMarker;
+    }
+
 
 }

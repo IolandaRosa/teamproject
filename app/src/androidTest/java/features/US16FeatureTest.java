@@ -80,7 +80,7 @@ public class US16FeatureTest extends GreenCoffeeTest {
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
         }
 
-        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735008,-8.820593", 0, 0);
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735066, -8.820434", 0, 0);
         SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735008,-8.820593", 0, 0);
     }
 
