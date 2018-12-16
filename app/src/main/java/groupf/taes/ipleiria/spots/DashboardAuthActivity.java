@@ -11,6 +11,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +39,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -125,11 +132,105 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         addDrawerItems();
         setupDrawer();
+        onChangeSpotStatus();
 
         //mapFragment.getMapAsync(this);
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    public void onChangeSpotStatus(){
+        FirebaseDatabase firebase = FirebaseDatabase.getInstance();
+
+        DatabaseReference reference = firebase.getReference();
+        reference.child("ParkingSpots").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                // Devolve todos os atributos daquele estacionamento
+                Iterable<DataSnapshot> spot = dataSnapshot.getChildren();
+                putMarkers();
+
+
+                String id = dataSnapshot.getKey();
+
+                // Saber o estado do parque:
+                Object infoPark = dataSnapshot.getValue();
+                System.out.println(infoPark);
+
+                System.out.println(dataSnapshot.child("Status").getValue().toString());
+
+
+                // Devolve chave-valor com a location do que foi mudado
+                // Usar loc.getValue() para devolver valor "-39.xxxxx, 8.xxxxx"
+                DataSnapshot loc = spot.iterator().next();
+
+                // Apenas para saber as coordenadas de GPS do spot que mudou de estado
+                String[] location = loc.getValue().toString().split(",");
+
+                for (DataSnapshot child : spot) {
+                    Toast.makeText(DashboardAuthActivity.this, "Mudou o spot: " + child.getValue(), Toast.LENGTH_LONG).show();
+                }
+
+
+
+                // Saber a minha localização física
+                Task<Location> lastLocation = getLocation();
+
+                // Calculo da distancia
+
+                float distance = FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude());
+
+                // Verificar se a a distancia do ponto infeiror a 5
+                if (distance < 20){
+                    setParkingInSpot(id);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /*
+        reference.child("ParkingSpots")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        listSpotsNew = dataSnapshot.getChildren();
+                        for (DataSnapshot child : listSpotsNew) {
+
+                            Toast.makeText(DashboardAuthActivity.this, "Mudou o spot: " + child.getValue(), Toast.LENGTH_LONG).show();
+                        }
+                        putMarkers();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+*/
+    }
+
+    private void setParkingInSpot(String idSpotChanged) {
+        askUserIfHeParkInSpot("Do you park in this spot?", idSpotChanged);
     }
 
     public static Task<Location> getLocation() {
@@ -403,6 +504,32 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void askUserIfHeParkInSpot(String message, final String idSpotChanged){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                for (Marker m :markers) {
+                    System.out.println(m.getTitle());
+                    m.getId();
+                    if (m.getTitle().compareTo(idSpotChanged) == 0){
+                        m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.No, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
