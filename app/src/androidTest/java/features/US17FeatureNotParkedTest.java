@@ -74,7 +74,6 @@ public class US17FeatureNotParkedTest extends GreenCoffeeTest {
         }
     }
 
-
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
