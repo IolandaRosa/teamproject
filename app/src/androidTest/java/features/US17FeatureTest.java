@@ -1,7 +1,6 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,40 +19,39 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.FindPreference;
-import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US14FeatureSteps;
-import steps.US16FeatureSteps;
+import steps.US17FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US16FeatureTest extends GreenCoffeeTest {
+public class US17FeatureTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US16FeatureTest(ScenarioConfig scenario) {
+    public US17FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Test
     public void test() {
-        start(new US16FeatureSteps());
+        start(new US17FeatureSteps());
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS16.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS17.feature").scenarios();
     }
 
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
+
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735008,-8.820593", 1, 0);
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735066,-8.820434", 0, 0);
+
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
@@ -67,7 +65,7 @@ public class US16FeatureTest extends GreenCoffeeTest {
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot");
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
@@ -77,11 +75,9 @@ public class US16FeatureTest extends GreenCoffeeTest {
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot");
         }
 
-        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735066, -8.820434", 0, 0);
-        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735008,-8.820593", 0, 0);
     }
 
 
@@ -114,6 +110,8 @@ public class US16FeatureTest extends GreenCoffeeTest {
         SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
         SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot1");
     }
+
+
 
 
 }

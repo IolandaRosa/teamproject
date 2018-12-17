@@ -120,6 +120,13 @@ public enum UsersManager {
         mDatabase.child(id).setValue(user);
     }
 
+    // para testes
+    public void addUserThatIsParked(String name, String email, String spotId/*, String password*/) {
+        String id=mAuth.getCurrentUser().getUid();
+        User user=new User(id,name,email,null, spotId/*, password*/);
+        mDatabase.child(id).setValue(user);
+    }
+
     //Usado apenas para testes
     public void addUserWithSpotsToDatabase(String name,String email,List<Spot> spots){
         String id=mAuth.getCurrentUser().getUid();
@@ -379,6 +386,7 @@ public enum UsersManager {
     }
 
     public void setSpotUserIsParked(String spotId) {
+      //  mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
     }
 

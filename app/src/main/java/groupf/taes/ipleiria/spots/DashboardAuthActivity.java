@@ -69,6 +69,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private static FusedLocationProviderClient mFusedLocationClient;
 
     private Marker choosenMarker = null;
+    private static Marker userSpotMarker = null;
+
+    //private Marker spotParked
 
 
     @Override
@@ -168,12 +171,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         startActivity(FavouriteSpotsListActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 3:
-                  //      setClickListenerForMarker();
-
                         mDrawerLayout.closeDrawers();
                         setClickListenerForMarker();
-
-                        //   mMap.setOnMarkerClickListener(this);
+                        break;
+                    case 4:
+                        mySpotClicked();
                         break;
                     case 6:
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
@@ -223,6 +225,50 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public static Intent getIntent(Context context) {
         return new Intent(context, DashboardAuthActivity.class);
+    }
+
+    private void mySpotClicked() {
+        mDrawerLayout.closeDrawers();
+
+        if (currentUser.getSpotParked() == null) {
+
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.mySpotErrorUserNotParked);
+            return;
+        }
+
+        String parkedSpotId = currentUser.getSpotParked();
+        Spot spotParked = null;
+        List<Spot> spotsA = SpotsManager.INSTANCE.getParkingSpotsA();
+
+        for(Spot s : spotsA) {
+            if (s.getSpotId().equalsIgnoreCase(parkedSpotId)) {
+                spotParked = s;
+                break;
+            }
+        }
+
+        if (spotParked == null) {
+            List<Spot> spotsD = SpotsManager.INSTANCE.getParkingSpotsD();
+
+            for(Spot s : spotsA) {
+                if (s.getSpotId().equalsIgnoreCase(parkedSpotId)) {
+                    spotParked = s;
+                    break;
+                }
+            }
+        }
+
+        String location = spotParked.getLocationGeo();
+        String[] geo = location.split(",");
+        LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(spotParked.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        userSpotMarker = marker;
+
+        for(Marker m : markers) {
+            m.setVisible(false);
+        }
+        //    markers.add(marker);
+
     }
 
 
@@ -411,5 +457,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         builder.show();
     }
+
+    public static Marker getUserSpotMarker() {
+        return userSpotMarker;
+    }
+
 
 }

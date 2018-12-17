@@ -36,14 +36,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
 public class US16FeatureSteps extends GreenCoffeeSteps {
-    private List<Spot> spots = new ArrayList<>();
-
-    private void populateSpots() {
-        spots.add(new Spot("A-1", "A", "1,5", 0, 3));
-        spots.add(new Spot("A-2", "A", "1,2", 0, 2));
-        spots.add(new Spot("A-3", "A", "-1,5", 0, 4));
-    }
-
 
     @Given("^I am authenticated user$")
     public void i_am_authenticated_user() {
@@ -86,10 +78,11 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
     public void i_select_other_marker_on_the_map() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains("TestSpot1"));
+
         try {
             marker.click();
         } catch (UiObjectNotFoundException e) {
-
+            Assert.assertTrue(marker.exists());
         }
     }
 
