@@ -49,6 +49,8 @@ public enum SpotsManager {
         freeParkingSpots = new LinkedList<>();
         parkingSpotsOld = new LinkedList<>();
         firstTime = true;
+
+
         //writeSpotsOnDatabase();
        // readSpotsDataFromDatabase();
     }

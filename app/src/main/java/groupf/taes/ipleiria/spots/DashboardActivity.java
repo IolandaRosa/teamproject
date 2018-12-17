@@ -49,7 +49,6 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
 
         SpotsManager.INSTANCE.readSpotsDataFromDatabase();
         setContentView(R.layout.activity_dashboard);
-
         freeSpotsTxt = findViewById(R.id.txtNumberFreeSpots);
         occupiedSpotsTxt = findViewById(R.id.txtNumberOcuppiedSpots);
         lastInfoDateTxt = findViewById(R.id.lastInfoDate);
