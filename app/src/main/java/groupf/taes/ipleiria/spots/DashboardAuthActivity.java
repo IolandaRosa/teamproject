@@ -188,7 +188,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setClickListenerForMarker () {
-        if (SpotsManager.INSTANCE.getFreeParkingSpots(currentPark).size() == 0) {
+        if (currentUser.getSpotParked() != null) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.errorUserAlreadyParked);
+        } else if (SpotsManager.INSTANCE.getFreeParkingSpots(currentPark).size() == 0) {
             InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.noFreeSpots);
         } else {
             mMap.setOnMarkerClickListener(this);
