@@ -26,6 +26,7 @@ import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.Spot;
 import modelo.SpotsManager;
+import modelo.UsersManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
@@ -133,18 +134,15 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spotTest.getStatus());
     }
 
-    @When("^I select the Park D$")
-    public void i_select_the_Park_D() {
-        onViewWithId(R.id.spinner).click();
-        onData(is("Park Campus D")).perform(click());
+    @Given("^I am already parked$")
+    public void i_am_already_parked() {
+        Assert.assertNotNull(UsersManager.INSTANCE.getCurrentUser().getSpotParked());
     }
 
-    @Then("^I see a dialog box saying that there's no free spots$")
-    public void i_see_a_dialog_box_saying_that_there_s_no_free_spots() {
-        onViewWithText(string(R.string.noFreeSpots)).isDisplayed();
-
+    @Then("^I see a message saying that I am already parked$")
+    public void i_see_a_message_saying_that_I_am_already_parked() {
+        onViewWithText(string(R.string.errorUserAlreadyParked)).isDisplayed();
     }
-
 
 
 }
