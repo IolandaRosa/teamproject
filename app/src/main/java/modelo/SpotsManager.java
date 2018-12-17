@@ -95,6 +95,8 @@ public enum SpotsManager {
                 parkingSpotsD = new LinkedList<>();
 
                 //mudei aqui
+
+
                 parkingSpotsOld = parkingSpots;
                 parkingSpots = new LinkedList<>();
 

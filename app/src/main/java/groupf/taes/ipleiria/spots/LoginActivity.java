@@ -71,7 +71,10 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        startActivity(DashboardAuthActivity.getIntent(LoginActivity.this));
+                        //DashboardActivity.dashActivity.finish();
+                        Intent i  = DashboardAuthActivity.getIntent(LoginActivity.this);
+                        i.putExtra("EXECUTE_READ_SPOTS",false);
+                        startActivity(i);
 
                     }else{
                         InternetConnectionManager.INSTANCE.showErrorMessage(LoginActivity.this,R.string.invalidCredentials);

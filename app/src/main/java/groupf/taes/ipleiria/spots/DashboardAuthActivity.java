@@ -1,6 +1,5 @@
 package groupf.taes.ipleiria.spots;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -84,13 +83,21 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private Marker choosenMarker = null;
 
     private String occupiedParkId = "";
+    private  boolean execute = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
         // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
-        SpotsManager.INSTANCE.readSpotsDataFromDatabase();
+
+        execute = getIntent().getBooleanExtra("EXECUTE_READ_SPOTS",true);
+        if(execute)//para evitar que seja executado mais do que uma vez
+        {
+            SpotsManager.INSTANCE.readSpotsDataFromDatabase();
+        }
+
+
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
@@ -167,13 +174,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
-            //na primeira vez que se corre a app a old fica sempre igual a new nao percebo porquê(Estao a ser atualizadas so spots manager)
-            // a partir da segunda a old fica com o seu suposto valor e ja funciona tudo bem
-            System.out.println(("old: " + SpotsManager.INSTANCE.getParkingSpotsOld() + "size: " + SpotsManager.INSTANCE.getParkingSpotsOld().size()  ));
-            System.out.println(("new: " + SpotsManager.INSTANCE.getParkingSpots() + "size: " + SpotsManager.INSTANCE.getParkingSpots().size()));
-           List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
-
+            List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
 
             //Task<Location> lastLocation = getLocation();
 
@@ -185,20 +186,20 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
                 //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
 
-               System.out.println("distancia: " + FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888));
                if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < 60
-                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals("")) //ou seja so se nao tiver ja estacionado
+                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado
                {
 
-                   System.out.println("park id: " + spot.getSpotId());
-                 setParkingInSpot(spot.getSpotId());
-                 break;
+                  // if(UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals(""))
+
+                   setParkingInSpot(spot.getSpotId());
+                   break;
+
+
                }
             }
-
             putMarkers();
         }
-
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -225,8 +226,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
 
         }
-
-
         return spotsResult;
     }
 

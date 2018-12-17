@@ -1,5 +1,6 @@
 package groupf.taes.ipleiria.spots;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,11 +35,12 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
-
+    public static Activity dashActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        dashActivity = this;
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startActivity(DashboardAuthActivity.getIntent(this));
             finish();
