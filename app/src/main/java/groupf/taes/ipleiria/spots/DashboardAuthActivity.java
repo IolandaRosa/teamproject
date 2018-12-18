@@ -1,6 +1,7 @@
 package groupf.taes.ipleiria.spots;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -189,9 +191,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < 60
                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado
                {
-
-                  // if(UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals(""))
-
                    setParkingInSpot(spot.getSpotId());
                    break;
 
@@ -230,7 +229,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setParkingInSpot(String idSpotChanged) {
-        askUserIfHeParkInSpot("Did you park in this spot?", idSpotChanged);
+        askUserIfHeParkInSpot(R.string.msgAskUserIfHeParked, idSpotChanged);
     }
 
     public static Task<Location> getLocation() {
@@ -534,9 +533,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         builder.show();
     }
 
-    private void askUserIfHeParkInSpot(String message, final String idSpotChanged){
+    private  void askUserIfHeParkInSpot(int message, final String idSpotChanged){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message);
+
         builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -560,8 +560,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 dialogInterface.dismiss();
             }
         });
+            builder.show();
 
-        builder.show();
+
     }
 
 }

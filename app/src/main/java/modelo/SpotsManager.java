@@ -198,6 +198,10 @@ public enum SpotsManager {
         dbRef.child(id).child("Status").setValue(1);
     }
 
+    public void setSpotStatusToFree(String id) {
+        dbRef.child(id).child("Status").setValue(0);
+    }
+
    /*
    public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);

@@ -25,6 +25,7 @@ import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.Spot;
+import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US14FeatureSteps;
 import steps.US15FeatureSteps;
@@ -48,63 +49,67 @@ public class US15FeatureTest extends GreenCoffeeTest {
         start(new US15FeatureSteps());
     }
 
-    /*@BeforeClass
+    @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
         //regista o utilizador
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots2@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
 
         //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-        List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","-1,5",1,0));
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots2@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots2@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots2@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
         }
-    }*/
+
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.734855,-8.820787", 0, 0);
+        //SpotsManager.INSTANCE.addSpotToDatabase("TestSpot1", "A", "39.735008,-8.820593", 0, 0);
+    }
 
 
-    /*@AfterClass
+    @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             String uid = currentUser.getUid();
             currentUser.delete();
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
-        } else {
+        }else{
             //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots2@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
-            while (!loginTask.isComplete())
+            while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if (loginTask.isSuccessful()) {
+            if(loginTask.isSuccessful()){
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();
                 currentUser.delete();
 
-                FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
+               FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
+
             }
         }
-    }*/
+
+        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
+    }
+
 
 }
