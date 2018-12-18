@@ -62,6 +62,7 @@ import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
+    public static final int distanceLimit = 60;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -188,7 +189,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
                 //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
 
-               if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < 60
+               if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado
                {
                    setParkingInSpot(spot.getSpotId());
@@ -564,5 +565,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
 
     }
+
+
 
 }

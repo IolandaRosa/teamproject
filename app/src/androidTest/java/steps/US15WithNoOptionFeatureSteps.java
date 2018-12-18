@@ -1,35 +1,21 @@
 package steps;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
-import android.support.v7.app.AlertDialog;
-import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
-import modelo.Lock;
-import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.os.SystemClock.sleep;
-import static android.support.test.espresso.action.ViewActions.click;
-
-public class US15FeatureSteps extends GreenCoffeeSteps {
+public class US15WithNoOptionFeatureSteps extends GreenCoffeeSteps {
 
     private LatLng userLocation = new LatLng(39.734810,-8.820888);
 
@@ -50,11 +36,6 @@ public class US15FeatureSteps extends GreenCoffeeSteps {
         onViewWithText(string(R.string.msgAskUserIfHeParked)).isDisplayed();
     }
 
-    @Then("^the application updates the user spot on database$")
-    public void the_application_updates_the_user_spot_on_database() {
-        Assert.assertTrue(UsersManager.INSTANCE.getUserCreated().getSpotParked().equals("TestSpot"));
-    }
-
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
@@ -64,5 +45,6 @@ public class US15FeatureSteps extends GreenCoffeeSteps {
     public void i_select_the_option(String arg1) {
         onViewWithText(arg1).click();
     }
+
 
 }
