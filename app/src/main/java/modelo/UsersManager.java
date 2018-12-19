@@ -41,8 +41,7 @@ public enum UsersManager {
 
 
     public Task<AuthResult> makeLogin(String email, String password) {
-
-        return mAuth.signInWithEmailAndPassword(email, password);
+       return mAuth.signInWithEmailAndPassword(email, password);
     }
 
     public Map<String, Integer> validadeUserCredentials(String email, String password) {

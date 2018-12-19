@@ -18,7 +18,7 @@ import modelo.UsersManager;
 public class US15WithNoOptionFeatureSteps extends GreenCoffeeSteps {
 
     private LatLng userLocation = new LatLng(39.734810,-8.820888);
-
+    private int distanceLimit = 60;
     @Given("^The application detects that a spot has changed from free to occupied$")
     public void the_application_detects_that_a_spot_has_changed_from_free_to_occupied() {
          SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot");
@@ -27,7 +27,7 @@ public class US15WithNoOptionFeatureSteps extends GreenCoffeeSteps {
     @When("^I am in the proximity of that spot$")
     public void i_am_in_the_proximity_of_that_spot() {
         float distance = FindMeASpotActivity.distance(39.734859, -8.820784, userLocation.latitude, userLocation.longitude);
-        Assert.assertTrue(distance < DashboardAuthActivity.distanceLimit);
+        Assert.assertTrue(distance < distanceLimit);
 
     }
 
