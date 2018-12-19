@@ -77,6 +77,9 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
     }
 
+
+
+
     public static Spot getCloserSpot(double latitude, double longitude, List<Spot> freeParkingSpots) {
         Spot choosenSpot=null;
         LatLng spotCoordenates;

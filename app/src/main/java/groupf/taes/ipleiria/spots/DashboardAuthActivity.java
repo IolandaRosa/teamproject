@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -55,6 +56,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
+import modelo.Lock;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -87,6 +89,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private String occupiedParkId = "";
     private  boolean execute = true;
+
+    private Location loc = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // FirebaseAuth.getInstance().signOut();
@@ -180,8 +184,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
 
             //Task<Location> lastLocation = getLocation();
-
-            String[] location = null;
+            Location lastLocation = getLocationG();
+            String[] location;
 
             for (Spot spot: spotsWithStateChanged) {
                 location = spot.getLocationGeo().split(",");
@@ -189,9 +193,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
                 //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
 
-               if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
-                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado
-               {
+               /*if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
+                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado*/
+                if(location != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
+                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
+
+                {
                    setParkingInSpot(spot.getSpotId());
                    break;
 
@@ -233,8 +240,27 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         askUserIfHeParkInSpot(R.string.msgAskUserIfHeParked, idSpotChanged);
     }
 
+    public Location getLocationG()
+    {
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            loc = location;
+                        }
+                    }
+                });
+        return loc;
+    }
+
+
+
     public static Task<Location> getLocation() {
-        Task<Location> loc = mFusedLocationClient.getLastLocation();
+
+      Task<Location> loc = mFusedLocationClient.getLastLocation();
 
         while (!loc.isComplete()) {
             try {
@@ -245,6 +271,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         return loc;
+
     }
 
     //Menu Hamburguer
