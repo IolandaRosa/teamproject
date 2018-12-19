@@ -121,6 +121,7 @@ public enum UsersManager {
         spots.add(new Spot("A-6","D","1,2",0,0));
         user.setFavouriteSpots(spots);*/
         mDatabase.child(id).setValue(user);
+
     }
 
     //Usado apenas para testes
