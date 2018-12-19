@@ -198,14 +198,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                /*if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado*/
-                if(location != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
+                if(lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
                         && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
 
                 {
                    setParkingInSpot(spot.getSpotId());
                    break;
-
-
                }
             }
             putMarkers();
