@@ -1,22 +1,29 @@
 package groupf.taes.ipleiria.spots;
 
-
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -35,19 +42,29 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
+import modelo.Lock;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    private static final int PERMISSION_LOCATION_REQUEST = 0;
+    public static final int distanceLimit = 60;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -73,14 +90,24 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     //private Marker spotParked
 
+    private String occupiedParkId = "";
+    private  boolean execute = true;
 
+    private Location loc = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
         // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
-        SpotsManager.INSTANCE.readSpotsDataFromDatabase();
+
+        execute = getIntent().getBooleanExtra("EXECUTE_READ_SPOTS",true);
+        if(execute)//para evitar que seja executado mais do que uma vez
+        {
+            SpotsManager.INSTANCE.readSpotsDataFromDatabase();
+        }
+
+
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
@@ -129,14 +156,114 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         addDrawerItems();
         setupDrawer();
 
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST);
+        }
+
+        onChangeSpotStatus();
+
         //mapFragment.getMapAsync(this);
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
+    public void onChangeSpotStatus(){
+
+        //final List<Spot> spotsBeforeChange = SpotsManager.INSTANCE.getFreeParkingSpots(0);
+
+        //System.out.println("before change: "+ spotsBeforeChange);
+        //spotsBeforeChange.addAll(SpotsManager.INSTANCE.getFreeParkingSpots(1));
+
+        FirebaseDatabase firebase = FirebaseDatabase.getInstance();
+
+        DatabaseReference reference = firebase.getReference();
+
+        reference.child("ParkingSpots").addValueEventListener(new ValueEventListener() {
+
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
+
+            //Task<Location> lastLocation = getLocation();
+            Location lastLocation = getLocationG();
+            String[] location;
+
+            for (Spot spot: spotsWithStateChanged) {
+                location = spot.getLocationGeo().split(",");
+
+                //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
+                //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
+
+               /*if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
+                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado*/
+                if(location != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
+                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
+
+                {
+                   setParkingInSpot(spot.getSpotId());
+                   break;
+
+
+               }
+            }
+            putMarkers();
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
+
+
+    }
+
+    private List<Spot> getOcuppiedSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
+
+        List<Spot> spotsResult = new LinkedList<>();
+        //System.out.println("before change:  " + spotsBeforeChange);
+        for (Spot spotBeforeChange: spotsBeforeChange) {
+            for (Spot spotChanged: spotsChanged) {
+                if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 0 && spotChanged.getStatus() == 1)
+                {
+                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
+                    spotsResult.add(spotChanged);
+                }
+
+
+            }
+
+
+        }
+        return spotsResult;
+    }
+
+    private void setParkingInSpot(String idSpotChanged) {
+        askUserIfHeParkInSpot(R.string.msgAskUserIfHeParked, idSpotChanged);
+    }
+
+    public Location getLocationG()
+    {
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            loc = location;
+                        }
+                    }
+                });
+        return loc;
+    }
+
+
+
     public static Task<Location> getLocation() {
-        Task<Location> loc = mFusedLocationClient.getLastLocation();
+
+      Task<Location> loc = mFusedLocationClient.getLastLocation();
 
         while (!loc.isComplete()) {
             try {
@@ -147,6 +274,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         return loc;
+
     }
 
     //Menu Hamburguer
@@ -340,12 +468,35 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         for (Spot s : spots) {
-            if (s.getStatus() == 0) {
+            if (s.getStatus() == 0 ) {
                 String location = s.getLocationGeo();
                 String[] geo = location.split(",");
                 LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
                 Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 markers.add(marker);
+
+
+                //pode estar mais otimizado
+                //primeira vez
+            }else if(s.getSpotId().equals(occupiedParkId))
+            {
+                String location = s.getLocationGeo();
+                String[] geo = location.split(",");
+                LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                markers.add(marker);
+
+                //sempre que o user sai da app para conseguir ver o seu spot de uma cor diferente
+            }else if(UsersManager.INSTANCE.getCurrentUser() != null)
+            {
+                if( s.getSpotId().equals(UsersManager.INSTANCE.getCurrentUser().getSpotParked()))
+                {
+                    String location = s.getLocationGeo();
+                    String[] geo = location.split(",");
+                    LatLng markerPosition = new LatLng(Float.parseFloat(geo[0]), Float.parseFloat(geo[1]));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(markerPosition).title(s.getSpotId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    markers.add(marker);
+                }
             }
         }
 
@@ -457,6 +608,40 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         builder.show();
     }
+
+    private  void askUserIfHeParkInSpot(int message, final String idSpotChanged){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                occupiedParkId = idSpotChanged;
+                putMarkers();
+                for (Marker m :markers) {
+                    m.getId();
+                    if (m.getTitle().compareTo(idSpotChanged) == 0){
+
+                        m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        UsersManager.INSTANCE.setSpotUserIsParked(m.getTitle());
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.No, new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+            builder.show();
+
+
+    }
+
+
 
     public static Marker getUserSpotMarker() {
         return userSpotMarker;

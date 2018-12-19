@@ -44,4 +44,15 @@ public class Spot implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Spot{" +
+                "spotId='" + spotId + '\'' +
+                ", park='" + park + '\'' +
+                ", locationGeo='" + locationGeo + '\'' +
+                ", status=" + status +
+                ", rating=" + rating +
+                '}';
+    }
 }

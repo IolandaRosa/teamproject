@@ -77,6 +77,9 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
     }
 
+
+
+
     public static Spot getCloserSpot(double latitude, double longitude, List<Spot> freeParkingSpots) {
         Spot choosenSpot=null;
         LatLng spotCoordenates;
@@ -104,7 +107,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
         return new LatLng(Double.parseDouble(coordenates[0]), Double.parseDouble(coordenates[1]));
     }
 
-    private static float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
+    public static float distance(double lat_a, double lng_a, double lat_b, double lng_b) {
         double earthRadius = 3958.75;
         double latDiff = Math.toRadians(lat_b - lat_a);
         double lngDiff = Math.toRadians(lng_b - lng_a);

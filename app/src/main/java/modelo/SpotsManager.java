@@ -19,7 +19,6 @@ public enum SpotsManager {
 
     private List<Spot> parkingSpotsA;
     private List<Spot> parkingSpotsD;
-    private List<Spot> parkingSpots;
     private List<Spot> parkingSpotsTest;
    /* private int freeSpots = 0;
     private int ocuppiedSpots = 0; */
@@ -31,6 +30,11 @@ public enum SpotsManager {
 
     private int freeSpotsPark = 0;
     private List<Spot> freeParkingSpots;
+
+    private List<Spot> parkingSpotsOld;
+    private List<Spot> parkingSpots;
+    private boolean firstTime;
+
     SpotsManager() {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
@@ -43,6 +47,9 @@ public enum SpotsManager {
         parkingSpotsD = new LinkedList<>();
         parkingSpotsTest = new LinkedList<>();
         freeParkingSpots = new LinkedList<>();
+        parkingSpotsOld = new LinkedList<>();
+        firstTime = true;
+
 
         //writeSpotsOnDatabase();
        // readSpotsDataFromDatabase();
@@ -78,6 +85,7 @@ public enum SpotsManager {
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 freeSpotsParkA = 0;
                 freeSpotsParkD = 0;
                 ocuppiedSpotsParkA = 0;
@@ -88,10 +96,19 @@ public enum SpotsManager {
                 parkingSpotsA = new LinkedList<>();
                 parkingSpotsD = new LinkedList<>();
 
+                //mudei aqui
+
+
+                parkingSpotsOld = parkingSpots;
+                parkingSpots = new LinkedList<>();
+
+
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
                 for (DataSnapshot d : children) {
+                    //System.out.printf("spoats amanger spot: " + d);
                     Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()), Integer.parseInt(d.child("Rating").getValue().toString()));
+                    parkingSpots.add(spot);
                     if (spot.getPark().equalsIgnoreCase("A")) {
                         parkingSpotsA.add(spot);
                         if (spot.getStatus() == 0) {
@@ -108,6 +125,8 @@ public enum SpotsManager {
                         }
                     }
                 }
+
+
                 DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
                 String date = df.format(Calendar.getInstance().getTime());
                 setDateOfData(date);
@@ -179,6 +198,10 @@ public enum SpotsManager {
         dbRef.child(id).child("Status").setValue(1);
     }
 
+    public void setSpotStatusToFree(String id) {
+        dbRef.child(id).child("Status").setValue(0);
+    }
+
    /*
    public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
@@ -213,6 +236,14 @@ public enum SpotsManager {
 
     public void removeSpotFromDatabase(String spotId) {
         dbRef.child(spotId).removeValue();
+    }
+
+    public List<Spot> getParkingSpots() {
+        return parkingSpots;
+    }
+
+    public List<Spot> getParkingSpotsOld() {
+        return parkingSpotsOld;
     }
 }
 

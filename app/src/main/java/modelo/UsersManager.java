@@ -28,6 +28,9 @@ public enum UsersManager {
     private DatabaseReference mDatabase;
     private User currentUser;
 
+
+    private User userCreated;
+
     UsersManager() {
 
         this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
@@ -38,8 +41,7 @@ public enum UsersManager {
 
 
     public Task<AuthResult> makeLogin(String email, String password) {
-
-        return mAuth.signInWithEmailAndPassword(email, password);
+       return mAuth.signInWithEmailAndPassword(email, password);
     }
 
     public Map<String, Integer> validadeUserCredentials(String email, String password) {
@@ -109,6 +111,7 @@ public enum UsersManager {
     public void addUserToDatabase(String name, String email/*, String password*/) {
         String id=mAuth.getCurrentUser().getUid();
         User user=new User(id,name,email,null,null/*, password*/);
+        userCreated = user;
         /*List<Spot> spots=new ArrayList<>();
         spots.add(new Spot("A-1","D","1,2",0,4));
         spots.add(new Spot("A-2","D","1,2",0,0));
@@ -118,6 +121,7 @@ public enum UsersManager {
         spots.add(new Spot("A-6","D","1,2",0,0));
         user.setFavouriteSpots(spots);*/
         mDatabase.child(id).setValue(user);
+
     }
 
     // para testes
@@ -320,6 +324,8 @@ public enum UsersManager {
             @Override
             public void onDataChange(DataSnapshot ds) {
                // currentUser = dataSnapshot.getValue(User.class);
+
+
                 FindPreference preference=null;
                 String id=null;
                 String name=null;
@@ -351,8 +357,8 @@ public enum UsersManager {
                 if (spotParkedObject != null) {
                     spotParked = spotParkedObject.toString();
                 }
-
                 currentUser = new User(id, name, email, preference, spotParked);
+
                 ArrayList<Spot> favouriteSpots = new ArrayList<Spot>();
 
                 for (DataSnapshot d : ds.child("favouriteSpots").getChildren()) {
@@ -386,8 +392,11 @@ public enum UsersManager {
     }
 
     public void setSpotUserIsParked(String spotId) {
-      //  mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
+        userCreated.setSpotParked(spotId);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
     }
 
+    public User getUserCreated() {
+        return userCreated;
+    }
 }
