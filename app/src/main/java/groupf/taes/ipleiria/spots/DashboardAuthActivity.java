@@ -1,7 +1,6 @@
 package groupf.taes.ipleiria.spots;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +10,8 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,14 +20,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -45,7 +40,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +50,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
-import modelo.Lock;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -303,16 +296,31 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 4:
                         mySpotClicked();
                         break;
+                    case 5:
+                        mDrawerLayout.closeDrawers();
+                        leaveSpotClicked();
+                        break;
                     case 6:
-                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        // statistics
                         break;
                     case 7:
+                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 8:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
                 }
             }
         });
+    }
+
+    public void leaveSpotClicked() {
+        if (currentUser.getSpotParked() == null) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.errorLeaveSpotUserIsNotPaked);
+        } else {
+            askUserYesOrNo(R.string.askUserIsLeavingTheSpot, false);
+        }
     }
 
     private void setClickListenerForMarker () {
@@ -565,7 +573,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         }
 
-        askUserIfWantToParkInSpot(R.string.msgAskUserIfWantToPark);
+        askUserYesOrNo(R.string.msgAskUserIfWantToPark, true);
 
         //  initializeMapsApp(marker.getPosition());
 
@@ -575,31 +583,31 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return false;
     }
 
-    private void initializeMapsApp(LatLng choosenSpot) {
-        String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setPackage("com.google.android.apps.maps");
-        startActivity(intent);
-    }
 
-
-    private void askUserIfWantToParkInSpot(int msg) {
+                                        // parking or leaving
+    private void askUserYesOrNo(int msg, final boolean parking ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMessage(msg);
         builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
-                UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
-                initializeMapsApp(choosenMarker.getPosition());
+               if (parking) {
+                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                   UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+               } else {
+                    leaveSpot();
+               }
+               currentUser = UsersManager.INSTANCE.getCurrentUser();
             }
         });
 
         builder.setNegativeButton(R.string.No, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                if (parking) {
+                    choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                }
                 dialogInterface.dismiss();
             }
         });
@@ -643,6 +651,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public static Marker getUserSpotMarker() {
         return userSpotMarker;
+    }
+
+    public void leaveSpot() {
+        SpotsManager.INSTANCE.setSpotStatusToFree(currentUser.getSpotParked());
+        UsersManager.INSTANCE.userLeaveSpot();
+
     }
 
 

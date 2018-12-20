@@ -392,11 +392,20 @@ public enum UsersManager {
     }
 
     public void setSpotUserIsParked(String spotId) {
-        userCreated.setSpotParked(spotId);
+        if(userCreated != null) {
+            userCreated.setSpotParked(spotId);
+        }
+        currentUser.setSpotParked(spotId);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
     }
 
     public User getUserCreated() {
         return userCreated;
+    }
+
+    public void userLeaveSpot() {
+       // mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(null);
+        currentUser.setSpotParked(null);
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").removeValue();
     }
 }
