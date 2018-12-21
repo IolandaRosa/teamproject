@@ -245,6 +245,19 @@ public enum SpotsManager {
     public List<Spot> getParkingSpotsOld() {
         return parkingSpotsOld;
     }
+
+    public Spot getSpotFromId(String spotId) {
+        for (Spot s : getParkingSpots()) {
+            if (s.getSpotId().equalsIgnoreCase(spotId)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public void setSpotRate(String spotId, int rating) {
+        dbRef.child(spotId).child("Rating").setValue(rating);
+    }
 }
 
 

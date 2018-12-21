@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,14 +20,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -654,10 +662,77 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void leaveSpot() {
+        final String spotId = currentUser.getSpotParked();
         SpotsManager.INSTANCE.setSpotStatusToFree(currentUser.getSpotParked());
         UsersManager.INSTANCE.userLeaveSpot();
+        LayoutInflater inflater = (LayoutInflater) DashboardAuthActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.leave_spot_dialog, null);
+        float density = DashboardAuthActivity.this.getResources().getDisplayMetrics().density;
 
+        final PopupWindow pw = new PopupWindow(layout, (int)density*380, (int)density*420, true);
+
+        pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pw.setOutsideTouchable(true);
+
+        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+        List<Spot> spots = currentUser.getFavouriteSpots();
+        for(Spot s : spots) {
+            if(s.getSpotId().equalsIgnoreCase(spotId)) {
+                layout.findViewById(R.id.btnAddToFavourites).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewOneOfFavourites).setVisibility(View.VISIBLE);
+            }
+        }
+
+        ((Button) layout.findViewById(R.id.btnClose)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                pw.dismiss();
+            }
+        });
+
+        ((Button) layout.findViewById(R.id.btnAddToFavourites)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addSpotToFavourites(spotId);
+                layout.findViewById(R.id.btnAddToFavourites).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewOneOfFavourites).setVisibility(View.VISIBLE);
+            }
+        });
+
+        ((Button) layout.findViewById(R.id.btnSendRate)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                RatingBar ratingBar = (RatingBar) layout.findViewById(R.id.ratingBar);
+
+                rateSpot(spotId, (int) ratingBar.getRating());
+
+                layout.findViewById(R.id.btnSendRate).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewWantRateSpot).setVisibility(View.GONE);
+                layout.findViewById(R.id.ratingBar).setVisibility(View.INVISIBLE);
+                layout.findViewById(R.id.txtViewRateSended).setVisibility(View.VISIBLE);
+            }
+        });
     }
+
+    private void addSpotToFavourites(String spotId) {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
+        UsersManager.INSTANCE.addFavouriteSpotsList(currentUser, spot);
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
+    }
+
+    private void rateSpot(String spotId, int rate) {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
+        int spotRate = spot.getRating();
+
+        System.out.println("rate user: " + rate);
+        System.out.println("rate spot: " + spotRate);
+
+        int finalRate = ((spotRate + rate) / 2);
+
+        System.out.println("Rate: " + finalRate);
+
+        SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
+    }
+
+
 
 
 }

@@ -70,6 +70,11 @@
     <string name="mySpotErrorUserNotParked">You aren\'t parked.</string>
     <string name="errorLeaveSpotUserIsNotPaked">You\'re not parked</string>
     <string name="askUserIsLeavingTheSpot">Are you leaving the spot?</string>
+    <string name="rateTheSpot">Do you want to rate the spot?</string>
+    <string name="askWantsAddToFavourites">Add to my favourites</string>
+    <string name="close">Close</string>
+    <string name="sendRate">Send Rate</string>
+    <string name="infoRateSended">Rate sended.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

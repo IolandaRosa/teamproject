@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="380dp"
+    android:layout_height="450dp"
+    android:orientation="vertical"
+    android:background="@drawable/custom_border">
+
+    <TextView
+        android:id="@+id/txtViewWantRateSpot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rateTheSpot"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1.0" />
+
+    <TextView
+        android:id="@+id/txtViewRateSended"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/infoRateSended"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:visibility="gone" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/btnSendRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sendRate"
+        android:textSize="12sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:id="@+id/txtViewOneOfFavourites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/infoRateSended"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnAddToFavourites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/askWantsAddToFavourites"
+        android:textSize="12sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="@string/close" />
+
+
+</LinearLayout>

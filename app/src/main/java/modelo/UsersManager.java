@@ -386,8 +386,11 @@ public enum UsersManager {
     }
 
     public void addFavouriteSpotsList(User user, Spot spot) {
+
+
         user.addFavouriteSpot(spot);
         List<Spot> userSpots = user.getFavouriteSpots();
+        currentUser = user;
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("favouriteSpots").setValue(userSpots);
     }
 
@@ -408,4 +411,7 @@ public enum UsersManager {
         currentUser.setSpotParked(null);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").removeValue();
     }
+
+
+
 }
