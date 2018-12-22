@@ -18,7 +18,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class US17FeatureNotParkedSteps extends GreenCoffeeSteps {
+public class US18FeatureNotParkedSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -42,5 +42,6 @@ public class US17FeatureNotParkedSteps extends GreenCoffeeSteps {
     public void i_see_a_message_saying_that_I_am_not_parked() {
         onViewWithText(string(R.string.errorUserIsNotParked)).isDisplayed();
     }
+
 
 }

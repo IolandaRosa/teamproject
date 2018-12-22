@@ -1,36 +1,38 @@
 package groupf.taes.ipleiria.spots;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -45,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +57,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
-import modelo.Lock;
 import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
@@ -303,16 +303,31 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 4:
                         mySpotClicked();
                         break;
+                    case 5:
+                        mDrawerLayout.closeDrawers();
+                        leaveSpotClicked();
+                        break;
                     case 6:
-                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        // statistics
                         break;
                     case 7:
+                        startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 8:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
                 }
             }
         });
+    }
+
+    public void leaveSpotClicked() {
+        if (currentUser.getSpotParked() == null) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.errorUserIsNotParked);
+        } else {
+            askUserYesOrNo(R.string.askUserIsLeavingTheSpot, false);
+        }
     }
 
     private void setClickListenerForMarker () {
@@ -358,7 +373,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         if (currentUser.getSpotParked() == null) {
 
-            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.mySpotErrorUserNotParked);
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.errorUserIsNotParked);
             return;
         }
 
@@ -565,7 +580,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         }
 
-        askUserIfWantToParkInSpot(R.string.msgAskUserIfWantToPark);
+        askUserYesOrNo(R.string.msgAskUserIfWantToPark, true);
 
         //  initializeMapsApp(marker.getPosition());
 
@@ -575,31 +590,31 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         return false;
     }
 
-    private void initializeMapsApp(LatLng choosenSpot) {
-        String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setPackage("com.google.android.apps.maps");
-        startActivity(intent);
-    }
 
-
-    private void askUserIfWantToParkInSpot(int msg) {
+                                        // parking or leaving
+    private void askUserYesOrNo(int msg, final boolean parking ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMessage(msg);
         builder.setPositiveButton(R.string.Yes, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
-                UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
-                initializeMapsApp(choosenMarker.getPosition());
+               if (parking) {
+                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                   UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+               } else {
+                    leaveSpot();
+               }
+               currentUser = UsersManager.INSTANCE.getCurrentUser();
             }
         });
 
         builder.setNegativeButton(R.string.No, new  DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                if (parking) {
+                    choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                }
                 dialogInterface.dismiss();
             }
         });
@@ -644,6 +659,80 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     public static Marker getUserSpotMarker() {
         return userSpotMarker;
     }
+
+    public void leaveSpot() {
+        final String spotId = currentUser.getSpotParked();
+        SpotsManager.INSTANCE.setSpotStatusToFree(currentUser.getSpotParked());
+        UsersManager.INSTANCE.userLeaveSpot();
+        LayoutInflater inflater = (LayoutInflater) DashboardAuthActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.leave_spot_dialog, null);
+        float density = DashboardAuthActivity.this.getResources().getDisplayMetrics().density;
+
+        final PopupWindow pw = new PopupWindow(layout, (int)density*380, (int)density*420, true);
+
+        pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pw.setOutsideTouchable(true);
+
+        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+        List<Spot> spots = currentUser.getFavouriteSpots();
+        for(Spot s : spots) {
+            if(s.getSpotId().equalsIgnoreCase(spotId)) {
+                layout.findViewById(R.id.btnAddToFavourites).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewOneOfFavourites).setVisibility(View.VISIBLE);
+            }
+        }
+
+        ((Button) layout.findViewById(R.id.btnClose)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                pw.dismiss();
+            }
+        });
+
+        ((Button) layout.findViewById(R.id.btnAddToFavourites)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addSpotToFavourites(spotId);
+                layout.findViewById(R.id.btnAddToFavourites).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewOneOfFavourites).setVisibility(View.VISIBLE);
+            }
+        });
+
+        ((Button) layout.findViewById(R.id.btnSendRate)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                RatingBar ratingBar = (RatingBar) layout.findViewById(R.id.ratingBar);
+
+                rateSpot(spotId, (int) ratingBar.getRating());
+
+                layout.findViewById(R.id.btnSendRate).setVisibility(View.GONE);
+                layout.findViewById(R.id.txtViewWantRateSpot).setVisibility(View.GONE);
+                layout.findViewById(R.id.ratingBar).setVisibility(View.INVISIBLE);
+                layout.findViewById(R.id.txtViewRateSended).setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void addSpotToFavourites(String spotId) {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
+        UsersManager.INSTANCE.addSpotToFavourites(currentUser, spot);
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
+    }
+
+    private void rateSpot(String spotId, int rate) {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
+        int spotRate = spot.getRating();
+
+        int finalRate = ((spotRate + rate) / 2);
+
+        if (finalRate > 5) {
+            finalRate = 5;
+        } else if (finalRate < 0) {
+            finalRate = 0;
+        }
+
+        SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
+    }
+
+
 
 
 }

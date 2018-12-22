@@ -24,37 +24,38 @@ import java.util.Collection;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US16FeatureIsParkedSteps;
-import steps.US16FeatureNoFreeSpotsSteps;
+import steps.US18FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US16FeatureIsParkedTest extends GreenCoffeeTest {
+public class US18FeatureTest extends GreenCoffeeTest {
+
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US16FeatureIsParkedTest(ScenarioConfig scenario) {
+    public US18FeatureTest(ScenarioConfig scenario) {
         super(scenario);
+    }
+
+    @Test
+    public void test() {
+        start(new US18FeatureSteps());
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS16IsParked.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS18.feature").scenarios();
     }
-
-
-    @Test
-    public void test() {
-        start(new US16FeatureIsParkedSteps());
-    }
-
 
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
+
+        SpotsManager.INSTANCE.addSpotToDatabase("TestSpot", "A", "39.735008,-8.820593", 1, 0);
+
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
         //regista o utilizador
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots5@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots7@email.pt", "12345678");
 
         //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
@@ -63,19 +64,17 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots5@email.pt", "TestSpot", null);
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots7@email.pt", "TestSpot", null);
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots5@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots7@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-           // UsersManager.INSTANCE.addUserToDatabase("Spots","spots5@email.pt");
-          //  UsersManager.INSTANCE.add;
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots5@email.pt", "TestSpot", null);
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots7@email.pt", "TestSpot", null);
         }
 
     }
@@ -91,7 +90,7 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
             //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots5@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
             //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
@@ -107,7 +106,9 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
             }
         }
 
+        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
     }
+
 
 
 }

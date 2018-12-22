@@ -125,9 +125,20 @@ public enum UsersManager {
     }
 
     // para testes
-    public void addUserThatIsParked(String name, String email, String spotId/*, String password*/) {
+    public void addUserThatIsParked(String name, String email, String spotId, List<Spot> spots) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null, spotId/*, password*/);
+        User user=new User(id,name,email,null, spotId);
+        if (spots != null) {
+            user.setFavouriteSpots(spots);
+        }
+        mDatabase.child(id).setValue(user);
+    }
+
+    // para testes
+    public void addUserWithFavouritesAndParked(String name, String email, String spotId, List<Spot> spots) {
+        String id = mAuth.getCurrentUser().getUid();
+        User user = new User(id,name,email,null, spotId);
+        user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
     }
 
@@ -385,18 +396,41 @@ public enum UsersManager {
         return mDatabase.child(id).child("favouriteSpots");
     }
 
-    public void addFavouriteSpotsList(User user, Spot spot) {
+    public void addSpotToFavourites(User user, Spot spot) {
         user.addFavouriteSpot(spot);
         List<Spot> userSpots = user.getFavouriteSpots();
+        currentUser = user;
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("favouriteSpots").setValue(userSpots);
     }
 
     public void setSpotUserIsParked(String spotId) {
-        userCreated.setSpotParked(spotId);
+        if(userCreated != null) {
+            userCreated.setSpotParked(spotId);
+        }
+        currentUser.setSpotParked(spotId);
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
+    }
+
+    // para test
+    public boolean spotIsUserFavourite(String spotId) {
+        for (Spot s : currentUser.getFavouriteSpots()) {
+            if (s.getSpotId().equalsIgnoreCase(spotId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public User getUserCreated() {
         return userCreated;
     }
+
+    public void userLeaveSpot() {
+       // mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(null);
+        currentUser.setSpotParked(null);
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").removeValue();
+    }
+
+
+
 }

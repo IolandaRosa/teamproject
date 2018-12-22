@@ -67,7 +67,14 @@
     <string name="msgAskUserIfWantToPark">Do you want to park in the spot selected?</string>
     <string name="msgAskUserIfHeParked">Did you park in this spot?</string>
     <string name="errorUserAlreadyParked">You are already parked.</string>
-    <string name="mySpotErrorUserNotParked">You aren\'t parked.</string>
+    <string name="errorUserIsNotParked">You aren\'t parked.</string>
+    <string name="askUserIsLeavingTheSpot">Are you leaving the spot?</string>
+    <string name="rateTheSpot">Do you want to rate the spot?</string>
+    <string name="askWantsAddToFavourites">Add to my favourites</string>
+    <string name="close">Close</string>
+    <string name="sendRate">Send Rate</string>
+    <string name="infoRateSended">Rate sended.</string>
+    <string name="infoSpotIsFavourite">\"This spot is one of your favourites.\"</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -80,6 +87,7 @@
         <item>My favourite spots</item>
         <item>Park Manually</item>
         <item>My spot</item>
+        <item>Leave My Spot</item>
         <item>Statistics</item>
         <item>Change my password</item>
         <item>Logout</item>
