@@ -95,9 +95,6 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I am registered with success$")
     public void i_am_registered_with_success() {
-        //Regista e faz login logo tem sucesso
-        //todo tratar caso do sleep para sincronização de threads
-        sleep(5000);
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
@@ -158,7 +155,4 @@ public class US3FeatureSteps extends GreenCoffeeSteps {
         onViewWithText("Email").isDisplayed();
         onViewWithText("Password").isDisplayed();
     }
-
-
-
 }

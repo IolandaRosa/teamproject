@@ -54,10 +54,8 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        //regista o utilizador
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots1@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
@@ -66,22 +64,20 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
         spots.add(new Spot("A-2","D","-1,5",1,0));
 
         if(registerTask.isSuccessful()){
-            //Coloca utilizador na BD sem spots
+
             UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots1@email.pt", spots);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots1@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            //Coloca utilizador na BD sem spots
             UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots1@email.pt", spots);
         }
     }
 
-    //Apagar esse user de teste da BD auth e da BD de Users
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
@@ -93,7 +89,7 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - aplicar sincronização
+
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 

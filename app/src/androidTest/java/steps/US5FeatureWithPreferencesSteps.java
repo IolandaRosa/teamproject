@@ -36,7 +36,6 @@ public class US5FeatureWithPreferencesSteps extends GreenCoffeeSteps {
     @When("^I press the My Profile button$")
     public void i_press_the_My_Profile_button() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(500);
         Espresso.onView(withText("Profile")).perform(click());
     }
 

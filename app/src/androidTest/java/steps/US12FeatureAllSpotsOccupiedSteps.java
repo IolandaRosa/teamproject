@@ -38,7 +38,6 @@ public class US12FeatureAllSpotsOccupiedSteps extends GreenCoffeeSteps {
 
     @Then("^I see an error message displayed saying \"([^\"]*)\"$")
     public void i_see_an_error_message_displayed_saying(String arg1) {
-        sleep(100);
         onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed()));
         onView(withText(arg1)).inRoot(isDialog()).perform(click());
     }

@@ -3,6 +3,7 @@ package groupf.taes.ipleiria.spots;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import static modelo.FindPreference.CLOSER_LOCATION;
 import static modelo.FindPreference.FAVOURITE_SPOTS;
 
 public class ProfileActivity extends AppCompatActivity {
+    private static final CountingIdlingResource idlingResource = new CountingIdlingResource("profile");
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtfindMeAPreference;
@@ -66,11 +68,12 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     public void getProfile(DatabaseReference ref) {
+        idlingResource.increment();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                idlingResource.decrement();
                 user =dataSnapshot.getValue(User.class);
 
                 txtName.setText(user.getName());
@@ -125,4 +128,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
     }
+    public static CountingIdlingResource getIdlingResource() {
+        return idlingResource;
+    }
+
 }

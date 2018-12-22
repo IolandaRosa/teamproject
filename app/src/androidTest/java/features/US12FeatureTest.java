@@ -58,10 +58,9 @@ public class US12FeatureTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        //regista o utilizador
+
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
@@ -72,18 +71,16 @@ public class US12FeatureTest extends GreenCoffeeTest {
         spots.add(new Spot("A-4","A","-1,5",1,5));
 
         if(registerTask.isSuccessful()){
-            //Coloca utilizador na BD sem spots
             UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.FAVOURITE_SPOTS);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            //Coloca utilizador na BD sem spots
             UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots3@email.pt", spots);
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.FAVOURITE_SPOTS);
         }
@@ -99,10 +96,10 @@ public class US12FeatureTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-            //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
+
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
+
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 

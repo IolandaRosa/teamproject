@@ -46,7 +46,6 @@ public class US11FeatureWithNoFreeSpotsSteps extends GreenCoffeeSteps {
 
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(1000);
         Espresso.onView(withText("Find me a spot")).perform(click());
     }
 

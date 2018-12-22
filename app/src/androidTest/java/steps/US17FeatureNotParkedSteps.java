@@ -34,7 +34,6 @@ public class US17FeatureNotParkedSteps extends GreenCoffeeSteps {
     public void i_select_the_option_on_the_menu(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(1000);
         Espresso.onView(withText(arg1)).perform(click());
     }
 

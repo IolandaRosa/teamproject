@@ -128,6 +128,15 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
     }
 
 
+    @Given("^I am already parked$")
+    public void i_am_already_parked() {
+
+    }
+
+    @Then("^I see a message saying that I am already parked$")
+    public void i_see_a_message_saying_that_I_am_already_parked() {
+        onViewWithText(string(R.string.errorUserAlreadyParked)).isDisplayed().perform(click());
+    }
 
 
 

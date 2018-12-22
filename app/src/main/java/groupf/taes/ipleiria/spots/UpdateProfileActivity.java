@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import modelo.UsersManager;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
+    private static final CountingIdlingResource idlingResource = new CountingIdlingResource("updateProfile");
     private EditText editTextName;
     private EditText editTextEmail;
     private Spinner spinnerPreferences;
@@ -147,10 +149,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
         else{
 
             AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(),password);
-
+            idlingResource.increment();
             FirebaseAuth.getInstance().getCurrentUser().reauthenticateAndRetrieveData(credentials).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    idlingResource.decrement();
                     if(task.isSuccessful()){
 
                         String email = editTextEmail.getText().toString();
@@ -168,4 +171,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
             });
         }
     }
+    public static CountingIdlingResource getIdlingResource() {
+        return idlingResource;
+    }
+
 }

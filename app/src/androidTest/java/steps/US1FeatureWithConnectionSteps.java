@@ -57,7 +57,4 @@ public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnSignup).isDisplayed();
         onViewWithId(R.id.btnSignup).contains(string(R.string.signUpButton));
     }
-
-
-
 }
