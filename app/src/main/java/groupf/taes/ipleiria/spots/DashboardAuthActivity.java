@@ -33,7 +33,6 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -325,7 +324,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public void leaveSpotClicked() {
         if (currentUser.getSpotParked() == null) {
-            InternetConnectionManager.INSTANCE.showErrorMessage(this,R.string.errorLeaveSpotUserIsNotPaked);
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.errorUserIsNotParked);
         } else {
             askUserYesOrNo(R.string.askUserIsLeavingTheSpot, false);
         }
@@ -374,7 +373,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         if (currentUser.getSpotParked() == null) {
 
-            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.mySpotErrorUserNotParked);
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.errorUserIsNotParked);
             return;
         }
 

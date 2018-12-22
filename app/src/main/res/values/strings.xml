@@ -67,8 +67,7 @@
     <string name="msgAskUserIfWantToPark">Do you want to park in the spot selected?</string>
     <string name="msgAskUserIfHeParked">Did you park in this spot?</string>
     <string name="errorUserAlreadyParked">You are already parked.</string>
-    <string name="mySpotErrorUserNotParked">You aren\'t parked.</string>
-    <string name="errorLeaveSpotUserIsNotPaked">You\'re not parked</string>
+    <string name="errorUserIsNotParked">You aren\'t parked.</string>
     <string name="askUserIsLeavingTheSpot">Are you leaving the spot?</string>
     <string name="rateTheSpot">Do you want to rate the spot?</string>
     <string name="askWantsAddToFavourites">Add to my favourites</string>
