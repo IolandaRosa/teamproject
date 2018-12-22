@@ -80,6 +80,19 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spot.getStatus());
     }
 
+   /* @Then("^I am parked$")
+    public void i_am_parked() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    } */
+
+    @Then("^The spot is occupied$")
+    public void the_spot_is_occupied() {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
+        Assert.assertEquals(1, spot.getStatus());
+    }
+
+
 
 
 }
