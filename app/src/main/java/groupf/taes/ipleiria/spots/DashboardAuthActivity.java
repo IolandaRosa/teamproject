@@ -722,12 +722,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
         int spotRate = spot.getRating();
 
-        System.out.println("rate user: " + rate);
-        System.out.println("rate spot: " + spotRate);
-
         int finalRate = ((spotRate + rate) / 2);
-
-        System.out.println("Rate: " + finalRate);
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
