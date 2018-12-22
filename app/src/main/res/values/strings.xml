@@ -74,6 +74,7 @@
     <string name="close">Close</string>
     <string name="sendRate">Send Rate</string>
     <string name="infoRateSended">Rate sended.</string>
+    <string name="infoSpotIsFavourite">\"This spot is one of your favourites.\"</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

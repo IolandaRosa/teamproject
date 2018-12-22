@@ -22,7 +22,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class US18FeatureSteps extends GreenCoffeeSteps {
+public class US18FeatureWithoutRatingSpotSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -60,33 +60,8 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnClose).isDisplayed();
     }
 
-    @Given("^I press a star$")
-    public void i_press_a_star() {
-        onViewWithId(R.id.ratingBar).click();
-    }
-
-    @Given("^The button to send rate$")
-    public void the_button_to_send_rate() {
-        onViewWithId(R.id.btnSendRate).click();
-    }
-
-    @Then("^I see a text saying that the rate was sended$")
-    public void i_see_a_text_saying_that_the_rate_was_sended() {
-        onViewWithText(string(R.string.infoRateSended)).click();
-    }
-
-    @Then("^I press the button to add to my favourites$")
-    public void i_press_the_button_to_add_to_my_favourites() {
-        onViewWithId(R.id.btnAddToFavourites).click();
-    }
-
-    @Then("^I see a message saying that the spot is on my favourites list$")
-    public void i_see_a_message_saying_that_the_spot_is_on_my_favourites_list() {
-        onViewWithText(string(R.string.infoSpotIsFavourite)).isDisplayed();
-    }
-
     @Then("^I press the close button$")
-    public void I_press_the_close_button() {
+    public void i_press_the_close_button() {
         onViewWithId(R.id.btnClose).click();
     }
 
@@ -107,19 +82,12 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spot.getStatus());
     }
 
-   /* @Then("^I am parked$")
-    public void i_am_parked() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    } */
-
-    @Then("^The spot is occupied$")
-    public void the_spot_is_occupied() {
+    @Then("^The spot is not at my list of favourites$")
+    public void the_spot_is_not_at_my_list_of_favourites() {
         Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        Assert.assertEquals(1, spot.getStatus());
+        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
+        Assert.assertFalse(spotsList.contains(spot));
     }
-
-
 
 
 }
