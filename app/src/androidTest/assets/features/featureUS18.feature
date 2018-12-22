@@ -1,6 +1,16 @@
 Feature: Leave the Spot
   As an authenticated user I want to leave the spot that I am parked
 
+  Scenario: User selects no when asked if is leaving spot
+    Given I am an authenticated user
+    And I am parked
+    And I select the option "Leave My Spot" on the menu
+    And I see a dialog asking if I want to leave
+    And I select the option "No"
+    Then I am on the auth dashboard
+    And I am parked
+    And The spot is occupied
+
   Scenario: User doens't rate the spot and doesn't add the spot to his favourites
     Given I am an authenticated user
     And I am parked
