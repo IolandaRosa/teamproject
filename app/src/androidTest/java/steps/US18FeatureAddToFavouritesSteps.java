@@ -22,7 +22,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class US18FeatureSteps extends GreenCoffeeSteps {
+public class US18FeatureAddToFavouritesSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -60,16 +60,11 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnClose).isDisplayed();
     }
 
-    @Then("^I press the close button$")
-    public void i_press_the_close_button() {
-        onViewWithId(R.id.btnClose).click();
+    @Then("^I press the button to add to my favourites$")
+    public void i_press_the_button_to_add_to_my_favourites() {
+        onViewWithId(R.id.btnAddToFavourites).click();
     }
 
-    @Then("^I am on the auth dashboard$")
-    public void i_am_on_the_auth_dashboard() {
-        onViewWithId(R.id.mapFragment).isDisplayed();
-        onViewWithId(R.id.spinner).isDisplayed();
-    }
 
     @Then("^I am not parked$")
     public void i_am_not_parked() {
@@ -82,19 +77,12 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spot.getStatus());
     }
 
-   /* @Then("^I am parked$")
-    public void i_am_parked() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    } */
-
-    @Then("^The spot is occupied$")
-    public void the_spot_is_occupied() {
+    @Then("^The spot is on my list of favourites$")
+    public void the_spot_is_on_my_list_of_favourites() {
         Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        Assert.assertEquals(1, spot.getStatus());
+        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
+        Assert.assertTrue(spotsList.contains(spot));
     }
-
-
 
 
 }
