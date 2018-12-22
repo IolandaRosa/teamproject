@@ -127,15 +127,8 @@ public class US16FeatureSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spotTest.getStatus());
     }
 
-    @Given("^I am already parked$")
-    public void i_am_already_parked() {
-        Assert.assertNotNull(UsersManager.INSTANCE.getCurrentUser().getSpotParked());
-    }
 
-    @Then("^I see a message saying that I am already parked$")
-    public void i_see_a_message_saying_that_I_am_already_parked() {
-        onViewWithText(string(R.string.errorUserAlreadyParked)).isDisplayed();
-    }
+
 
 
 }

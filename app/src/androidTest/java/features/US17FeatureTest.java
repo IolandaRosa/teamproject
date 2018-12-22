@@ -65,7 +65,7 @@ public class US17FeatureTest extends GreenCoffeeTest {
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot");
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot", null);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
@@ -75,7 +75,7 @@ public class US17FeatureTest extends GreenCoffeeTest {
                 Thread.sleep(1);
 
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot");
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots3@email.pt", "TestSpot", null);
         }
 
     }

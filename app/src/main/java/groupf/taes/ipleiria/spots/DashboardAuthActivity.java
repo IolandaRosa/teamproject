@@ -713,7 +713,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     private void addSpotToFavourites(String spotId) {
         Spot spot = SpotsManager.INSTANCE.getSpotFromId(spotId);
-        UsersManager.INSTANCE.addFavouriteSpotsList(currentUser, spot);
+        UsersManager.INSTANCE.addSpotToFavourites(currentUser, spot);
         currentUser = UsersManager.INSTANCE.getCurrentUser();
     }
 

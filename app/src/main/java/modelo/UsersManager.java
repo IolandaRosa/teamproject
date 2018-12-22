@@ -125,9 +125,12 @@ public enum UsersManager {
     }
 
     // para testes
-    public void addUserThatIsParked(String name, String email, String spotId/*, String password*/) {
+    public void addUserThatIsParked(String name, String email, String spotId, List<Spot> spots) {
         String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null, spotId/*, password*/);
+        User user=new User(id,name,email,null, spotId);
+        if (spots != null) {
+            user.setFavouriteSpots(spots);
+        }
         mDatabase.child(id).setValue(user);
     }
 
@@ -393,9 +396,7 @@ public enum UsersManager {
         return mDatabase.child(id).child("favouriteSpots");
     }
 
-    public void addFavouriteSpotsList(User user, Spot spot) {
-
-
+    public void addSpotToFavourites(User user, Spot spot) {
         user.addFavouriteSpot(spot);
         List<Spot> userSpots = user.getFavouriteSpots();
         currentUser = user;

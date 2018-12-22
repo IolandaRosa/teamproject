@@ -24,6 +24,7 @@ import java.util.Collection;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.SpotsManager;
 import modelo.UsersManager;
+import steps.US16FeatureIsParkedSteps;
 import steps.US16FeatureNoFreeSpotsSteps;
 
 @RunWith(Parameterized.class)
@@ -43,7 +44,7 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
 
     @Test
     public void test() {
-        start(new US16FeatureNoFreeSpotsSteps());
+        start(new US16FeatureIsParkedSteps());
     }
 
 
@@ -62,7 +63,7 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots5@email.pt");
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots5@email.pt", "TestSpot", null);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots5@email.pt", "12345678");
@@ -74,6 +75,7 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
             //Coloca utilizador na BD sem spots
            // UsersManager.INSTANCE.addUserToDatabase("Spots","spots5@email.pt");
           //  UsersManager.INSTANCE.add;
+            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots5@email.pt", "TestSpot", null);
         }
 
     }
