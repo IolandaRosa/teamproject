@@ -47,17 +47,19 @@ public class US18FeatureSpotOnFavouritesSteps extends GreenCoffeeSteps {
         onViewWithText(string(R.string.askUserIsLeavingTheSpot)).isDisplayed();
     }
 
+    @Given("^The spot is already on my favourites list$")
+    public void the_spot_is_already_on_my_favourites_list() {
+       /* Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
+        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
+        Assert.assertTrue(spotsList.contains(spot)); */
+       Assert.assertTrue(UsersManager.INSTANCE.spotIsUserFavourite("TestSpot"));
+    }
+
     @Given("^I select the option \"([^\"]*)\"$")
     public void i_select_the_option(String arg1) {
         onViewWithText(arg1).click();
     }
 
-    @Given("^The spot is already on my favourites list$")
-    public void the_spot_is_already_on_my_favourites_list() {
-        Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
-        Assert.assertTrue(spotsList.contains(spot));
-    }
 
     @Then("^I see an ecran where I can rate the spot and close this ecran$")
     public void i_see_an_ecran_where_I_can_rate_the_spot_and_close_this_ecran() {

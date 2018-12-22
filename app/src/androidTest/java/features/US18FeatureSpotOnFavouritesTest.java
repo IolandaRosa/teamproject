@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,15 +20,20 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US18FeatureSpotOnFavouritesSteps;
 
 @RunWith(Parameterized.class)
 public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
@@ -61,10 +67,12 @@ public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
+        List<Spot> spots=new ArrayList<>();
+        spots.add(new Spot("TestSpot", "A", "39.735008,-8.820593", 1, 0));
 
         if(registerTask.isSuccessful()){
             //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots7@email.pt", "TestSpot");
+            UsersManager.INSTANCE.addUserWithFavouritesAndParked("Spots","spots7@email.pt", "TestSpot", spots);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots7@email.pt", "12345678");
@@ -73,8 +81,8 @@ public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            //Coloca utilizador na BD sem spots
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots7@email.pt", "TestSpot");
+
+            UsersManager.INSTANCE.addUserWithFavouritesAndParked("Spots","spots7@email.pt", "TestSpot", spots);
         }
 
     }
