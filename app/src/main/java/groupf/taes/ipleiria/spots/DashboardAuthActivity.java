@@ -723,6 +723,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         int finalRate = ((spotRate + rate) / 2);
 
+        if (finalRate > 5) {
+            finalRate = 5;
+        } else if (finalRate < 0) {
+            finalRate = 0;
+        }
+
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
 
