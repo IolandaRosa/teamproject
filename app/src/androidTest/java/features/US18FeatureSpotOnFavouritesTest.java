@@ -24,27 +24,26 @@ import java.util.Collection;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US18FeatureAddToFavouritesSteps;
-import steps.US18FeatureSteps;
+import steps.US18FeatureSpotOnFavouritesSteps;
 
 @RunWith(Parameterized.class)
-public class US18FeatureAddToFavouritesTest extends GreenCoffeeTest {
+public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US18FeatureAddToFavouritesTest(ScenarioConfig scenario) {
+    public US18FeatureSpotOnFavouritesTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Test
     public void test() {
-        start(new US18FeatureAddToFavouritesSteps());
+        start(new US18FeatureSpotOnFavouritesSteps());
     }
 
     @Parameterized.Parameters (name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS18AddToFavourites.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS18SpotOnFavourites.feature").scenarios();
     }
 
     @BeforeClass

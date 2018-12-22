@@ -22,7 +22,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class US18FeatureAddToFavouritesSteps extends GreenCoffeeSteps {
+public class US18FeatureSpotOnFavouritesSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -52,17 +52,28 @@ public class US18FeatureAddToFavouritesSteps extends GreenCoffeeSteps {
         onViewWithText(arg1).click();
     }
 
-    @Given("^I see an ecran where I can rate the spot, add to my favourites and close this ecran$")
-    public void i_see_an_ecran_where_I_can_rate_the_spot_add_to_my_favourites_and_close_this_ecran() {
+    @Given("^The spot is already on my favourites list$")
+    public void the_spot_is_already_on_my_favourites_list() {
+        Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
+        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
+        Assert.assertTrue(spotsList.contains(spot));
+    }
+
+    @Then("^I see an ecran where I can rate the spot and close this ecran$")
+    public void i_see_an_ecran_where_I_can_rate_the_spot_and_close_this_ecran() {
         onViewWithId(R.id.ratingBar).isDisplayed();
         onViewWithId(R.id.btnSendRate).isDisplayed();
-        onViewWithId(R.id.btnAddToFavourites).isDisplayed();
         onViewWithId(R.id.btnClose).isDisplayed();
     }
 
-    @Then("^I press the button to add to my favourites$")
-    public void i_press_the_button_to_add_to_my_favourites() {
-        onViewWithId(R.id.btnAddToFavourites).click();
+    @Then("^I don't see the button to add to my favourites$")
+    public void i_don_t_see_the_button_to_add_to_my_favourites() {
+        onViewWithId(R.id.btnAddToFavourites).isNotDisplayed();
+    }
+
+    @Then("^I see a message saying that the spot is already on my favourites list$")
+    public void i_see_a_message_saying_that_the_spot_is_already_on_my_favourites_list() {
+        onViewWithText(string(R.string.infoSpotIsFavourite)).isDisplayed();
     }
 
 
@@ -77,12 +88,6 @@ public class US18FeatureAddToFavouritesSteps extends GreenCoffeeSteps {
         Assert.assertEquals(0, spot.getStatus());
     }
 
-    @Then("^The spot is on my list of favourites$")
-    public void the_spot_is_on_my_list_of_favourites() {
-        Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
-        Assert.assertTrue(spotsList.contains(spot));
-    }
 
 
 }
