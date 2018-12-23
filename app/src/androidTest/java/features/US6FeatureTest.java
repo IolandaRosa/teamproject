@@ -26,8 +26,6 @@ import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
 import steps.US6FeatureSteps;
 
-import static android.os.SystemClock.sleep;
-
 @RunWith(Parameterized.class)
 public class US6FeatureTest extends GreenCoffeeTest {
     @Rule

@@ -16,7 +16,6 @@ import helpers.DrawerHelper;
 import modelo.User;
 import modelo.UsersManager;
 
-import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;

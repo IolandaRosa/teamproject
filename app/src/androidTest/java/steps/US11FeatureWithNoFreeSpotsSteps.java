@@ -10,14 +10,9 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import junit.framework.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
-import modelo.Spot;
 
-import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

@@ -1,9 +1,7 @@
 package steps;
 
-import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.matcher.RootMatchers;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
@@ -11,11 +9,8 @@ import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
 
-
-import org.hamcrest.Matcher;
 import org.junit.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.test.uiautomator.UiDevice;
@@ -26,14 +21,11 @@ import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.Spot;
 import modelo.SpotsManager;
-import modelo.UsersManager;
 
 import static android.os.SystemClock.sleep;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
 
 public class US16FeatureSteps extends GreenCoffeeSteps {
 

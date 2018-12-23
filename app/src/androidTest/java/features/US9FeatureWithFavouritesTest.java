@@ -28,8 +28,6 @@ import modelo.Spot;
 import modelo.UsersManager;
 import steps.US9FeatureWithFavouritesSteps;
 
-import static android.os.SystemClock.sleep;
-
 @RunWith(Parameterized.class)
 public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
     @Rule

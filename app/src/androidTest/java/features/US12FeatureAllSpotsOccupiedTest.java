@@ -28,7 +28,6 @@ import modelo.FindPreference;
 import modelo.Spot;
 import modelo.UsersManager;
 import steps.US12FeatureAllSpotsOccupiedSteps;
-import steps.US12FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US12FeatureAllSpotsOccupiedTest extends GreenCoffeeTest {

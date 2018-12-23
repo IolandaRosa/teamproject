@@ -19,16 +19,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.Lock;
-import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US14FeatureSteps;
 import steps.US15FeatureSteps;
 
 @RunWith(Parameterized.class)

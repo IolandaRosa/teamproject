@@ -26,7 +26,6 @@ import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.FindPreference;
 import modelo.UsersManager;
 import steps.US10FeatureNoFreeSpotsSteps;
-import steps.US10FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US10FeatureNoFreeSpotsTest extends GreenCoffeeTest {
