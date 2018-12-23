@@ -1,7 +1,5 @@
 package modelo;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -319,6 +317,9 @@ public enum SpotsManager {
         return -1;
     }
 
+    public DatabaseReference getDbRef() {
+        return dbRef;
+    }
 }
 
 
