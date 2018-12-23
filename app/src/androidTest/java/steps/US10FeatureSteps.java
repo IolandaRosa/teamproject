@@ -34,10 +34,10 @@ public class US10FeatureSteps extends GreenCoffeeSteps {
     private List<Spot> spots=new ArrayList<>();
 
     private void populateSpots(){
-        spots.add(new Spot("TESTE-1","A","1,2",0,3));
-        spots.add(new Spot("TESTE-2","A","1,2",1,4));
-        spots.add(new Spot("TESTE-3","A","1,2",0,2));
-        spots.add(new Spot("TESTE-4","A","-1,5",0,4));
+        spots.add(new Spot("TESTE-1","A","1,2",0,3,0));
+        spots.add(new Spot("TESTE-2","A","1,2",1,4,0));
+        spots.add(new Spot("TESTE-3","A","1,2",0,2,0));
+        spots.add(new Spot("TESTE-4","A","-1,5",0,4,0));
     }
 
     @Given("^I am an authenticated user$")
