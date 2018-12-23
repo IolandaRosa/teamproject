@@ -1,5 +1,6 @@
 package features;
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import groupf.taes.ipleiria.spots.LoginActivity;
+import groupf.taes.ipleiria.spots.StatisticsActivity;
 import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US20FeatureSteps;
@@ -46,8 +49,7 @@ public class US20FeatureTest extends GreenCoffeeTest {
     }
 
     @BeforeClass
-    public static void setUpOnlyOnce() throws Exception {
-
+    public static synchronized void setUpOnlyOnce() throws Exception {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 

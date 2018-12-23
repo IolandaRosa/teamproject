@@ -43,21 +43,29 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I confirm that the value of registered users is at least (\\d+)$")
     public void i_confirm_that_the_value_of_registered_users_is_at_least(int arg1) {
-        
+        onViewWithId(R.id.txtTotalRegisteredUsers).isDisplayed().isNotEmpty();
+        Assert.assertTrue(Integer.parseInt(onViewWithId(R.id.txtTotalRegisteredUsers).text())>=1);
     }
 
     @Then("^The value of logged users is at least (\\d+)$")
     public void the_value_of_logged_users_is_at_least(int arg1) {
-        
+        onViewWithId(R.id.txtTotalLoggedUsers).isDisplayed().isNotEmpty();
+        Assert.assertTrue(Integer.parseInt(onViewWithId(R.id.txtTotalLoggedUsers).text())>=1);
     }
 
     @Then("^The value of total occupied spots is at least (\\d+)$")
     public void the_value_of_total_occupied_spots_is_at_least(int arg1) {
-        
+        onViewWithId(R.id.textTotalParkedUsers).isDisplayed().isNotEmpty();
+        Assert.assertTrue(Integer.parseInt(onViewWithId(R.id.textTotalParkedUsers).text())>=0);
     }
 
     @Then("^The top (\\d+) most parking and best rated spots is displayed$")
     public void the_top_most_parking_and_best_rated_spots_is_displayed(int arg1) {
-        
+        onViewWithId(R.id.textTopBestRated).isDisplayed().isNotEmpty();
+        String[] split = onViewWithId(R.id.textTopBestRated).text().split("\n");
+        Assert.assertTrue(split.length==5);
+        onViewWithId(R.id.textTopMostParked).isDisplayed().isNotEmpty();
+        split = onViewWithId(R.id.textTopMostParked).text().split("\n");
+        Assert.assertTrue(split.length==5);
     }
 }

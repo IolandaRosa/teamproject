@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private void fillTotalsIformation(){
         UsersManager.INSTANCE.getmDatabase().addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try{
@@ -79,7 +81,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -167,7 +168,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -175,6 +175,5 @@ public class StatisticsActivity extends AppCompatActivity {
     public static Intent getIntent(Context context) {
         return new Intent(context, StatisticsActivity.class);
     }
-
 
 }
