@@ -9,11 +9,9 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import org.junit.Assert;
 
-import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
 import modelo.SpotsManager;
-import modelo.UsersManager;
 
 public class US15WithNoOptionFeatureSteps extends GreenCoffeeSteps {
 

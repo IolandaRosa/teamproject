@@ -67,7 +67,7 @@ public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
             Thread.sleep(1);
 
         List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("TestSpot", "A", "39.735008,-8.820593", 1, 0));
+        spots.add(new Spot("TestSpot", "A", "39.735008,-8.820593", 1, 0,0));
 
         if(registerTask.isSuccessful()){
            UsersManager.INSTANCE. addUserThatIsParked("Spots","spots7@email.pt", "TestSpot", spots);

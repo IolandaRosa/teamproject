@@ -112,15 +112,9 @@ public enum UsersManager {
         String id=mAuth.getCurrentUser().getUid();
         User user=new User(id,name,email,null,null/*, password*/);
         userCreated = user;
-        /*List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","1,2",0,0));
-        spots.add(new Spot("A-3","D","1,2",0,4));
-        spots.add(new Spot("A-4","D","1,2",0,0));
-        spots.add(new Spot("A-5","D","1,2",0,4));
-        spots.add(new Spot("A-6","D","1,2",0,0));
-        user.setFavouriteSpots(spots);*/
         mDatabase.child(id).setValue(user);
+        currentUser=new User();
+        currentUser=user;
 
     }
 
@@ -132,6 +126,8 @@ public enum UsersManager {
             user.setFavouriteSpots(spots);
         }
         mDatabase.child(id).setValue(user);
+        if(currentUser!=null)
+            currentUser.setFavouriteSpots(spots);
     }
 
     // para testes
@@ -140,6 +136,8 @@ public enum UsersManager {
         User user = new User(id,name,email,null, spotId);
         user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
+        if(currentUser!=null)
+            currentUser.setFavouriteSpots(spots);
     }
 
     //Usado apenas para testes
@@ -148,6 +146,8 @@ public enum UsersManager {
         User user=new User(id,name,email,null,null);
         user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
+        if(currentUser!=null)
+            currentUser.setFavouriteSpots(spots);
     }
 
     public DatabaseReference getUserProfileInfo() {
@@ -196,6 +196,8 @@ public enum UsersManager {
 
     public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
+        if(currentUser!=null)
+            currentUser.setFindPreference(findPreference);
     }
 
     public Map<String, Integer> validateNameAndEmail(String name, String email) {
@@ -232,11 +234,16 @@ public enum UsersManager {
     public void updateUserNameInDatabase(String name) {
         String id=mAuth.getCurrentUser().getUid();
         mDatabase.child(id).child("name").setValue(name);
+        if(currentUser!=null)
+            currentUser.setName(name);
     }
 
     public void updateUserEmailInDatabase(String email) {
         String id=mAuth.getCurrentUser().getUid();
         mDatabase.child(id).child("email").setValue(email);
+
+        if(currentUser!=null)
+            currentUser.setEmail(email);
     }
 
     public void updateUserFindPreferenceInDatabase(String selectPreference) {
@@ -245,9 +252,13 @@ public enum UsersManager {
 
         if(findPreference==null){
             mDatabase.child(id).child("findPreference").removeValue();
+            if(currentUser!=null)
+                currentUser.setFindPreference(null);
         }
         else{
             mDatabase.child(id).child("findPreference").setValue(findPreference);
+            if(currentUser!=null)
+                currentUser.setFindPreference(findPreference);
         }
 
     }
@@ -255,7 +266,10 @@ public enum UsersManager {
     public void logoutUser() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
         {
+            this.setUserLogged(false);
             FirebaseAuth.getInstance().signOut();
+            if(currentUser!=null)
+                currentUser.setLogged(false);
         }
     }
 
@@ -336,7 +350,6 @@ public enum UsersManager {
             public void onDataChange(DataSnapshot ds) {
                // currentUser = dataSnapshot.getValue(User.class);
 
-
                 FindPreference preference=null;
                 String id=null;
                 String name=null;
@@ -399,7 +412,9 @@ public enum UsersManager {
     public void addSpotToFavourites(User user, Spot spot) {
         user.addFavouriteSpot(spot);
         List<Spot> userSpots = user.getFavouriteSpots();
-        currentUser = user;
+        if(currentUser!=null){
+            currentUser = user;
+        }
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("favouriteSpots").setValue(userSpots);
     }
 
@@ -407,7 +422,10 @@ public enum UsersManager {
         if(userCreated != null) {
             userCreated.setSpotParked(spotId);
         }
-        currentUser.setSpotParked(spotId);
+        if(currentUser!=null){
+            currentUser.setSpotParked(spotId);
+        }
+
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(spotId);
     }
 
@@ -427,10 +445,23 @@ public enum UsersManager {
 
     public void userLeaveSpot() {
        // mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(null);
-        currentUser.setSpotParked(null);
+        if(currentUser!=null){
+            currentUser.setSpotParked(null);
+        }
         mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").removeValue();
     }
 
 
+    public void setUserLogged(boolean loggedValue) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("logged").setValue(loggedValue);
 
+        if(currentUser!=null){
+            currentUser.setLogged(loggedValue);
+        }
+    }
+
+    public DatabaseReference getmDatabase() {
+        return mDatabase;
+    }
 }

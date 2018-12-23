@@ -23,7 +23,6 @@ import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
-import steps.US17FeatureNotParkedSteps;
 import steps.US18FeatureNotParkedSteps;
 
 @RunWith(Parameterized.class)

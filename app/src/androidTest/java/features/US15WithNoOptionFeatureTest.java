@@ -24,7 +24,6 @@ import java.util.Collection;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US15FeatureSteps;
 import steps.US15WithNoOptionFeatureSteps;
 
 @RunWith(Parameterized.class)

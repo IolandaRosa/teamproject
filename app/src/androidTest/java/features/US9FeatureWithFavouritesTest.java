@@ -28,8 +28,6 @@ import modelo.Spot;
 import modelo.UsersManager;
 import steps.US9FeatureWithFavouritesSteps;
 
-import static android.os.SystemClock.sleep;
-
 @RunWith(Parameterized.class)
 public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
     @Rule
@@ -60,8 +58,8 @@ public class US9FeatureWithFavouritesTest extends GreenCoffeeTest {
             Thread.sleep(1);
 
         List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","-1,5",1,0));
+        spots.add(new Spot("A-1","D","1,2",0,4,0));
+        spots.add(new Spot("A-2","D","-1,5",1,0,0));
 
         if(registerTask.isSuccessful()){
 

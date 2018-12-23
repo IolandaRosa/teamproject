@@ -1,7 +1,6 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,16 +19,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.FindPreference;
-import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US14FeatureSteps;
 import steps.US16FeatureSteps;
 
 @RunWith(Parameterized.class)

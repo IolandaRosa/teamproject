@@ -51,6 +51,7 @@
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".FavouriteSpotsListActivity" />
         <activity android:name=".FindMeASpotActivity" />
+        <activity android:name=".StatisticsActivity"></activity>
     </application>
 
 </manifest>

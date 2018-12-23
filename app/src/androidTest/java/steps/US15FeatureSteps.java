@@ -1,33 +1,19 @@
 package steps;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeSteps;
 import com.mauriciotogneri.greencoffee.annotations.Given;
 import com.mauriciotogneri.greencoffee.annotations.Then;
 import com.mauriciotogneri.greencoffee.annotations.When;
-import android.support.v7.app.AlertDialog;
-import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import groupf.taes.ipleiria.spots.FindMeASpotActivity;
 import groupf.taes.ipleiria.spots.R;
-import modelo.Lock;
-import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.os.SystemClock.sleep;
-import static android.support.test.espresso.action.ViewActions.click;
 
 public class US15FeatureSteps extends GreenCoffeeSteps {
 

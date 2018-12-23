@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.SpotsManager;
 import modelo.UsersManager;
 import steps.US16FeatureIsParkedSteps;
-import steps.US16FeatureNoFreeSpotsSteps;
 
 @RunWith(Parameterized.class)
 public class US16FeatureIsParkedTest extends GreenCoffeeTest {

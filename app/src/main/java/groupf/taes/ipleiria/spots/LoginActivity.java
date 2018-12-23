@@ -73,7 +73,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     idlingResource.decrement();
                     if(task.isSuccessful()){
-                        //DashboardActivity.dashActivity.finish();
+                        //Utilizador daz loggin e coloca na BD o logged a true
+                        UsersManager.INSTANCE.setUserLogged(true);
+
                         Intent i  = DashboardAuthActivity.getIntent(LoginActivity.this);
                         i.putExtra("EXECUTE_READ_SPOTS",false);
                         startActivity(i);

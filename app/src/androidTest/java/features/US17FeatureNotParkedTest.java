@@ -24,7 +24,6 @@ import java.util.Collection;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
 import steps.US17FeatureNotParkedSteps;
-import steps.US17FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US17FeatureNotParkedTest extends GreenCoffeeTest {

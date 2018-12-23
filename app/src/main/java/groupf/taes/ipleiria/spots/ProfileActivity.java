@@ -7,7 +7,6 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,10 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import modelo.User;
 import modelo.UsersManager;
-
-import static modelo.FindPreference.BEST_RATED;
-import static modelo.FindPreference.CLOSER_LOCATION;
-import static modelo.FindPreference.FAVOURITE_SPOTS;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("profile");

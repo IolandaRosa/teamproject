@@ -8,17 +8,19 @@ public class Spot implements Serializable {
     private String locationGeo;
     private int status;
     private int rating;
+    private int totalOfParkings;
 
     public Spot(){
-
+        this.totalOfParkings=0;
     }
 
-    public Spot(String spotId, String park, String locationGeo, int status, int rating) {
+    public Spot(String spotId, String park, String locationGeo, int status, int rating, int totalOfParkings) {
         this.spotId = spotId;
+        this.park = park;
         this.locationGeo = locationGeo;
         this.status = status;
-        this.park = park;
         this.rating = rating;
+        this.totalOfParkings = totalOfParkings;
     }
 
     public String getSpotId() {
@@ -54,5 +56,13 @@ public class Spot implements Serializable {
                 ", status=" + status +
                 ", rating=" + rating +
                 '}';
+    }
+
+    public int getTotalOfParkings() {
+        return totalOfParkings;
+    }
+
+    public void setTotalOfParkings() {
+        this.totalOfParkings = totalOfParkings+1;
     }
 }

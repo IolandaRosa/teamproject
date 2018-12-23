@@ -94,9 +94,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private  boolean execute = true;
 
     private Location loc = null;
+    private Boolean isManual = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // FirebaseAuth.getInstance().signOut();
+        //FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
         // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
@@ -170,50 +173,50 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public void onChangeSpotStatus(){
 
-        //final List<Spot> spotsBeforeChange = SpotsManager.INSTANCE.getFreeParkingSpots(0);
+            //final List<Spot> spotsBeforeChange = SpotsManager.INSTANCE.getFreeParkingSpots(0);
 
-        //System.out.println("before change: "+ spotsBeforeChange);
-        //spotsBeforeChange.addAll(SpotsManager.INSTANCE.getFreeParkingSpots(1));
+            //System.out.println("before change: "+ spotsBeforeChange);
+            //spotsBeforeChange.addAll(SpotsManager.INSTANCE.getFreeParkingSpots(1));
 
-        FirebaseDatabase firebase = FirebaseDatabase.getInstance();
+            FirebaseDatabase firebase = FirebaseDatabase.getInstance();
 
-        DatabaseReference reference = firebase.getReference();
+            DatabaseReference reference = firebase.getReference();
 
-        reference.child("ParkingSpots").addValueEventListener(new ValueEventListener() {
+            reference.child("ParkingSpots").addValueEventListener(new ValueEventListener() {
 
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
+                    List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(), SpotsManager.INSTANCE.getParkingSpots());
 
-            //Task<Location> lastLocation = getLocation();
-            Location lastLocation = getLocationG();
-            String[] location;
+                    //Task<Location> lastLocation = getLocation();
+                    Location lastLocation = getLocationG();
+                    String[] location;
 
-            for (Spot spot: spotsWithStateChanged) {
-                location = spot.getLocationGeo().split(",");
+                    for (Spot spot : spotsWithStateChanged) {
+                        location = spot.getLocationGeo().split(",");
 
-                //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
-                //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
+                        //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
+                        //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
 
-               /*if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
-                       && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null) //ou seja so se nao tiver ja estacionado*/
-                if(lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
-                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
+                        if (FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
+                                && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
+                /*if(lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
+                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)*/
 
-                {
-                   setParkingInSpot(spot.getSpotId());
-                   break;
-               }
-            }
-            putMarkers();
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        {
+                            setParkingInSpot(spot.getSpotId());
+                            break;
+                        }
+                    }
+                    putMarkers();
+                }
 
-        }
-    });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
 
     }
 
@@ -238,7 +241,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setParkingInSpot(String idSpotChanged) {
-        askUserIfHeParkInSpot(R.string.msgAskUserIfHeParked, idSpotChanged);
+        if(!isManual){
+            askUserIfHeParkInSpot(R.string.msgAskUserIfHeParked, idSpotChanged);
+        }
+        isManual=false;
     }
 
     public Location getLocationG()
@@ -298,6 +304,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         break;
                     case 3:
                         mDrawerLayout.closeDrawers();
+                        isManual=true;
                         setClickListenerForMarker();
                         break;
                     case 4:
@@ -308,7 +315,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         leaveSpotClicked();
                         break;
                     case 6:
-                        // statistics
+                        startActivity(StatisticsActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 7:
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
@@ -638,6 +645,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                         m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                         UsersManager.INSTANCE.setSpotUserIsParked(m.getTitle());
+                        SpotsManager.INSTANCE.setTotalParkingTimesOnSpot(m.getTitle());
                     }
                 }
             }

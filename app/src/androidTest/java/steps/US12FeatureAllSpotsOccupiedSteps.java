@@ -13,7 +13,6 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
-import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;

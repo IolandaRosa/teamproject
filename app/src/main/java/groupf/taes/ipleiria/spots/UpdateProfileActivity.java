@@ -155,7 +155,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     idlingResource.decrement();
                     if(task.isSuccessful()){
-
+                        UsersManager.INSTANCE.setUserLogged(true);
                         String email = editTextEmail.getText().toString();
                         String selectPreference = spinnerPreferences.getSelectedItem().toString();
 

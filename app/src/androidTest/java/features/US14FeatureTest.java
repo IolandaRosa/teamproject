@@ -60,8 +60,8 @@ public class US14FeatureTest extends GreenCoffeeTest {
             Thread.sleep(1);
 
         List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","-1,5",1,0));
+        spots.add(new Spot("A-1","D","1,2",0,4,0));
+        spots.add(new Spot("A-2","D","-1,5",1,0,0));
 
         if(registerTask.isSuccessful()){
             UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots2@email.pt", spots);
