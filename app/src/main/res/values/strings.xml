@@ -81,6 +81,15 @@
     <string name="totalParkedUsers">Total Parked Users</string>
     <string name="topBestRated">Top 5 Best Rated Spots</string>
     <string name="topMostParked">Top 5 Most Parked Spots</string>
+    <string name="findMeASpotTitle">Find Me a Spot Medium Time</string>
+    <string name="best_rated">Best Rated Time</string>
+    <string name="closerLocation">Closer Location Time</string>
+    <string name="myFavourites">My Favourites List Time</string>
+    <string name="occupationRateTittle">Occupation Rate At This Moment</string>
+    <string name="displayDateArea">See Rate Occupation During Time</string>
+    <string name="initialDate">Insert Initial Date</string>
+    <string name="finalDate">Insert Final Date</string>
+    <string name="hintDatetime">dd/mm/yyyy</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -97,5 +106,6 @@
         <item>Statistics</item>
         <item>Change my password</item>
         <item>Logout</item>
+        <item>Algorithm Performance</item>
     </string-array>
 </resources>

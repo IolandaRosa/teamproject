@@ -2,10 +2,14 @@ package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.test.espresso.idling.CountingIdlingResource;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -25,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView txtfindMeAPreference;
     private User user;
     private int currentPark;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,5 +131,4 @@ public class ProfileActivity extends AppCompatActivity {
     public static CountingIdlingResource getIdlingResource() {
         return idlingResource;
     }
-
 }
