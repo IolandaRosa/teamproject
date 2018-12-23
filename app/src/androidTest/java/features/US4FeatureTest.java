@@ -54,7 +54,7 @@ public class US4FeatureTest extends GreenCoffeeTest {
             FirebaseAuth.getInstance().signOut();
 
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
-        //todo - aplicar sincronização
+
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
@@ -65,13 +65,11 @@ public class US4FeatureTest extends GreenCoffeeTest {
 
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - aplicar sincronização
             while(!loginTask.isComplete())
                 Thread.sleep(1);
         }
     }
 
-    //Apagar esse user de teste da BD auth e da BD de Users
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
@@ -83,7 +81,6 @@ public class US4FeatureTest extends GreenCoffeeTest {
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - aplicar sincronização
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 

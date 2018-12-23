@@ -22,7 +22,6 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I am an anonymous user$")
     public void i_am_an_anonymous_user() {
-        //Garante que utilizador é anónimo (como ele fica logado sempre temos de fazer o signOut no teste)
         Assert.assertNull(FirebaseAuth.getInstance().getCurrentUser());
     }
 
@@ -74,7 +73,6 @@ public class US2FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I see the authenticated dashboard page$")
     public void i_see_the_authenticated_dashboard_page() {
-        sleep(5000);
         onViewWithId(R.id.mapFragment).isDisplayed();
         onViewWithId(R.id.spinner);
         onViewWithId(R.id.drawer_layout).isDisplayed();

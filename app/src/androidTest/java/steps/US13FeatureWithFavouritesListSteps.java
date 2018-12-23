@@ -38,7 +38,6 @@ public class US13FeatureWithFavouritesListSteps extends GreenCoffeeSteps {
     @Then("^I open the menu$")
     public void i_open_the_menu() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(500);
     }
 
     @Given("^I press the \"([^\"]*)\" option$")

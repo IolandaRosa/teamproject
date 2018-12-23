@@ -1,5 +1,6 @@
 package features;
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -23,65 +24,54 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardActivity;
+import groupf.taes.ipleiria.spots.ProfileActivity;
 import modelo.FindPreference;
 import modelo.UsersManager;
 import steps.US5FeatureWithPreferencesSteps;
-
-import static android.os.SystemClock.sleep;
 
 @RunWith(Parameterized.class)
 public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
 
     @Rule
-    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardActivity.class);
 
     public US5FeatureWithPreferencesTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
-    @Parameterized.Parameters (name = "{0}")
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS5WithPreferences.feature").scenarios();
     }
 
-    @Test
-    public void test() {
-        start(new US5FeatureWithPreferencesSteps());
-    }
-
-    //Assegurar que existe o utilizador de teste na BD Auth e na BD de Users
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+        IdlingRegistry.getInstance().register(ProfileActivity.getIdlingResource());
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
 
-        //Criar um utilizador manel@email.pt com password "12345678"
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("manel@email.pt", "12345678");
 
-        //todo - aplicar sincronização
-        while(!registerTask.isComplete())
+        while (!registerTask.isComplete())
             Thread.sleep(1);
 
-        //apos obter a resposta se correu como esperado adicionar user à database (era porque utilizador não existia)
-        if(registerTask.isSuccessful()){
-            UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
-            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
-        }
-        else{
+        if (registerTask.isSuccessful()) {
+            UsersManager.INSTANCE.addUserToDatabase("Manel", "manel@email.pt");
+            UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), FindPreference.BEST_RATED);
+        } else {
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("manel@email.pt", "12345678");
 
-            //todo - aplicar sincronização
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if(loginTask.isSuccessful()){
-                //Temos de ver se utilizador já existe na Bd e se não existir acrescentar um novo
+            if (loginTask.isSuccessful()) {
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                if(users==null){
-                    UsersManager.INSTANCE.addUserToDatabase("Manel","manel@email.pt"/*,"12345678"*/);
-                    UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.BEST_RATED);
+                if (users == null) {
+                    UsersManager.INSTANCE.addUserToDatabase("Manel", "manel@email.pt");
+                    UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), FindPreference.BEST_RATED);
                 }
             }
         }
@@ -89,22 +79,21 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
-        //Se utilizador estiver logado então simplesmente eliminar
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             String uid = currentUser.getUid();
             currentUser.delete();
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
-        }else{
-            //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
+        } else {
+
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("manel@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if(loginTask.isSuccessful()){
+            if (loginTask.isSuccessful()) {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();
                 currentUser.delete();
@@ -112,5 +101,10 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
                 FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
             }
         }
+    }
+
+    @Test
+    public void test() {
+        start(new US5FeatureWithPreferencesSteps());
     }
 }

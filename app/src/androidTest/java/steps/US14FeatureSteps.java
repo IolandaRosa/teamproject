@@ -40,7 +40,6 @@ public class US14FeatureSteps extends GreenCoffeeSteps {
     @When("^I see the spots favourite list with the delete option$")
     public void i_see_the_spots_favourite_list_with_the_delete_option() {
         onViewWithId(R.id.spotsList).isDisplayed().isNotEmpty();
-        sleep(100);
         onData(anything()).atPosition(0).onChildView(withId(R.id.btnDelete)).check(matches(withText(string(R.string.delete))));
     }
 

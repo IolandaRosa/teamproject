@@ -1,5 +1,6 @@
 package features;
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -23,60 +24,74 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import groupf.taes.ipleiria.spots.ProfileActivity;
 import modelo.UsersManager;
 import steps.US5FeatureWithoutPreferencesSteps;
 
 @RunWith(Parameterized.class)
 public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
+    private static Object lock = new Object();
+    private static boolean ready = false;
 
     @Rule
-    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
     public US5FeatureWithoutPreferencesTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
-    @Parameterized.Parameters (name = "{0}")
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS5WithoutPreferences.feature").scenarios();
     }
 
-    @Test
-    public void test() {
-        start(new US5FeatureWithoutPreferencesSteps());
-    }
-
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
-        //Criar um utilizador maria@email.pt com password "12345678"
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+        IdlingRegistry.getInstance().register(ProfileActivity.getIdlingResource());
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
 
-        //2º - Ver se o utilizador já existe (em principio não deve existir)
+
+        /*synchronized (lock) {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword("maria@email.pt", "12345678")
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                ready = true;
+
+                                UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
+
+                            } else {
+                                Log.println(1, "Exception US5 - beforeClass", task.getException().getMessage());
+                            }
+                        }
+                    });
+
+            if (ready) {
+                lock.notify();
+            }
+        }*/
+
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
 
-        //todo - aplicar sincronização
-        while(!registerTask.isComplete())
+        while (!registerTask.isComplete())
             Thread.sleep(1);
-        //apos obter a resposta se for sucessful correu como esperado e é so fazer signout
-        if(registerTask.isSuccessful()){
-            //Quer dizer que utilizador não existia então acrescenta utilizador na BD
-            UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt"/*,"12345678"*/);
-            //Utilizador já fica logado e aplicação pode iniciar no authenticated dashboard
-        }
-        else{
+
+        if (registerTask.isSuccessful()) {
+            UsersManager.INSTANCE.addUserToDatabase("Maria Pt", "maria@email.pt");
+        } else {
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - aplicar sincronização
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if(loginTask.isSuccessful()){
-                //Temos de ver se utilizador já existe na Bd e se não existir acrescentar
+            if (loginTask.isSuccessful()) {
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                if(users==null){
-                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt"/*,"12345678"*/);
+                if (users == null) {
+                    UsersManager.INSTANCE.addUserToDatabase("Maria Pt", "maria@email.pt");
                 }
             }
         }
@@ -84,20 +99,19 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             String uid = currentUser.getUid();
             currentUser.delete();
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
-        }else{
+        } else {
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("maria@email.pt", "12345678");
 
-            //todo - aplicar sincronização
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if(loginTask.isSuccessful()){
+            if (loginTask.isSuccessful()) {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = currentUser.getUid();
                 currentUser.delete();
@@ -105,5 +119,19 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
                 FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
             }
         }
+    }
+
+    @Test
+    public synchronized void test() {
+       /* synchronized (lock) {
+            while (!ready) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
+        start(new US5FeatureWithoutPreferencesSteps());
     }
 }

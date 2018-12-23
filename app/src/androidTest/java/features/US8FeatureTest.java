@@ -1,5 +1,6 @@
 package features;
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.Task;
@@ -19,66 +20,96 @@ import org.junit.runners.Parameterized;
 import java.io.IOException;
 import java.util.Collection;
 
+import groupf.taes.ipleiria.spots.ChangePasswordActivity;
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
 import steps.US8FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US8FeatureTest extends GreenCoffeeTest {
+    private static Object lock = new Object();
+    private static boolean ready = false;
 
     @Rule
-    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardAuthActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
     public US8FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
-    @Parameterized.Parameters (name = "{0}")
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS8.feature").scenarios();
     }
 
-    @Test
-    public void test() {
-        start(new US8FeatureSteps());
-    }
-
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+
+        IdlingRegistry.getInstance().register(ChangePasswordActivity.getIdlingResource());
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
+
+        /*synchronized (lock) {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword("changePass@email.pt", "12345678")
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                ready = true;
+
+                            } else {
+                                Log.println(1, "Exception US8 - beforeClass", task.getException().getMessage());
+                            }
+                        }
+                    });
+
+            if (ready) {
+                lock.notify();
+            }
+        }*/
 
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("changePass@email.pt", "12345678");
 
-        //todo - não é a melhor solução mas em termos de performance é melhor que sleep
-        while(!registerTask.isComplete())
+        while (!registerTask.isComplete())
             Thread.sleep(1);
 
-        if(!registerTask.isSuccessful()){
+        if (!registerTask.isSuccessful()) {
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("changePass@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
         }
     }
 
-
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuth.getInstance().getCurrentUser().delete();
-        }else{
+        } else {
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("changePass@email.pt", "12345677");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
-            while(!loginTask.isComplete())
+            while (!loginTask.isComplete())
                 Thread.sleep(1);
 
-            if(loginTask.isSuccessful()){
+            if (loginTask.isSuccessful()) {
                 FirebaseAuth.getInstance().getCurrentUser().delete();
             }
         }
+    }
+
+    @Test
+    public void test() {
+        /*synchronized (lock) {
+            while (!ready) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
+        start(new US8FeatureSteps());
     }
 
 }

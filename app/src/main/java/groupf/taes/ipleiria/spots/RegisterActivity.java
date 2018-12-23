@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import modelo.UsersManager;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final CountingIdlingResource idlingResource = new CountingIdlingResource("register");
     private EditText editEmail;
     private EditText editPassword;
     private EditText editName;
@@ -86,9 +88,11 @@ public class RegisterActivity extends AppCompatActivity {
 
             //Regista o utilizador e guarda o utilizador como uma instancia na BD
             Task<AuthResult> authResultTask = UsersManager.INSTANCE.registerUser(email, password);
+            idlingResource.increment();
             authResultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    idlingResource.decrement();
                     if(task.isSuccessful()){
 
                         UsersManager.INSTANCE.setUserLogged(true);
@@ -119,5 +123,10 @@ public class RegisterActivity extends AppCompatActivity {
     public static Intent getIntent(Context context) {
         return new Intent(context, RegisterActivity.class);
     }
+
+    public static CountingIdlingResource getIdlingResource() {
+        return idlingResource;
+    }
+
 
 }

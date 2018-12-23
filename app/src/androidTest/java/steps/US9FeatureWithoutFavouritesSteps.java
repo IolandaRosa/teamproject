@@ -43,14 +43,12 @@ public class US9FeatureWithoutFavouritesSteps extends GreenCoffeeSteps {
     @When("^I press the Find Me a Spot on the menu $")
     public void i_press_the_Find_Me_a_Spot_on_the_menu() {
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(500);
         String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
         Espresso.onView(withText(options[1])).perform(click());
     }
 
     @Then("^I see buttons with the options The best spot available and The spot closer to me$")
     public void i_see_buttons_with_the_options_The_best_spot_available_and_The_spot_closer_to_me() {
-        sleep(500);
         onViewWithId(R.id.btnBestRatedSpot).isDisplayed();
         onViewWithId(R.id.btnCloserToMe).isDisplayed();
         onViewWithId(R.id.btnBestRatedSpot).contains(string(R.string.theBestRatedSpotAvailable));

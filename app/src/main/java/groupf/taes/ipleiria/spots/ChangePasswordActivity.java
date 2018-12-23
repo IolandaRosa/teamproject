@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -22,9 +23,14 @@ import modelo.UsersManager;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
+    private static final CountingIdlingResource idlingResource = new CountingIdlingResource("password");
     private EditText editCurrentPassword;
     private EditText editNewPassword;
     private EditText editNewPasswordConfirmation;
+
+    public static CountingIdlingResource getIdlingResource() {
+        return idlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +89,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         //Se passou todos os testes anteriores vai reautenticar e depois se falhar então é porque a current password esta errada
         AuthCredential credentials = EmailAuthProvider.getCredential(FirebaseAuth.getInstance().getCurrentUser().getEmail(), currentPassword);
-
+        idlingResource.increment();
         FirebaseAuth.getInstance().getCurrentUser().reauthenticateAndRetrieveData(credentials).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                idlingResource.decrement();
                 if (task.isSuccessful()) {
                     UsersManager.INSTANCE.setUserLogged(true);
                     FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword);

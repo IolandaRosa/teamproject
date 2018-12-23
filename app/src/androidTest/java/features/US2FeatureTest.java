@@ -1,7 +1,7 @@
 package features;
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
-import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -23,75 +23,112 @@ import java.util.Collection;
 import java.util.Locale;
 
 import groupf.taes.ipleiria.spots.DashboardActivity;
+import groupf.taes.ipleiria.spots.LoginActivity;
+import modelo.UsersManager;
 import steps.US2FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US2FeatureTest extends GreenCoffeeTest {
+    private static Object lock = new Object();
+    private static boolean ready = false;
+
     @Rule
-    public ActivityTestRule activityTestRule=new ActivityTestRule(DashboardActivity.class);
+    public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardActivity.class);
 
     public US2FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
-    @Parameterized.Parameters (name = "{0}")
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS2.feature").scenarios();
     }
 
-    @Test
-    public void test() {
-        start(new US2FeatureSteps());
-    }
-
-    //Antes de cada teste do login faz sign out
-    @Override
-    protected void beforeScenarioStarts(Scenario scenario, Locale locale) {
-        super.beforeScenarioStarts(scenario, locale);
-
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-            FirebaseAuth.getInstance().signOut();
-
-    }
-
-    //Antes da classe iniciar cria um utilizador para testar
     @BeforeClass
-    public static void setUpOnlyOnce() throws Exception {
-        //Criar um utilizador test@test.test com password "12345678"
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+    public static synchronized void setUpOnlyOnce() throws Exception {
+        IdlingRegistry.getInstance().register(LoginActivity.getIdlingResource());
+
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
 
-        Task<AuthResult> registerTask = FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("test@test.test", "12345678");
 
-        //todo - aplicar sincronização
         while (!registerTask.isComplete())
             Thread.sleep(1);
 
-        if(registerTask.isSuccessful()){
-            if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+        if (registerTask.isSuccessful()) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null)
                 FirebaseAuth.getInstance().signOut();
+        } else {
+
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("test@test.test", "12345678");
+
+
+            while (!loginTask.isComplete())
+                Thread.sleep(1);
         }
-        else{
-            Exception exception = registerTask.getException();
-            //Se não for successfull significa que email ja existia e podemos fazer login
-            Log.println(1,"Exception set Up",exception.getMessage());
-        }
+
+
+            /*FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678")
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            synchronized (lock) {
+                                if (task.isSuccessful()) {
+                                    if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                                        FirebaseAuth.getInstance().signOut();
+                                } else {
+                                    Log.println(1, "Exception US2 - beforeClass", task.getException().getMessage());
+                                }
+                                ready = true;
+                                lock.notify();
+                            }
+                        }
+                    });*/
+
+
     }
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Exception {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuth.getInstance().signOut();
         }
-        //Destruir o utilizador test@test.test com password "12345678"
+
         Task<AuthResult> authResultTask = FirebaseAuth.getInstance().signInWithEmailAndPassword("test@test.test", "12345678");
 
-        //todo - aplicar sincronização
-        while(!authResultTask.isComplete())
+        while (!authResultTask.isComplete())
             Thread.sleep(1);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuth.getInstance().getCurrentUser().delete();
         }
+    }
+
+    @Test
+    public synchronized void test() {
+        /*synchronized (lock) {
+            while (!ready) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            start(new US2FeatureSteps());
+        }*/
+        start(new US2FeatureSteps());
+    }
+
+    //Faz logout antes de scenario
+    @Override
+    protected void beforeScenarioStarts(Scenario scenario, Locale locale) {
+        super.beforeScenarioStarts(scenario, locale);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+            FirebaseAuth.getInstance().signOut();
+
     }
 }
