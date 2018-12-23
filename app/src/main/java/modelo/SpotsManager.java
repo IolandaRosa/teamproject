@@ -62,11 +62,28 @@ public enum SpotsManager {
         spots.add(new Spot("A-2", "A", "39.734884,-8.820745", 1, 3));
         spots.add(new Spot("A-3", "A", "39.734909,-8.820708", 0, 1));
         spots.add(new Spot("A-4", "A", "39,734905,-8.820718", 1, 4));
+        spots.add(new Spot("A-5", "A", "39.734928,-8.820685", 0, 3));
+        spots.add(new Spot("A-6", "A", "39.734946,-8.820649", 0, 3));
+        spots.add(new Spot("A-7", "A", "39.734964,-8.820616", 0, 3));
+        spots.add(new Spot("A-8", "A", "39.734981,-8.820590", 0, 3));
+        spots.add(new Spot("A-9", "A", "39.735001,-8.820561", 0, 3));
+        spots.add(new Spot("A-10", "A", "39.735013,-8.820535", 0, 3));
+        spots.add(new Spot("A-11", "A", "39.735034,-8.820499", 0, 3));
+        spots.add(new Spot("A-12", "A", "39.735051,-8.820471", 0, 3));
+        spots.add(new Spot("A-13", "A", "39.735072,-8.820447", 0, 3));
+        spots.add(new Spot("A-14", "A", "39.735090,-8.820414", 0, 3));
+        spots.add(new Spot("A-15", "A", "39.735109,-8.820379", 0, 3));
+
+
         spots.add(new Spot("D-1", "D", "39.733888,-8.821332", 0, 5));
         spots.add(new Spot("D-2", "D", "39.733917,-8.821326", 1, 2));
         spots.add(new Spot("D-3", "D", "39.733937,-8.821340", 0, 1));
         spots.add(new Spot("D-4", "D", "39,734942,-8.821347", 1, 4));
 
+        spots.add(new Spot("D-5", "D", "39.733937,-8.8213403", 1, 5));
+        spots.add(new Spot("D-6", "D", "39.734079, -8.821500", 1, 2));
+        spots.add(new Spot("D-7", "D", "39.734067, -8.821479", 1, 1));
+        spots.add(new Spot("D-8", "D", "39.734110, -8.821521", 1, 4));
 
         for(Spot s : spots) {
             // dbRef.child("ParkingSpots").child(s.getSpotParked()).child("Park").setValue(s.getPark());
@@ -74,6 +91,7 @@ public enum SpotsManager {
             dbRef.child(s.getSpotId()).child("LocationGeo").setValue(s.getLocationGeo());
             dbRef.child(s.getSpotId()).child("Status").setValue(s.getStatus());
             dbRef.child(s.getSpotId()).child("Rating").setValue(s.getRating());
+            dbRef.child(s.getSpotId()).child("TotalOfParkings").setValue(s.getTotalOfParkings());
         }
     }
 

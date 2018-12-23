@@ -112,15 +112,8 @@ public enum UsersManager {
         String id=mAuth.getCurrentUser().getUid();
         User user=new User(id,name,email,null,null/*, password*/);
         userCreated = user;
-        /*List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4));
-        spots.add(new Spot("A-2","D","1,2",0,0));
-        spots.add(new Spot("A-3","D","1,2",0,4));
-        spots.add(new Spot("A-4","D","1,2",0,0));
-        spots.add(new Spot("A-5","D","1,2",0,4));
-        spots.add(new Spot("A-6","D","1,2",0,0));
-        user.setFavouriteSpots(spots);*/
         mDatabase.child(id).setValue(user);
+        currentUser=user;
 
     }
 
@@ -132,6 +125,7 @@ public enum UsersManager {
             user.setFavouriteSpots(spots);
         }
         mDatabase.child(id).setValue(user);
+        currentUser.setFavouriteSpots(spots);
     }
 
     // para testes
@@ -140,6 +134,7 @@ public enum UsersManager {
         User user = new User(id,name,email,null, spotId);
         user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
+        currentUser.setFavouriteSpots(spots);
     }
 
     //Usado apenas para testes
@@ -148,6 +143,7 @@ public enum UsersManager {
         User user=new User(id,name,email,null,null);
         user.setFavouriteSpots(spots);
         mDatabase.child(id).setValue(user);
+        currentUser.setFavouriteSpots(spots);
     }
 
     public DatabaseReference getUserProfileInfo() {
@@ -196,6 +192,7 @@ public enum UsersManager {
 
     public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
         mDatabase.child(id).child("findPreference").setValue(findPreference);
+        currentUser.setFindPreference(findPreference);
     }
 
     public Map<String, Integer> validateNameAndEmail(String name, String email) {
@@ -232,11 +229,13 @@ public enum UsersManager {
     public void updateUserNameInDatabase(String name) {
         String id=mAuth.getCurrentUser().getUid();
         mDatabase.child(id).child("name").setValue(name);
+        currentUser.setName(name);
     }
 
     public void updateUserEmailInDatabase(String email) {
         String id=mAuth.getCurrentUser().getUid();
         mDatabase.child(id).child("email").setValue(email);
+        currentUser.setEmail(email);
     }
 
     public void updateUserFindPreferenceInDatabase(String selectPreference) {
@@ -245,9 +244,11 @@ public enum UsersManager {
 
         if(findPreference==null){
             mDatabase.child(id).child("findPreference").removeValue();
+            currentUser.setFindPreference(null);
         }
         else{
             mDatabase.child(id).child("findPreference").setValue(findPreference);
+            currentUser.setFindPreference(findPreference);
         }
 
     }
@@ -255,7 +256,9 @@ public enum UsersManager {
     public void logoutUser() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
         {
+            this.setUserLogged(false);
             FirebaseAuth.getInstance().signOut();
+            currentUser.setLogged(false);
         }
     }
 
@@ -432,5 +435,9 @@ public enum UsersManager {
     }
 
 
-
+    public void setUserLogged(boolean loggedValue) {
+        String id=mAuth.getCurrentUser().getUid();
+        mDatabase.child(id).child("logged").setValue(loggedValue);
+        currentUser.setLogged(loggedValue);
+    }
 }

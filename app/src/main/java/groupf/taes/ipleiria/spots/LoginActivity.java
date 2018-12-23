@@ -3,6 +3,7 @@ package groupf.taes.ipleiria.spots;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -71,7 +72,9 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        //DashboardActivity.dashActivity.finish();
+                        //Utilizador daz loggin e coloca na BD o logged a true
+                        UsersManager.INSTANCE.setUserLogged(true);
+
                         Intent i  = DashboardAuthActivity.getIntent(LoginActivity.this);
                         i.putExtra("EXECUTE_READ_SPOTS",false);
                         startActivity(i);

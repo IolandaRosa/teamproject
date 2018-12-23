@@ -8,10 +8,10 @@ public class User implements Serializable {
     private String id;
     private String name;
     private String email;
-    //private String password;
     private List<Spot> favouriteSpots;
     private FindPreference findPreference;
     private String spotParked;
+    private boolean isLogged;
 
     public User(){
         this.favouriteSpots=new ArrayList<>();
@@ -21,10 +21,10 @@ public class User implements Serializable {
         this.name = name;
         this.email = email;
         this.id = id;
-        //this.password=UsersManager.INSTANCE.md5_Hash(password);
         this.favouriteSpots=new ArrayList<>();
         this.findPreference=preference;
         this.spotParked = spotParked;
+        this.isLogged = false;
     }
 
     public String getId() {
@@ -34,10 +34,6 @@ public class User implements Serializable {
     public String getName() {
         return name;
     }
-
-    /*public String getPassword () {
-        return this.password;
-    }*/
 
     public String getEmail() {
         return email;
@@ -69,5 +65,21 @@ public class User implements Serializable {
 
     public void setSpotParked(String spotParked) {
         this.spotParked = spotParked;
+    }
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
+    public void setLogged(boolean logged) {
+        isLogged = logged;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

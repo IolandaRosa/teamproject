@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
 
-
+                        UsersManager.INSTANCE.setUserLogged(true);
                         //#############################
                         UsersManager.INSTANCE.addUserToDatabase(name,email/*,password*/);
                         //#############################

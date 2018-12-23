@@ -88,6 +88,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    UsersManager.INSTANCE.setUserLogged(true);
                     FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPassword);
                     startActivity(DashboardAuthActivity.getIntent(ChangePasswordActivity.this));
                 } else {

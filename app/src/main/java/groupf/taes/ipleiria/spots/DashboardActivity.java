@@ -27,6 +27,7 @@ import java.util.List;
 
 import modelo.Spot;
 import modelo.SpotsManager;
+import modelo.UsersManager;
 
 public class DashboardActivity extends AppCompatActivity implements OnMapReadyCallback {
 
