@@ -75,6 +75,12 @@
     <string name="sendRate">Send Rate</string>
     <string name="infoRateSended">Rate sended.</string>
     <string name="infoSpotIsFavourite">\"This spot is one of your favourites.\"</string>
+    <string name="totalRegistered">Total Registered Users</string>
+    <string name="statisticsTitle">Statistical Information</string>
+    <string name="totalLoggedUsers">Total Logged Users</string>
+    <string name="totalParkedUsers">Total Parked Users</string>
+    <string name="topBestRated">Top 5 Best Rated Spots</string>
+    <string name="topMostParked">Top 5 Most Parked Spots</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

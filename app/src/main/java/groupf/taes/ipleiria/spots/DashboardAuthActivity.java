@@ -315,7 +315,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         leaveSpotClicked();
                         break;
                     case 6:
-                        // statistics
+                        startActivity(StatisticsActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 7:
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));

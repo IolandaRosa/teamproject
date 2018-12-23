@@ -350,7 +350,6 @@ public enum UsersManager {
             public void onDataChange(DataSnapshot ds) {
                // currentUser = dataSnapshot.getValue(User.class);
 
-
                 FindPreference preference=null;
                 String id=null;
                 String name=null;
@@ -460,5 +459,9 @@ public enum UsersManager {
         if(currentUser!=null){
             currentUser.setLogged(loggedValue);
         }
+    }
+
+    public DatabaseReference getmDatabase() {
+        return mDatabase;
     }
 }
