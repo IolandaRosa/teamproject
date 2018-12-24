@@ -56,6 +56,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.IncidentsReportsManager;
 import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
@@ -82,7 +83,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private  static int currentPark;
-    private LatLng currentLocation = null;
+    private static LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     private Marker choosenMarker = null;
@@ -111,6 +112,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
 
+        IncidentsReportsManager.INSTANCE.getIncidentsReporstFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
@@ -260,6 +262,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         }
                     }
                 });
+
         return loc;
     }
 
@@ -321,6 +324,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 8:
+                        mDrawerLayout.closeDrawers();
                         startActivity(ReportIncidentActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 9:

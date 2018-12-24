@@ -3,15 +3,17 @@ package modelo;
 public class IncidentReport {
     private String description;
     private String location;
-    private Spot spot;
+    private String spotId;
+    private int id;
 
     public IncidentReport() {
     }
 
-    public IncidentReport(String description, String location, Spot spot) {
+    public IncidentReport(/*int id, */String description, String location, String spotId) {
         this.description = description;
+      //  this.id = id;
         this.location = location;
-        this.spot = spot;
+        this.spotId = spotId;
     }
 
     public String getDescription() {
@@ -30,11 +32,12 @@ public class IncidentReport {
         this.location = location;
     }
 
-    public Spot getSpot() {
-        return spot;
+    public String getSpotId() {
+        return spotId;
     }
 
-    public void setSpot(Spot spot) {
-        this.spot = spot;
+    public void setSpotId(String spotId) {
+        this.spotId = spotId;
     }
+
 }

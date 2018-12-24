@@ -89,6 +89,8 @@
     <string name="txtViewChooseAPark">Choose a park</string>
     <string name="txtViewChooseASpot">Choose a spot</string>
     <string name="infoReportGotUserLocation">Your location was successfully obtained.</string>
+    <string name="errorReportDescriptionEmpty">Description can\'t be empty.</string>
+    <string name="errorReportLocationNotPut">ERROR: You need to put a location.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
