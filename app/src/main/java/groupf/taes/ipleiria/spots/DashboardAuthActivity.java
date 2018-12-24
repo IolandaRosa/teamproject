@@ -33,6 +33,7 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -61,6 +62,8 @@ import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
+
+import static android.os.SystemClock.sleep;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
@@ -209,6 +212,19 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                             break;
                         }
                     }
+
+
+                    spotsWithStateChanged = getFreeSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
+
+                    for (Spot spot : spotsWithStateChanged) {
+
+                        if (UsersManager.INSTANCE.getCurrentUser().getSpotParked() != null && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals(spot.getSpotId()))
+                            {
+                                askUserYesOrNo(R.string.askUserIsLeavingTheSpot, false);
+                                break;
+                            }
+                    }
+
                     putMarkers();
                 }
 
@@ -218,6 +234,21 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 }
             });
 
+    }
+    private List<Spot> getFreeSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
+
+        List<Spot> spotsResult = new LinkedList<>();
+        //System.out.println("before change:  " + spotsBeforeChange);
+        for (Spot spotBeforeChange: spotsBeforeChange) {
+            for (Spot spotChanged: spotsChanged) {
+                if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 1 && spotChanged.getStatus() == 0)
+                {
+                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
+                    spotsResult.add(spotChanged);
+                }
+            }
+        }
+        return spotsResult;
     }
 
     private List<Spot> getOcuppiedSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
@@ -231,11 +262,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
                     spotsResult.add(spotChanged);
                 }
-
-
             }
-
-
         }
         return spotsResult;
     }
@@ -669,6 +696,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void leaveSpot() {
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
         final String spotId = currentUser.getSpotParked();
         SpotsManager.INSTANCE.setSpotStatusToFree(currentUser.getSpotParked());
         UsersManager.INSTANCE.userLeaveSpot();

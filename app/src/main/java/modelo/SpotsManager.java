@@ -233,6 +233,11 @@ public enum SpotsManager {
 
     }
 
+    public void setSpotStatusToOccupiedTest(String id) {
+        dbRef.child(id).child("Status").setValue(1);
+
+    }
+
     public void setSpotStatusToFree(String id) {
         dbRef.child(id).child("Status").setValue(0);
     }
