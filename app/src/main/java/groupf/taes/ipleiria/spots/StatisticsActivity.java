@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -56,15 +55,16 @@ public class StatisticsActivity extends PerformanceButtonActivity{
                     int totalParked=0;
 
                     for(DataSnapshot d:children){
-                        d.child("logged").getValue().toString();
-                        if(d.child("logged").getValue().toString().compareToIgnoreCase("true")==0){
-                            totalLoggedUsers++;
-                        }
+                        if (d.child("logged").getValue() != null) {
 
+                            if (d.child("logged").getValue().toString().compareToIgnoreCase("true") == 0) {
+                                totalLoggedUsers++;
+                            }
+                            totalRegistered++;
+                        }
                         if(d.child("spotParked").getValue()!=null){
                             totalParked++;
                         }
-                        totalRegistered++;
                     }
 
                     textLogged.setText(String.valueOf(totalLoggedUsers));
@@ -150,7 +150,6 @@ public class StatisticsActivity extends PerformanceButtonActivity{
 
                     for (int i = 0; i < 5; i++) {
                         multilineMostParked += String.format("%d - Spot: '%4s' \t\t Total Parkings: %s\n",(i+1),orderedSpots.get(i).getSpotId(),String.valueOf(orderedSpots.get(i).getTotalOfParkings()) );
-                        //multilineMostParked += "Spot: " + "\"" + orderedSpots.get(i).getSpotId() + "\"" + "\tTotal Parkings: " + String.valueOf(orderedSpots.get(i).getTotalOfParkings()) +"\n";
                     }
 
                     textTopRated.setText(multilineBest);
