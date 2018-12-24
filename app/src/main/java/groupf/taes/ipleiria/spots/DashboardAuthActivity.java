@@ -55,7 +55,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import modelo.InternetConnectionManager;
 import modelo.Spot;
