@@ -81,6 +81,14 @@
     <string name="totalParkedUsers">Total Parked Users</string>
     <string name="topBestRated">Top 5 Best Rated Spots</string>
     <string name="topMostParked">Top 5 Most Parked Spots</string>
+    <string name="titleReportIncident">Report Incident</string>
+    <string name="titleReportDescription">Description</string>
+    <string name="titleReportLocation">Location</string>
+    <string name="txtBtnReportGetCurrentLocation">Get My Current Location</string>
+    <string name="txtBtnReportChooseParkAndSpot">Choose a park and a spot</string>
+    <string name="txtViewChooseAPark">Choose a park</string>
+    <string name="txtViewChooseASpot">Choose a spot</string>
+    <string name="infoReportGotUserLocation">Your location was successfully obtained.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -96,6 +104,7 @@
         <item>Leave My Spot</item>
         <item>Statistics</item>
         <item>Change my password</item>
+        <item>Report a Incident</item>
         <item>Logout</item>
     </string-array>
 </resources>

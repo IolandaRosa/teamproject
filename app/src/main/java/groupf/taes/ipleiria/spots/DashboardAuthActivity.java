@@ -321,6 +321,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 8:
+                        startActivity(ReportIncidentActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 9:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
