@@ -24,7 +24,7 @@ import modelo.InternetConnectionManager;
 import modelo.User;
 import modelo.UsersManager;
 
-public class UpdateProfileActivity extends PerformanceButtonActivity/*AppCompatActivity*/ {
+public class UpdateProfileActivity extends PerformanceButtonActivity {
 
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("updateProfile");
     private EditText editTextName;
@@ -38,7 +38,6 @@ public class UpdateProfileActivity extends PerformanceButtonActivity/*AppCompatA
             startActivity(DashboardActivity.getIntent(this));
         }
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_update_profile);
 
         this.editTextName = findViewById(R.id.editTextName);
         this.editTextEmail = findViewById(R.id.editTextEmail);

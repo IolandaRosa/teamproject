@@ -33,3 +33,4 @@ Feature: An authenticated user can see the performance medium time
     And I press the button
     Then I am in the statistics screen
     And I see the performance time and statistics displayed
+
