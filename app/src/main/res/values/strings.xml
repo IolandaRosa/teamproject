@@ -90,6 +90,7 @@
     <string name="initialDate">Insert Initial Date</string>
     <string name="finalDate">Insert Final Date</string>
     <string name="hintDatetime">dd/mm/yyyy</string>
+    <string name="performanceBtn">View Occupation Rate And Find Me a Spot Performance</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

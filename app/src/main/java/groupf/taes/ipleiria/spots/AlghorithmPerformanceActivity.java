@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import modelo.Spot;
@@ -18,6 +19,9 @@ import modelo.SpotsManager;
 public class AlghorithmPerformanceActivity extends AppCompatActivity {
 
     private TextView ocupationRateTxt;
+    private TextView bestRatedTxt;
+    private TextView closerLocationTxt;
+    private TextView myFavouritesTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +29,12 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alghorithm_performance);
 
         this.ocupationRateTxt = findViewById(R.id.txtOccupationRate);
+        this.bestRatedTxt = findViewById(R.id.txtBestRatedTime);
+        this.closerLocationTxt=findViewById(R.id.txtCloserLocationTime);
+        this.myFavouritesTxt=findViewById(R.id.txtMyFavouritesTime);
 
         computeOccupationRate();
+        getAlgorithmMediumTime();
     }
 
     public static Intent getIntent(Context context) {
@@ -86,6 +94,47 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void getAlgorithmMediumTime(){
+        FirebaseDatabase.getInstance().getReference().child("Performance_Alghorithms").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+
+                    String bestRated = dataSnapshot.child("Best_Rated").getValue().toString();
+                    String closerLocation = dataSnapshot.child("Closer_Location").getValue().toString();
+                    String myFavourites = dataSnapshot.child("My_Favourites").getValue().toString();
+
+                    double v = Double.parseDouble(bestRated);
+                    int seconds = (int)Math.floor(v/1000);
+                    String format = String.format("%2d s %.3f ms",seconds,Math.abs(seconds * 1000 - v));
+
+                    bestRatedTxt.setText(format);
+
+                    v = Double.parseDouble(closerLocation);
+                    seconds = (int)Math.floor(v/1000);
+                    format = String.format("%2d s %.3f ms",seconds,Math.abs(seconds * 1000 - v));
+                    closerLocationTxt.setText(format);
+
+                    v = Double.parseDouble(myFavourites);
+                    seconds = (int)Math.floor(v/1000);
+                    format = String.format("%2d s %.3f ms",seconds,Math.abs(seconds * 1000 - v));
+                    myFavouritesTxt.setText(format);
+
+                } catch (
+                        Exception e)
+
+                {
+                    Log.d("e", e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

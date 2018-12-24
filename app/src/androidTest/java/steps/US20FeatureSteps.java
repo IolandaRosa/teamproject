@@ -38,7 +38,6 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
         onViewWithText(R.string.totalRegistered).isDisplayed();
         onViewWithText(R.string.topBestRated).isDisplayed();
         onViewWithText(R.string.topMostParked).isDisplayed();
-        onViewWithText(R.string.statisticsTitle).isDisplayed();
     }
 
     @Then("^I confirm that the value of registered users is at least (\\d+)$")

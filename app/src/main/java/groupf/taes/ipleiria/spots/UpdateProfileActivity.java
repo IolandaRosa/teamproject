@@ -24,7 +24,7 @@ import modelo.InternetConnectionManager;
 import modelo.User;
 import modelo.UsersManager;
 
-public class UpdateProfileActivity extends AppCompatActivity {
+public class UpdateProfileActivity extends PerformanceButtonActivity/*AppCompatActivity*/ {
 
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("updateProfile");
     private EditText editTextName;
@@ -38,7 +38,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             startActivity(DashboardActivity.getIntent(this));
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_profile);
+        //setContentView(R.layout.activity_update_profile);
 
         this.editTextName = findViewById(R.id.editTextName);
         this.editTextEmail = findViewById(R.id.editTextEmail);
@@ -173,6 +173,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
     public static CountingIdlingResource getIdlingResource() {
         return idlingResource;
+    }
+
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_update_profile,null);
     }
 
 }
