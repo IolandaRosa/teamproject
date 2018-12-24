@@ -13,11 +13,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.List;
 
 import modelo.InternetConnectionManager;
@@ -30,11 +37,22 @@ public class FindMeASpotActivity extends AppCompatActivity {
     private int optionForSpot;
     private int currentPark;
     private User currentUser;
+    private long initTime;
+    private long timeDif;
+    private double mediumBestRated;
+    private double mediumCloserLocation;
+    private double mediumMyFavourites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_me_aspot);
+
+        this.initTime = 0;
+        this.timeDif = 0;
+        this.mediumBestRated = 0;
+        this.mediumCloserLocation = 0;
+        this.mediumMyFavourites = 0;
 
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
         currentUser = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
@@ -45,10 +63,65 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
 
     private void initializeMapsApp(LatLng choosenSpot) {
+
+        timeDif = Math.abs(Calendar.getInstance().getTimeInMillis() - initTime);
+
         String uri = "http://maps.google.com/maps?&daddr=" + choosenSpot.latitude + "," + choosenSpot.longitude;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
         startActivity(intent);
+
+        try {
+            getValueFromDatabase();
+        } catch (Exception ex) {
+            Log.d("Exception put media find me a spot on database", ex.getMessage());
+        }
+    }
+
+    private void getValueFromDatabase() {
+
+        FirebaseDatabase.getInstance().getReference().child("Performance_Alghorithms")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        try {
+                            mediumBestRated = Double.parseDouble(dataSnapshot.child("Best_Rated").getValue().toString());
+                            mediumCloserLocation = Double.parseDouble(dataSnapshot.child("Closer_Location").getValue().toString());
+                            mediumMyFavourites = Double.parseDouble(dataSnapshot.child("My_Favourites").getValue().toString());
+
+
+
+
+                            String media = null;
+                            DatabaseReference performance_alghorithms = FirebaseDatabase.getInstance().getReference().child("Performance_Alghorithms");
+
+                            switch (optionForSpot) {
+                                case 0:
+                                    media = String.valueOf((double) (mediumBestRated + timeDif) / 2);
+                                    performance_alghorithms.child("Best_Rated").setValue(media);
+                                    performance_alghorithms.removeEventListener(this);
+                                    break;
+                                case 1:
+                                    media = String.valueOf((double) (mediumCloserLocation + timeDif) / 2);
+                                    performance_alghorithms.child("Closer_Location").setValue(media);
+                                    performance_alghorithms.removeEventListener(this);
+                                    break;
+                                case 2:
+                                    media = String.valueOf((double) (mediumMyFavourites + timeDif) / 2);
+                                    performance_alghorithms.child("My_Favourites").setValue(media);
+                                    performance_alghorithms.removeEventListener(this);
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            Log.d("Exception on get value of database find me a spot", e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private LatLng closestSpot() {
@@ -134,6 +207,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         switch (optionForSpot) {
             case 0:
+                this.initTime = Calendar.getInstance().getTimeInMillis();
+
                 List<Spot> spots = null;
                 best = bestRatedPerPark(spots, currentPark);
                 //System.out.println(best.getRating() + best.getSpotParked()+best.getPark());
@@ -146,6 +221,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
                 break;
             case 1:
+                this.initTime = Calendar.getInstance().getTimeInMillis();
+
                 choosenSpot = closestSpot();
                 if(choosenSpot != null){
                     finish();
@@ -156,6 +233,8 @@ public class FindMeASpotActivity extends AppCompatActivity {
                 }
                 break;
             case 2:
+                this.initTime = Calendar.getInstance().getTimeInMillis();
+
                 List<Spot> favouriteSpots = currentUser.getFavouriteSpots();
                 if(favouriteSpots.isEmpty()){
                     showErrorMessage(R.string.emptySpotsList);

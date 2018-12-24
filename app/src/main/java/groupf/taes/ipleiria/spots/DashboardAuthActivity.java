@@ -72,15 +72,12 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
-
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
-
     private User currentUser;
-
     private  static int currentPark;
     private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
@@ -102,7 +99,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         //FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-        // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+         //SpotsManager.INSTANCE().writeSpotsOnDatabase();
+
+        //SpotsManager.INSTANCE.writeSpotsOnDatabase();
 
         execute = getIntent().getBooleanExtra("EXECUTE_READ_SPOTS",true);
         if(execute)//para evitar que seja executado mais do que uma vez
@@ -152,6 +151,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
             }
         });
+
+
+
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -282,7 +285,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     //Menu Hamburguer
-    private void addDrawerItems() {
+    public void addDrawerItems() {
         mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
 
@@ -324,6 +327,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
+                    case 9:
+                        startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
+                        break;
                 }
             }
         });
@@ -348,7 +354,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    private void setupDrawer() {
+    public void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */
@@ -739,7 +745,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
-
 
 
 

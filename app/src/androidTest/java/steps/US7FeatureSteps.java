@@ -185,11 +185,6 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.txtViewEmail).isDisplayed().check(matches(withText("maria_jesus@email.com")));
     }
 
-    @Then("^I confirm the authentication email is now \"([^\"]*)\"$")
-    public void i_confirm_the_authentication_email_is_now(String arg1) {
-        //Assert.assertTrue(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(arg1));
-    }
-
     @When("^I click on the spinner$")
     public void i_click_on_the_spinner() {
         closeKeyboard();

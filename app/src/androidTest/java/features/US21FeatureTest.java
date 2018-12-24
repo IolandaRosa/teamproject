@@ -19,30 +19,34 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US20FeatureSteps;
+import steps.US21FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US20FeatureTest extends GreenCoffeeTest {
+public class US21FeatureTest extends GreenCoffeeTest {
+
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US20FeatureTest(ScenarioConfig scenario) {
+    public US21FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS20.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS21.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US20FeatureSteps());
+        start(new US21FeatureSteps());
     }
 
     @BeforeClass
@@ -50,22 +54,28 @@ public class US20FeatureTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots8@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots9@email.pt", "12345678");
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
 
+        List<Spot> spots=new ArrayList<>();
+        spots.add(new Spot("A-1","D","1,2",0,4,0));
+        spots.add(new Spot("A-2","D","-1,5",1,0,0));
+
         if(registerTask.isSuccessful()){
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots8@email.pt", "TestSpot", null);
+
+            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots9@email.pt", spots);
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots8@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
+
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            UsersManager.INSTANCE.addUserThatIsParked("Spots","spots8@email.pt", "TestSpot", null);
+            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots9@email.pt", spots);
         }
 
     }
@@ -81,7 +91,7 @@ public class US20FeatureTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
 
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots8@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);

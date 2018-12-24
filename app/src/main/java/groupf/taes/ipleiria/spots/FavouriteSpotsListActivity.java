@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -22,7 +22,7 @@ import modelo.Spot;
 import modelo.SpotAdapter;
 import modelo.UsersManager;
 
-public class FavouriteSpotsListActivity extends AppCompatActivity {
+public class FavouriteSpotsListActivity extends PerformanceButtonActivity /*AppCompatActivity*/ {
 
     private List<Spot> spots;
     private ListView spotsList;
@@ -30,7 +30,7 @@ public class FavouriteSpotsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favourite_spots_list);
+        //setContentView(R.layout.activity_favourite_spots_list);
 
         this.spots=new ArrayList<>();
         this.spotsList = findViewById(R.id.spotsList);
@@ -43,24 +43,30 @@ public class FavouriteSpotsListActivity extends AppCompatActivity {
     }
 
     private void getSpotsList(DatabaseReference ref) {
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot data : dataSnapshot.getChildren()){
-                    Spot spot = data.getValue(Spot.class);
-                    spots.add(spot);
+                try{
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        Spot spot = data.getValue(Spot.class);
+                        spots.add(spot);
+                    }
+
+                    if(spots.isEmpty()){
+
+                        showErrorMessage(FavouriteSpotsListActivity.this,R.string.emptySpotsList);
+                        spotsList.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    SpotAdapter spotAdapter = new SpotAdapter(FavouriteSpotsListActivity.this, (ArrayList<Spot>) spots);
+
+                    spotsList.setAdapter(spotAdapter);
                 }
-
-                if(spots.isEmpty()){
-
-                    showErrorMessage(FavouriteSpotsListActivity.this,R.string.emptySpotsList);
-                    spotsList.setVisibility(View.GONE);
-                    return;
+                catch(Exception e){
+                    Log.d("Exception",e.getMessage());
                 }
-
-                SpotAdapter spotAdapter = new SpotAdapter(FavouriteSpotsListActivity.this, (ArrayList<Spot>) spots);
-
-                spotsList.setAdapter(spotAdapter);
             }
 
             @Override
@@ -86,7 +92,10 @@ public class FavouriteSpotsListActivity extends AppCompatActivity {
         builder.show();
     }
 
-
+    @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_favourite_spots_list,null);
+    }
 
 
 }
