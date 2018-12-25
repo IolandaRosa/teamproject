@@ -1,8 +1,10 @@
 package groupf.taes.ipleiria.spots;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -165,6 +167,31 @@ public class ReportIncidentActivity extends AppCompatActivity {
 
         IncidentsReportsManager.INSTANCE.createNewIncidentReport(description, currentLocation, spotSelected);
 
+        showSuccessMessage();
+    }
+
+    public void showSuccessMessage() {
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+
+        builder.setIconAttribute(android.R.attr.alertDialogIcon);
+        builder.setTitle(R.string.app_name);
+        builder.setMessage(R.string.incidentReportedWithSuccess);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finishActivity();
+            }
+        });
+
+
+        builder.show();
+    }
+
+    private void finishActivity() {
         this.finish();
     }
+
+
+
+
 }

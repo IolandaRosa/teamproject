@@ -101,7 +101,7 @@
         android:layout_height="38dp" />
 
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnSaveReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="btnCreateIncidentReportClick"
