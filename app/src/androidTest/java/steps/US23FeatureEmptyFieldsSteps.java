@@ -33,5 +33,27 @@ public class US23FeatureEmptyFieldsSteps extends GreenCoffeeSteps {
         Espresso.onView(withText(arg1)).perform(click());
     }
 
+    @When("^I press the save button$")
+    public void i_press_the_save_button() {
+        onViewWithId(R.id.btnSaveReport).click();
+    }
+
+    @Then("^I see a error saying that description can't be empty$")
+    public void i_see_a_error_saying_that_description_can_t_be_empty() {
+        onViewWithId(R.id.editTxtDescription).hasErrorText(string(R.string.errorReportDescriptionEmpty));
+    }
+
+    @When("^I insert a description on the description field$")
+    public void i_insert_a_description_on_the_description_field() {
+        onViewWithId(R.id.editTxtDescription).type("This is a description");
+        Espresso.closeSoftKeyboard();
+    }
+
+
+    @Then("^I see a error saying that I need to put a location$")
+    public void i_see_a_error_saying_that_I_need_to_put_a_location() {
+        onViewWithText(string(R.string.errorReportLocationNotPut)).isDisplayed();
+    }
+
 
 }

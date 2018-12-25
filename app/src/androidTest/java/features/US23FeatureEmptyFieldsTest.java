@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
+import steps.US23FeatureEmptyFieldsSteps;
 import steps.US23FeatureSteps;
 
 @RunWith(Parameterized.class)
@@ -41,7 +42,7 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
 
     @Test
     public void test() {
-        start(new US23FeatureSteps());
+        start(new US23FeatureEmptyFieldsSteps());
     }
 
     @BeforeClass
