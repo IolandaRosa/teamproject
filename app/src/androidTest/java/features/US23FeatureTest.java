@@ -22,28 +22,26 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
-import modelo.SpotsManager;
 import modelo.UsersManager;
-import steps.US20FeatureSteps;
-import steps.US23FeatureChooseSpotSteps;
+import steps.US23FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US23FeatureChooseSpotTest extends GreenCoffeeTest {
+public class US23FeatureTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US23FeatureChooseSpotTest(ScenarioConfig scenario) {
+    public US23FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS23ChooseSpot.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS23.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US23FeatureChooseSpotSteps());
+        start(new US23FeatureSteps());
     }
 
     @BeforeClass

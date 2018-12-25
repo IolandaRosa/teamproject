@@ -19,7 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
-public class US23FeatureChooseSpotSteps extends GreenCoffeeSteps {
+public class US23FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -82,6 +82,22 @@ public class US23FeatureChooseSpotSteps extends GreenCoffeeSteps {
     public void i_see_a_message_saying_my_incident_was_reported_with_success() {
         onViewWithText(string(R.string.incidentReportedWithSuccess)).isDisplayed();
     }
+
+    @When("^I press the button to get my current location$")
+    public void i_press_the_button_to_get_my_current_location() {
+        onViewWithId(R.id.btnGetCurrentLocation).click();
+    }
+
+    @When("^I don't see the button to choose a park and a spot$")
+    public void i_don_t_see_the_button_to_choose_a_park_and_a_spot() {
+        onViewWithId(R.id.btnChooseParkSpot).isNotDisplayed();
+    }
+
+    @When("^I see a message saying that my current location was obtained$")
+    public void i_see_a_message_saying_that_my_current_location_was_obtained() {
+        onViewWithText(string(R.string.infoReportGotUserLocation)).isDisplayed();
+    }
+
 
 
 }
