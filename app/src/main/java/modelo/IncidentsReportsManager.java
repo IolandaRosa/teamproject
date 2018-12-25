@@ -36,14 +36,20 @@ public enum IncidentsReportsManager {
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                incidents = new LinkedList<>();
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
                 for (DataSnapshot d : children) {
-               //     int id = -1;
+                    int id = -1;
                     String description = null;
                     String location = null;
                     String spotId = null;
 
+
+                    Object idObject = d.child("id").getValue();
+                    if (idObject != null) {
+                        id = Integer.parseInt(idObject.toString());
+                    }
 
                     Object descriptionObject = d.child("description").getValue();
                     if (descriptionObject != null) {
@@ -60,7 +66,7 @@ public enum IncidentsReportsManager {
                         spotId = spotObject.toString();
                     }
 
-                    IncidentReport i = new IncidentReport(description, location, spotId);
+                    IncidentReport i = new IncidentReport(id, description, location, spotId);
                     incidents.add(i);
                 }
             }
@@ -78,9 +84,20 @@ public enum IncidentsReportsManager {
         if (location != null) {
             loc = location.getLatitude() + "," + location.getLongitude();
         }
-        IncidentReport incident = new IncidentReport(description, loc, spotId);
 
-        dbRef.push().setValue(incident);
+
+        int id;
+        if (incidents.size() == 0) {
+            id = 1;
+        } else {
+            id = incidents.size() + 1;
+        }
+
+
+
+        IncidentReport incident = new IncidentReport(id, description, loc, spotId);
+
+        dbRef.child(String.valueOf(id)).setValue(incident);
     }
 
 

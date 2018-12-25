@@ -9,9 +9,9 @@ public class IncidentReport {
     public IncidentReport() {
     }
 
-    public IncidentReport(/*int id, */String description, String location, String spotId) {
+    public IncidentReport(int id, String description, String location, String spotId) {
         this.description = description;
-      //  this.id = id;
+        this.id = id;
         this.location = location;
         this.spotId = spotId;
     }
@@ -40,4 +40,11 @@ public class IncidentReport {
         this.spotId = spotId;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
