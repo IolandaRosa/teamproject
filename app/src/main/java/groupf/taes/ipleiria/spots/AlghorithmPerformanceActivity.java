@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -18,8 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import modelo.Spot;
-import modelo.SpotsManager;
+import modelo.InternetConnectionManager;
 
 public class AlghorithmPerformanceActivity extends AppCompatActivity {
 
@@ -27,7 +27,8 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
     private TextView bestRatedTxt;
     private TextView closerLocationTxt;
     private TextView myFavouritesTxt;
-    private View confirmationLayout;
+    private EditText dateInit;
+    private EditText dateFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,10 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
         this.bestRatedTxt = findViewById(R.id.txtBestRatedTime);
         this.closerLocationTxt=findViewById(R.id.txtCloserLocationTime);
         this.myFavouritesTxt=findViewById(R.id.txtMyFavouritesTime);
-        this.confirmationLayout = findViewById(R.id.confirmationLayout);
+        this.dateInit = findViewById(R.id.editTextInitDate);
+        this.dateFinal = findViewById(R.id.editTextFinalDate);
+
+        findViewById(R.id.confirmationLayout).setVisibility(View.GONE);
 
         computeOccupationRate();
         getAlgorithmMediumTime();
@@ -112,7 +116,48 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
     }
 
     public void onClick_btnDisplayDataInsertionArea(View view) {
-        this.confirmationLayout.setVisibility(View.GONE);
+        findViewById(R.id.btnDisplayDataInsertionArea).setVisibility(View.GONE);
+        findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
+    }
+
+
+    public void onClick_btnOk(View view) {
+        String initialDate = dateInit.getText().toString();
+        String finalDate = dateFinal.getText().toString();
+
+        //ver se é vazio
+        if (initialDate.trim().isEmpty() || finalDate.trim().isEmpty()) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.emptyFields);
+            return;
+        }
+
+        //ver formato
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date initialD = new Date();
+        Date finalD = new Date();
+        try {
+            initialD=dateFormat.parse(initialDate);
+            finalD=dateFormat.parse(finalDate);
+        } catch (Exception e) {
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.invalidDateFormat);
+            return;
+        }
+
+        //ver se data inicial>final
+        if(initialD.compareTo(finalD)>=0){
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.invalidInitialDate);
+            return;
+        }
+
+        //ver se data inicial <actual
+        if(initialD.compareTo(new Date())>=0){
+            InternetConnectionManager.INSTANCE.showErrorMessage(this, R.string.invalidInitialDateActual);
+            return;
+        }
+
+        //mostrar grafico
+        startActivity(RateChartActivity.getIntent(this).putExtra("init", initialDate).putExtra("final", finalDate));
 
     }
 }
