@@ -12,8 +12,8 @@ tools:context=".AlghorithmPerformanceActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:text="@string/findMeASpotTitle"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
@@ -74,8 +74,8 @@ tools:context=".AlghorithmPerformanceActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:text="@string/occupationRateTittle"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
@@ -86,7 +86,6 @@ tools:context=".AlghorithmPerformanceActivity">
         android:id="@+id/txtOccupationRate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
         android:textAlignment="center"
         android:textSize="18sp"
         android:lines="2"
@@ -96,6 +95,7 @@ tools:context=".AlghorithmPerformanceActivity">
         android:id="@+id/btnDisplayDataInsertionArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:onClick="onClick_btnDisplayDataInsertionArea"
         android:text="@string/displayDateArea" />
 
@@ -106,7 +106,6 @@ tools:context=".AlghorithmPerformanceActivity">
         android:background="@android:color/darker_gray"
         android:orientation="vertical"
         android:paddingHorizontal="60dp"
-        android:layout_marginTop="10dp"
         android:visibility="gone">
 
         <TextView
@@ -151,7 +150,8 @@ tools:context=".AlghorithmPerformanceActivity">
             android:id="@+id/btnOk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:onClick="onClick_btnOk"
             android:text="@string/OK" />
     </LinearLayout>
 </LinearLayout>
