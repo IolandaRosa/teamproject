@@ -12,14 +12,13 @@ import java.text.SimpleDateFormat;
 
 import modelo.InternetConnectionManager;
 
-public class DatePickActivity extends /*AppCompatActivity*/ PerformanceButtonActivity {
+public class DatePickActivity extends PerformanceButtonActivity {
     private EditText dateInit;
     private EditText dateFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_date_pick);
 
         this.dateInit = findViewById(R.id.editTextInitDate);
         this.dateFinal = findViewById(R.id.editTextFinalDate);

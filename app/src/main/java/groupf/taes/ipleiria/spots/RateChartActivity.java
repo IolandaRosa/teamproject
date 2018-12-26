@@ -161,14 +161,21 @@ public class RateChartActivity extends PerformanceButtonActivity/*AppCompatActiv
                 graph.getViewport().setMaxY(120);
 
                 graph.getViewport().setXAxisBoundsManual(true);
-                graph.getViewport().setMinX(historicA.get(0).getDate().getTime());
+
                 Calendar calendar = Calendar.getInstance();
+
+                calendar.setTime(historicA.get(0).getDate());
+                calendar.add(DATE, -2);
+                Date newInitDate = calendar.getTime();
+
+                graph.getViewport().setMinX(newInitDate.getTime());
 
                 calendar.setTime(historicA.get(historicA.size() - 1).getDate());
                 calendar.add(DATE, 5);
-                Date newDate = calendar.getTime();
+                Date newFinalDate = calendar.getTime();
 
-                graph.getViewport().setMaxX(newDate.getTime());
+                graph.getViewport().setMaxX(newFinalDate.getTime());
+                graph.getGridLabelRenderer().setLabelHorizontalHeight(120);
 
                 graph.getViewport().setScalable(true);
                 graph.getViewport().setScrollable(true);

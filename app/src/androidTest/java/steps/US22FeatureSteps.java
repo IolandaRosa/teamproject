@@ -8,6 +8,10 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import junit.framework.Assert;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
@@ -21,9 +25,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static java.util.Calendar.DATE;
 import static org.hamcrest.core.AllOf.allOf;
 
 public class US22FeatureSteps extends GreenCoffeeSteps {
+    private Calendar calendar = Calendar.getInstance();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
@@ -34,7 +41,7 @@ public class US22FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        onView(withId(R.id.navList)).perform(swipeUp());
+        onView(withId(R.id.drawer_layout)).perform(swipeUp());
         onView(allOf( withText(arg1),hasSibling(withText(arg1)),isDisplayed()))
                 .perform(scrollTo(), click());
     }
@@ -74,11 +81,24 @@ public class US22FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I insert the initial date from the future$")
     public void i_insert_the_initial_date_from_the_future() {
+        String s = setnewFutureDate(2);
+        closeKeyboard();
+        onViewWithId(R.id.editTextInitDate).type(s);
 
     }
 
     @When("^I insert the final date higher than initial date$")
     public void i_insert_the_final_date_higher_than_initial_date() {
+        String s = setnewFutureDate(3);
+        closeKeyboard();
+        onViewWithId(R.id.editTextFinalDate).type(s);
+    }
 
+    private String setnewFutureDate(int days){
+        calendar.setTime(new Date());
+        calendar.add(DATE, days);
+        Date newInitDate = calendar.getTime();
+
+        return dateFormat.format(newInitDate);
     }
 }

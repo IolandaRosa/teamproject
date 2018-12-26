@@ -80,3 +80,11 @@ Feature: An authenticated user can see the occupation rate evolution displayed
     And I press the button with text "Show Occupation Rate Evolution On Period"
     Then I see an error message saying "The date must van not be higher or equal to the actual date"
 
+  Scenario: An authenticated user wants to see graphical information whenthere is no data registered
+    Given I am an authenticated user
+    When I press the menu option "Occupation Rate During Time"
+    And I insert the initial date value "11/11/2016"
+    And I insert the final date value "12/12/2016"
+    And I press the button with text "Show Occupation Rate Evolution On Period"
+    Then I see an error message saying "No data found for given time period"
+
