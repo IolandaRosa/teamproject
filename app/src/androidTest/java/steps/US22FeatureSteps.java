@@ -16,6 +16,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -62,11 +63,22 @@ public class US22FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I press the button to see graphical information$")
     public void i_press_the_button_to_see_graphical_information() {
-
+        onViewWithId(R.id.btnDisplayDataInsertionArea).isDisplayed().check(matches(withText("Show Occupation Rate Evolution On Period"))).click();
     }
 
     @Then("^I see an error message saying \"([^\"]*)\"$")
     public void i_see_an_error_message_saying(String arg1) {
+        onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText(arg1)).inRoot(isDialog()).perform(click());
+    }
+
+    @When("^I insert the initial date from the future$")
+    public void i_insert_the_initial_date_from_the_future() {
+
+    }
+
+    @When("^I insert the final date higher than initial date$")
+    public void i_insert_the_final_date_higher_than_initial_date() {
 
     }
 }

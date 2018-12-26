@@ -75,8 +75,8 @@ Feature: An authenticated user can see the occupation rate evolution displayed
   Scenario: An authenticated user wants to see graphical information with date from the future
     Given I am an authenticated user
     When I press the menu option "Occupation Rate During Time"
-    And I insert the initial date value "13/12/2018"
-    And I insert the final date value "12/12/2018"
+    And I insert the initial date from the future
+    And I insert the final date higher than initial date
     And I press the button with text "Show Occupation Rate Evolution On Period"
     Then I see an error message saying "The date must van not be higher or equal to the actual date"
 
