@@ -18,7 +18,7 @@ import helpers.DrawerHelper;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -35,6 +35,7 @@ public class US21FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        onView(withId(R.id.navList)).perform(swipeUp());
         onView(allOf( withText(arg1),hasSibling(withText(arg1)),isDisplayed()))
                 .perform(scrollTo(), click());
     }
@@ -100,4 +101,14 @@ public class US21FeatureSteps extends GreenCoffeeSteps {
     public void i_press_that_button() {
         onViewWithId(R.id.btnUpdateMyProfile).click();
     }
+
+    @When("^I press the Occupation Rate During Time$")
+    public void i_press_the_Occupation_Rate_During_Time() {
+        onViewWithId(R.id.drawer_layout).isDisplayed();
+        onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        onView(withId(R.id.navList)).perform(swipeUp());
+        onView(allOf( withText("Occupation Rate During Time"),hasSibling(withText("Occupation Rate During Time")),isDisplayed()))
+                .perform(scrollTo(), click());
+    }
+
 }

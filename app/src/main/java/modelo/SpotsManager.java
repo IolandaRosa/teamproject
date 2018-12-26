@@ -1,5 +1,7 @@
 package modelo;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -9,10 +11,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 public enum SpotsManager {
     INSTANCE;
@@ -23,42 +25,27 @@ public enum SpotsManager {
     private List<Spot> parkingSpotsA;
     private List<Spot> parkingSpotsD;
     private List<Spot> parkingSpotsTest;
-   /* private int freeSpots = 0;
-    private int ocuppiedSpots = 0; */
     private String dateOfData = null;
     private int freeSpotsParkA = 0;
     private int ocuppiedSpotsParkA = 0;
     private int freeSpotsParkD = 0;
     private int ocuppiedSpotsParkD = 0;
-    private Map<String,Long> occupationValues;
-
-    private int freeSpotsPark = 0;
-    private List<Spot> freeParkingSpots;
 
     private List<Spot> parkingSpotsOld;
     private List<Spot> parkingSpots;
-    private boolean firstTime;
 
     SpotsManager() {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
 
-//        database.setPersistenceEnabled(true);
         dbRef = database.getReference().child("ParkingSpots");
         dbRef.keepSynced(true);
         parkingSpots = new LinkedList<>();
         parkingSpotsA = new LinkedList<>();
         parkingSpotsD = new LinkedList<>();
         parkingSpotsTest = new LinkedList<>();
-        freeParkingSpots = new LinkedList<>();
+
         parkingSpotsOld = new LinkedList<>();
-        firstTime = true;
-
-        this.occupationValues=new HashMap<>();
-
-
-        //writeSpotsOnDatabase();
-       // readSpotsDataFromDatabase();
     }
 
     public void writeSpotsOnDatabase() {
@@ -105,7 +92,6 @@ public enum SpotsManager {
     public void readSpotsDataFromDatabase() {
         // Attach a listener to read the data at our posts reference
 
-
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,9 +105,6 @@ public enum SpotsManager {
 
                 parkingSpotsA = new LinkedList<>();
                 parkingSpotsD = new LinkedList<>();
-
-                //mudei aqui
-
 
                 parkingSpotsOld = parkingSpots;
                 parkingSpots = new LinkedList<>();
@@ -225,7 +208,6 @@ public enum SpotsManager {
         int index=getSpotIndexById(id);
         if(index!=-1){
             Spot spot = this.parkingSpots.get(index);
-            int totalOfParkings = spot.getTotalOfParkings();
             spot.setTotalOfParkings();
             this.parkingSpots.set(index,spot);
             dbRef.child(id).child("TotalOfParkings").setValue(spot.getTotalOfParkings());
@@ -237,13 +219,6 @@ public enum SpotsManager {
         dbRef.child(id).child("Status").setValue(0);
     }
 
-   /*
-   public void addFindPreferenceToAUser(String id, FindPreference findPreference) {
-        mDatabase.child(id).child("findPreference").setValue(findPreference);
-    }
-    */
-
-    //teste
     public void setParkingSpotsTest(List<Spot> spots)
     {
         parkingSpotsTest.addAll(spots);
@@ -260,8 +235,6 @@ public enum SpotsManager {
     }
 
     public void addSpotToDatabase(String spotId, String park, String locationGeo, int status, int rating) {
-      //  Spot spot = new Spot(spotId, park, locationGeo, status, rating);
-   //     dbRef.child(spotId).setValue(spot);
         dbRef.child(spotId).child("Park").setValue(park);
         dbRef.child(spotId).child("LocationGeo").setValue(locationGeo);
         dbRef.child(spotId).child("Status").setValue(status);
@@ -300,7 +273,6 @@ public enum SpotsManager {
         int index=getSpotIndexById(id);
         if(index!=-1){
             Spot spot = this.parkingSpots.get(index);
-            int totalOfParkings = spot.getTotalOfParkings();
             spot.setTotalOfParkings();
             this.parkingSpots.set(index,spot);
             dbRef.child(id).child("TotalOfParkings").setValue(spot.getTotalOfParkings());
@@ -320,6 +292,95 @@ public enum SpotsManager {
     public DatabaseReference getDbRef() {
         return dbRef;
     }
+
+    public void updateDailyOccupationRate(){
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                int totalASpots = 0;
+                int totalAOccupiedSpots = 0;
+                int totalDSpots = 0;
+                int totalDOccupiedSpots = 0;
+                double occupationRateA = 100;
+                double occupationRateD = 100;
+
+                for (DataSnapshot d : children) {
+                    Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()), Integer.parseInt(d.child("Rating").getValue().toString()), Integer.parseInt(d.child("TotalOfParkings").getValue().toString()));
+
+                    if (spot.getPark().compareToIgnoreCase("A") == 0) {
+                        totalASpots++;
+                        if (spot.getStatus() == 1) {
+                            totalAOccupiedSpots++;
+                        }
+                    } else {
+                        totalDSpots++;
+                        if (spot.getStatus() == 1) {
+                            totalDOccupiedSpots++;
+                        }
+                    }
+                }
+
+                if (totalAOccupiedSpots > 0 && totalASpots > 0) {
+                    occupationRateA = ((double) totalAOccupiedSpots / totalASpots) * 100;
+                }
+
+                if (totalDOccupiedSpots > 0 && totalDSpots > 0) {
+                    occupationRateD = ((double) totalDOccupiedSpots / totalDSpots) * 100;
+                }
+
+                //Calculou a taxa de ocupação
+                //guarda os valores
+                putValuesOnDatabase(occupationRateA,occupationRateD);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void putValuesOnDatabase(final double occupationRateA, final double occupationRateD) {
+
+
+        final DatabaseReference dBOccupationRate = FirebaseDatabase.getInstance().getReference().child("DailyOccupationRate");
+
+        dBOccupationRate.addListenerForSingleValueEvent(new ValueEventListener() {
+            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(date).getValue()==null){
+                    dBOccupationRate.child(date).setValue("A");
+                    dBOccupationRate.child(date).setValue("D");
+                }
+
+                if(dataSnapshot.child(date).child("A").getValue()==null){
+                    dBOccupationRate.child(date).child("A").setValue(String.valueOf(occupationRateA));
+                    dBOccupationRate.child(date).child("D").setValue(String.valueOf(occupationRateD));
+                }
+                else{
+                    double occupationA = Double.parseDouble(dataSnapshot.child(date).child("A").getValue().toString());
+                    double occupationD = Double.parseDouble(dataSnapshot.child(date).child("D").getValue().toString());
+
+                    dBOccupationRate.child(date).child("A").setValue(String.valueOf((occupationA+occupationRateA)/2));
+                    dBOccupationRate.child(date).child("D").setValue(String.valueOf((occupationD+occupationRateD)/2));
+
+                }
+
+                dBOccupationRate.removeEventListener(this);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
 
 

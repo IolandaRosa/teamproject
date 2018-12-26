@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -81,15 +82,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private  static int currentPark;
     private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
-
     private Marker choosenMarker = null;
     private static Marker userSpotMarker = null;
-
-    //private Marker spotParked
-
     private String occupiedParkId = "";
     private  boolean execute = true;
-
     private Location loc = null;
     private Boolean isManual = false;
 
@@ -148,13 +144,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //empty
-
             }
         });
-
-
-
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -168,7 +159,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         onChangeSpotStatus();
 
-        //mapFragment.getMapAsync(this);
+        SpotsManager.INSTANCE.updateDailyOccupationRate();
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -234,11 +225,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
                     spotsResult.add(spotChanged);
                 }
-
-
             }
-
-
         }
         return spotsResult;
     }
@@ -330,6 +317,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 9:
                         startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
                         break;
+                    case 10:
+                        startActivity(DatePickActivity.getIntent(DashboardAuthActivity.this));
                 }
             }
         });
@@ -613,8 +602,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                if (parking) {
-                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
-                   UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   try{
+                       SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                       UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   }
+                   catch (Exception e){
+                       Log.d("Ex",e.getMessage());
+                   }
+
                } else {
                     leaveSpot();
                }
@@ -745,7 +740,4 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
-
-
-
 }

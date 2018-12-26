@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -13,8 +15,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import modelo.Spot;
-import modelo.SpotsManager;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import modelo.InternetConnectionManager;
 
 public class AlghorithmPerformanceActivity extends AppCompatActivity {
 
@@ -42,58 +47,23 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
     }
 
     public void computeOccupationRate() {
-        SpotsManager.INSTANCE.getDbRef().addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("DailyOccupationRate").addValueEventListener(new ValueEventListener() {
+            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                    int totalASpots = 0;
-                    int totalAOccupiedSpots = 0;
-                    int totalDSpots = 0;
-                    int totalDOccupiedSpots = 0;
-                    double occupationRateA = 100;
-                    double occupationRateD = 100;
-
-
-                    for (DataSnapshot d : children) {
-                        Spot spot = new Spot(d.getKey(), d.child("Park").getValue().toString(), d.child("LocationGeo").getValue().toString(), Integer.parseInt(d.child("Status").getValue().toString()), Integer.parseInt(d.child("Rating").getValue().toString()), Integer.parseInt(d.child("TotalOfParkings").getValue().toString()));
-
-                        if (spot.getPark().compareToIgnoreCase("A") == 0) {
-                            totalASpots++;
-                            if (spot.getStatus() == 1) {
-                                totalAOccupiedSpots++;
-                            }
-                        } else {
-                            totalDSpots++;
-                            if (spot.getStatus() == 1) {
-                                totalDOccupiedSpots++;
-                            }
-                        }
-
-                    }
-
-                    if (totalAOccupiedSpots > 0 && totalASpots > 0) {
-                        occupationRateA = ((double) totalAOccupiedSpots / totalASpots) * 100;
-                    }
-
-                    if (totalDOccupiedSpots > 0 && totalDSpots > 0) {
-                        occupationRateD = ((double) totalDOccupiedSpots / totalDSpots) * 100;
-                    }
-
-                    String multiline="Park A - "+String.format("%.2f",occupationRateA)+"%\nPark D - "+String.format("%.2f",occupationRateD)+"%";
-                    ocupationRateTxt.setText(multiline);
-
-
-                } catch (
-                        Exception e)
-
-                {
-                    Log.d("e", e.getMessage());
+                String multiline="";
+                if(dataSnapshot.child(date).getValue()==null){
+                    multiline = "Park A - No data available\nPark D - No data available";
                 }
+                else{
+                    multiline="Park A - "+String.format("%.2f",Double.parseDouble(dataSnapshot.child(date).child("A").getValue().toString()))+"%\nPark D - "+String.format("%.2f",Double.parseDouble(dataSnapshot.child(date).child("D").getValue().toString()))+"%";
+                }
+                ocupationRateTxt.setText(multiline);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -137,5 +107,9 @@ public class AlghorithmPerformanceActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void onClick_btnDisplayDataInsertionArea(View view) {
+        startActivity(DatePickActivity.getIntent(this));
     }
 }

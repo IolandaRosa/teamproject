@@ -19,10 +19,11 @@ Feature: An authenticated user can see the performance medium time
     And I see the performance time and statistics displayed
 
     Examples:
-      | menu_option        |
-      | Profile            |
-      | Statistics         |
-      | Change my password |
+      | menu_option                   |
+      | Profile                       |
+      | Statistics                    |
+      | Change my password            |
+      | Occupation Rate During Time   |
 
   Scenario: An authenticated user can see the information in the update profile activity
     Given I am an authenticated user
