@@ -97,5 +97,5 @@ tools:context=".AlghorithmPerformanceActivity">
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:onClick="onClick_btnDisplayDataInsertionArea"
-        android:text="Boi" />
+        android:text="@string/displayGraph" />
 </LinearLayout>

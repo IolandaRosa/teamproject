@@ -27,25 +27,25 @@ import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.Spot;
 import modelo.UsersManager;
 import steps.US21FeatureSteps;
+import steps.US22FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US21FeatureTest extends GreenCoffeeTest {
-
+public class US22FeatureTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    public US21FeatureTest(ScenarioConfig scenario) {
+    public US22FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS21.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS22.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US21FeatureSteps());
+        start(new US22FeatureSteps());
     }
 
     @BeforeClass
@@ -58,14 +58,9 @@ public class US21FeatureTest extends GreenCoffeeTest {
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-
-        List<Spot> spots=new ArrayList<>();
-        spots.add(new Spot("A-1","D","1,2",0,4,0));
-        spots.add(new Spot("A-2","D","-1,5",1,0,0));
-
         if(registerTask.isSuccessful()){
 
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots9@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
@@ -74,11 +69,10 @@ public class US21FeatureTest extends GreenCoffeeTest {
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            UsersManager.INSTANCE.addUserWithSpotsToDatabase("Spots","spots9@email.pt", spots);
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
         }
 
     }
-
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
