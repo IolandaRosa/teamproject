@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -53,8 +54,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import modelo.InternetConnectionManager;
 import modelo.Spot;
@@ -168,7 +172,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         onChangeSpotStatus();
 
-        //mapFragment.getMapAsync(this);
+        SpotsManager.INSTANCE.updateDailyOccupationRate();
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -613,8 +617,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                if (parking) {
-                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
-                   UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   try{
+                       SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                       UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   }
+                   catch (Exception e){
+                       Log.d("Ex",e.getMessage());
+                   }
+
                } else {
                     leaveSpot();
                }
@@ -745,7 +755,4 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
-
-
-
 }
