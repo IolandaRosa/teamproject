@@ -54,11 +54,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import modelo.InternetConnectionManager;
 import modelo.Spot;
@@ -85,15 +82,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private  static int currentPark;
     private LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
-
     private Marker choosenMarker = null;
     private static Marker userSpotMarker = null;
-
-    //private Marker spotParked
-
     private String occupiedParkId = "";
     private  boolean execute = true;
-
     private Location loc = null;
     private Boolean isManual = false;
 
@@ -152,13 +144,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //empty
-
             }
         });
-
-
-
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -238,11 +225,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
                     spotsResult.add(spotChanged);
                 }
-
-
             }
-
-
         }
         return spotsResult;
     }
@@ -334,6 +317,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     case 9:
                         startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
                         break;
+                    case 10:
+                        startActivity(DatePickActivity.getIntent(DashboardAuthActivity.this));
                 }
             }
         });
