@@ -15,6 +15,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -39,22 +40,24 @@ public class US22FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I insert the initial date value \"([^\"]*)\"$")
     public void i_insert_the_initial_date_value(String arg1) {
-
+        closeKeyboard();
+        onViewWithId(R.id.editTextInitDate).type(arg1);
     }
 
     @When("^I insert the final date value \"([^\"]*)\"$")
     public void i_insert_the_final_date_value(String arg1) {
-
+        closeKeyboard();
+        onViewWithId(R.id.editTextFinalDate).type(arg1);
     }
 
     @When("^I press the button with text \"([^\"]*)\"$")
     public void i_press_the_button_with_text(String arg1) {
-
+        onViewWithId(R.id.btnDisplayGraph).isDisplayed().check(matches(withText(arg1))).click();
     }
 
     @Then("^I see the graphical information displayed$")
     public void i_see_the_graphical_information_displayed() {
-
+        onViewWithId(R.id.graph).isDisplayed();
     }
 
     @When("^I press the button to see graphical information$")
