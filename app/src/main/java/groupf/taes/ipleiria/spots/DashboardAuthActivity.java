@@ -321,10 +321,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
-                    case 9:
+                    case 10:
                         startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
                         break;
-                    case 10:
+                    case 11:
                         startActivity(DatePickActivity.getIntent(DashboardAuthActivity.this));
                 }
             }
