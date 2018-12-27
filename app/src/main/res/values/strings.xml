@@ -106,6 +106,9 @@
     <string name="errorReportDescriptionEmpty">Description can\'t be empty.</string>
     <string name="errorReportLocationNotPut">ERROR: You need to put a location.</string>
     <string name="incidentReportedWithSuccess">The incident was reported with success.</string>
+    <string name="uploadPhoto">Upload Photo</string>
+    <string name="txtViewInfoUploadedSuccess">Image obtained with success.</string>
+    <string name="errorPermissionStorageDenied">You can\'t access this funcionality if the application doesn\'t have permission.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>

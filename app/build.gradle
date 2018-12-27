@@ -45,5 +45,7 @@ dependencies {
 
     implementation 'com.jjoe64:graphview:4.2.1'
 
+    implementation 'com.google.firebase:firebase-storage:16.0.4'
+
 
 }

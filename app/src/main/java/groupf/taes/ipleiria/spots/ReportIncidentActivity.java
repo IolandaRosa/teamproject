@@ -1,9 +1,17 @@
 package groupf.taes.ipleiria.spots;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,11 +40,14 @@ import modelo.Spot;
 import modelo.SpotsManager;
 
 public class ReportIncidentActivity extends AppCompatActivity {
+    private static final int PERMISSION_STORAGE_REQUEST = 0;
     private Button btnGetLocation;
     private Button btnChooseSpotPark;
+    private Button btnUpload;
     private TextView txtViewInfoLocationObtained;
     private TextView txtChoosePark;
     private TextView txtChooseSpot;
+    private TextView txtInfoUploadedSuccess;
     private EditText txtDescription;
     private Spinner spinnerPark;
     private Spinner spinnerSpot;
@@ -45,6 +57,10 @@ public class ReportIncidentActivity extends AppCompatActivity {
     private String spotSelected = null;
     private int spotSelectedIndex = 0;
     private List<String> spotsIds;
+
+    private Bitmap bitmap = null;
+
+    private int hasPhoto = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +74,9 @@ public class ReportIncidentActivity extends AppCompatActivity {
         txtChooseSpot = findViewById(R.id.txtViewChooseASpot);
         spinnerPark = findViewById(R.id.spinnerParks);
         spinnerSpot = findViewById(R.id.spinnerSpots);
+        btnUpload = findViewById(R.id.btnUploadPhoto);
         txtDescription = findViewById(R.id.editTxtDescription);
+        txtInfoUploadedSuccess = findViewById(R.id.txtViewInfoUploadedSuccess);
 
 
 
@@ -165,10 +183,74 @@ public class ReportIncidentActivity extends AppCompatActivity {
             return;
         }
 
-        IncidentsReportsManager.INSTANCE.createNewIncidentReport(description, currentLocation, spotSelected);
+        if (bitmap != null) {
+            IncidentsReportsManager.INSTANCE.uploadPhoto(bitmap);
+        }
+
+        IncidentsReportsManager.INSTANCE.createNewIncidentReport(description, currentLocation, spotSelected, hasPhoto);
 
         showSuccessMessage();
     }
+
+
+    public void btnUploadPhotoClick(View view) {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_STORAGE_REQUEST);
+        } else {
+            uploadImage();
+        }
+    }
+
+    private void uploadImage() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(galleryIntent, 0);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case PERMISSION_STORAGE_REQUEST: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permissão granted
+                    uploadImage();
+                    return;
+                } else {
+                    // permissão denied
+                    InternetConnectionManager.INSTANCE.showErrorMessage(ReportIncidentActivity.this,R.string.errorPermissionStorageDenied);
+                    //showErrorMessage(R.string.errorPermissionLocationDenied);
+                }
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == this.RESULT_CANCELED) {
+            return;
+        }
+
+        if (data != null) {
+            Uri contentURI = data.getData();
+            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                // String path = saveImage(bitmap);
+                bitmap = bm;
+                btnUpload.setVisibility(View.GONE);
+                txtInfoUploadedSuccess.setVisibility(View.VISIBLE);
+                hasPhoto = 1;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void showSuccessMessage() {
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
