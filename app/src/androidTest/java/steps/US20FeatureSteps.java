@@ -13,6 +13,7 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -28,6 +29,7 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option_on_dashboard_auth_screen(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         Espresso.onView(withText(arg1)).perform(click());
     }
 

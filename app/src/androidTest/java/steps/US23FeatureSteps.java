@@ -13,8 +13,10 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
@@ -30,6 +32,8 @@ public class US23FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
+        Espresso.onView(withId(R.id.drawer_layout)).perform(swipeUp());
         Espresso.onView(withText(arg1)).perform(click());
     }
 

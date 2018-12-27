@@ -15,6 +15,7 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -35,6 +36,7 @@ public class US21FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         onView(withId(R.id.navList)).perform(swipeUp());
         onView(allOf( withText(arg1),hasSibling(withText(arg1)),isDisplayed()))
                 .perform(scrollTo(), click());
@@ -66,6 +68,7 @@ public class US21FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_Profile() {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         onView(withText("Profile")).perform(click());
     }
 
@@ -82,18 +85,23 @@ public class US21FeatureSteps extends GreenCoffeeSteps {
     @When("^I press the Statistics$")
     public void i_press_the_Statistics() {
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
+        onView(withId(R.id.navList)).perform(swipeUp());
         onView(withText("Statistics")).perform(click());
     }
 
     @When("^I press the Change my password$")
     public void i_press_the_Change_my_password() {
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
+        onView(withId(R.id.navList)).perform(swipeUp());
         onView(withText("Change my password")).perform(click());
     }
 
     @When("^I press the \"([^\"]*)\"$")
     public void i_press_the(String arg1) {
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         onView(withText(arg1)).perform(click());
     }
 

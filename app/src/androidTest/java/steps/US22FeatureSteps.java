@@ -15,6 +15,7 @@ import java.util.Date;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -41,6 +42,7 @@ public class US22FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         onView(withId(R.id.drawer_layout)).perform(swipeUp());
         onView(allOf( withText(arg1),hasSibling(withText(arg1)),isDisplayed()))
                 .perform(scrollTo(), click());

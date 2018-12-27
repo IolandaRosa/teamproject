@@ -1,8 +1,6 @@
 package features;
 
-import android.Manifest;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,29 +23,27 @@ import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
 import modelo.UsersManager;
-import steps.US23FeatureEmptyFieldsSteps;
-import steps.US23FeatureSteps;
+import steps.US25FeatureNoReportsSteps;
 
 @RunWith(Parameterized.class)
-public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
+public class US25FeatureNoReportsTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
-    public US23FeatureEmptyFieldsTest(ScenarioConfig scenario) {
+
+    public US25FeatureNoReportsTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS23EmptyFields.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS25NoReports.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US23FeatureEmptyFieldsSteps());
+        start(new US25FeatureNoReportsSteps());
     }
 
     @BeforeClass
@@ -55,17 +51,17 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots10@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots9@email.pt", "12345678");
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
 
         if(registerTask.isSuccessful()){
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots10@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots10@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
@@ -86,7 +82,7 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
 
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots10@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
