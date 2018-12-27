@@ -149,6 +149,9 @@ public enum IncidentsReportsManager {
         dbRef.child(String.valueOf(id)).setValue(incident);
     }
 
+    public List<IncidentReport> getIncidents() {
+        return this.incidents;
+    }
 
 
 }
