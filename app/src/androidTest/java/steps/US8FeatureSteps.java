@@ -37,7 +37,7 @@ public class US8FeatureSteps extends GreenCoffeeSteps {
         onViewWithText(string(R.string.current_password)).isDisplayed();
         onViewWithText(string(R.string.new_password)).isDisplayed();
         onViewWithText(string(R.string.new_password_confirmation)).isDisplayed();
-        onViewWithId(R.id.btnSave).isDisplayed().check(matches(withText(string(R.string.save)))).isDisplayed();
+        onViewWithId(R.id.btnSaveReport).isDisplayed().check(matches(withText(string(R.string.save)))).isDisplayed();
         onViewWithId(R.id.btnCancel).isDisplayed().check(matches(withText(string(R.string.cancel)))).isDisplayed();
     }
 
@@ -64,7 +64,7 @@ public class US8FeatureSteps extends GreenCoffeeSteps {
     @When("^I click the Save button$")
     public void i_click_the_Save_button() {
         closeKeyboard();
-        onViewWithId(R.id.btnSave).click();
+        onViewWithId(R.id.btnSaveReport).click();
     }
 
     @Then("^I see an error message on the current password input field saying \"([^\"]*)\"$")

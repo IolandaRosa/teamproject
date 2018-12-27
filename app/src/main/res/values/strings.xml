@@ -95,6 +95,17 @@
     <string name="invalidInitialDateActual">The date must van not be higher or equal to the actual date</string>
     <string name="noDataFound">No data found for given time period</string>
     <string name="displayGraph">Show Occupation Rate Evolution On Period</string>
+    <string name="titleReportIncident">Report Incident</string>
+    <string name="titleReportDescription">Description</string>
+    <string name="titleReportLocation">Location</string>
+    <string name="txtBtnReportGetCurrentLocation">Get My Current Location</string>
+    <string name="txtBtnReportChooseParkAndSpot">Choose a park and a spot</string>
+    <string name="txtViewChooseAPark">Choose a park</string>
+    <string name="txtViewChooseASpot">Choose a spot</string>
+    <string name="infoReportGotUserLocation">Your location was successfully obtained.</string>
+    <string name="errorReportDescriptionEmpty">Description can\'t be empty.</string>
+    <string name="errorReportLocationNotPut">ERROR: You need to put a location.</string>
+    <string name="incidentReportedWithSuccess">The incident was reported with success.</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -110,6 +121,7 @@
         <item>Leave My Spot</item>
         <item>Statistics</item>
         <item>Change my password</item>
+        <item>Report an Incident</item>
         <item>Logout</item>
         <item>Algorithm Performance</item>
         <item>Occupation Rate During Time</item>

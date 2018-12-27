@@ -53,9 +53,9 @@
         <activity android:name=".FindMeASpotActivity" />
         <activity android:name=".StatisticsActivity" />
         <activity android:name=".AlghorithmPerformanceActivity" />
-        <activity android:name=".PerformanceButtonActivity" />
         <activity android:name=".RateChartActivity" />
         <activity android:name=".DatePickActivity"></activity>
+        <activity android:name=".ReportIncidentActivity"></activity>
     </application>
 
 </manifest>

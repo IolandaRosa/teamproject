@@ -121,13 +121,13 @@ public class UpdateProfileActivity extends PerformanceButtonActivity {
         if(!nameEquals && (!emailEquals || !preferenceEquals)){
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnSave).setVisibility(View.GONE);
+            findViewById(R.id.btnSaveReport).setVisibility(View.GONE);
             return;
         }
 
         if(!emailEquals || !preferenceEquals){
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnSave).setVisibility(View.GONE);
+            findViewById(R.id.btnSaveReport).setVisibility(View.GONE);
             return;
         }
 

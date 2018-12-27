@@ -50,7 +50,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
 
     @Then("^I am on update my profile screen$")
     public void i_am_on_update_my_profile_screen() {
-        onViewWithId(R.id.btnSave).isDisplayed().check(matches(withText(R.string.save)));
+        onViewWithId(R.id.btnSaveReport).isDisplayed().check(matches(withText(R.string.save)));
         onViewWithId(R.id.btnCancel).isDisplayed().check(matches(withText(R.string.cancel)));
     }
 
@@ -114,7 +114,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
     @When("^I press the \"([^\"]*)\" button$")
     public void i_press_the_button(String arg1) {
         closeKeyboard();
-        onViewWithId(R.id.btnSave).isDisplayed().check(matches(withText(arg1))).click();
+        onViewWithId(R.id.btnSaveReport).isDisplayed().check(matches(withText(arg1))).click();
     }
 
     @Then("^I see an error message displayed saying \"([^\"]*)\"$")
@@ -164,7 +164,7 @@ public class US7FeatureSteps extends GreenCoffeeSteps {
     @When("^I see the password confirmation displayed$")
     public void i_see_the_password_confirmation_displayed() {
         onViewWithId(R.id.confirmationLayout).isDisplayed();
-        onViewWithId(R.id.btnSave).isNotDisplayed();
+        onViewWithId(R.id.btnSaveReport).isNotDisplayed();
         onViewWithId(R.id.btnOk).isDisplayed().check(matches(withText(R.string.OK)));
     }
 
