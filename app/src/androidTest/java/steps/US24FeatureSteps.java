@@ -13,6 +13,7 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -28,6 +29,7 @@ public class US24FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         Espresso.onView(withText(arg1)).perform(click());
     }
 
@@ -63,27 +65,7 @@ public class US24FeatureSteps extends GreenCoffeeSteps {
        onViewWithId(R.id.btnUploadPhoto).click();
     }
 
-    @When("^I select a image$")
-    public void i_select_a_image() {
-        //  Espresso.intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(getImageResult());
-    }
 
-    @When("^I see a message saying that the image was obtained with success$")
-    public void i_see_a_message_saying_that_the_image_was_obtained_with_success() {
-        // Write code here that turns the phrase above into concrete actions
-        //throw new PendingException();
-    }
-
-    @When("^I press the back button of the device$")
-    public void i_press_the_back_button_of_the_device() {
-        Espresso.pressBack();
-    }
-
-    @Then("^I am on the dashboard auth$")
-    public void i_am_on_the_dashboard_auth() {
-        // Write code here that turns the phrase above into concrete actions
-     //   throw new PendingException();
-    }
 
 
 }
