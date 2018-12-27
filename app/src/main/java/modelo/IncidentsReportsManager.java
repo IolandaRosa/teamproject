@@ -45,6 +45,10 @@ public enum IncidentsReportsManager {
         this.storageRef = storage.getReference().child("incidents");
     }
 
+    public void setIncidentsList(List<IncidentReport> incidents) {
+        this.incidents = incidents;
+    }
+
     public void getIncidentsReporstFromDatabase() {
 
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -149,6 +153,22 @@ public enum IncidentsReportsManager {
         dbRef.child(String.valueOf(id)).setValue(incident);
     }
 
+    public List<IncidentReport> getIncidents() {
+        return this.incidents;
+    }
+
+    // para testes
+    public void addIncidentToDatabase(int id, String description, String loc, String spotId) {
+
+
+        IncidentReport incident = new IncidentReport(id, description, loc, spotId, 0);
+
+        dbRef.child(String.valueOf(id)).setValue(incident);
+    }
+
+    public void removeIncidentFromDatabase(int id) {
+        dbRef.child(String.valueOf(id)).removeValue();
+    }
 
 
 }

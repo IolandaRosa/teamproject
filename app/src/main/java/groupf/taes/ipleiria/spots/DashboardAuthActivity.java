@@ -315,16 +315,20 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         break;
                     case 8:
                         mDrawerLayout.closeDrawers();
-                        startActivity(ReportIncidentActivity.getIntent(DashboardAuthActivity.this));
+                        startActivity(IncidentsReportsListActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 9:
+                        mDrawerLayout.closeDrawers();
+                        startActivity(ReportIncidentActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 10:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
-                    case 10:
+                    case 11:
                         startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
                         break;
-                    case 11:
+                    case 12:
                         startActivity(DatePickActivity.getIntent(DashboardAuthActivity.this));
                 }
             }

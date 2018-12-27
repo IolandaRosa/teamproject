@@ -10,22 +10,29 @@ import com.mauriciotogneri.greencoffee.annotations.When;
 
 import junit.framework.Assert;
 
+import java.util.LinkedList;
+
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
+import modelo.IncidentReport;
+import modelo.IncidentsReportsManager;
 
 import static android.os.SystemClock.sleep;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
 
-public class US23FeatureEmptyFieldsSteps extends GreenCoffeeSteps {
+public class US25FeatureNoReportsSteps extends GreenCoffeeSteps {
 
     @Given("^I am an authenticated user$")
     public void i_am_an_authenticated_user() {
         Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
+    }
+
+    @Given("^There's no reports$")
+    public void there_s_no_reports() {
+        IncidentsReportsManager.INSTANCE.setIncidentsList(new LinkedList<IncidentReport>());
+        Assert.assertEquals(0, IncidentsReportsManager.INSTANCE.getIncidents().size());
     }
 
     @When("^I press the menu option \"([^\"]*)\"$")
@@ -33,32 +40,12 @@ public class US23FeatureEmptyFieldsSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
         sleep(500);
-        Espresso.onView(withId(R.id.drawer_layout)).perform(swipeUp());
         Espresso.onView(withText(arg1)).perform(click());
     }
 
-    @When("^I press the save button$")
-    public void i_press_the_save_button() {
-        Espresso.closeSoftKeyboard();
-        onViewWithId(R.id.btnSaveReport).click();
+    @Then("^I see a message saying that the're no reports to show$")
+    public void i_see_a_message_saying_that_the_re_no_reports_to_show() {
+        onViewWithText(string(R.string.incidentsEmptyList)).isDisplayed();
     }
-
-    @Then("^I see a error saying that description can't be empty$")
-    public void i_see_a_error_saying_that_description_can_t_be_empty() {
-        onViewWithId(R.id.editTxtDescription).hasErrorText(string(R.string.errorReportDescriptionEmpty));
-    }
-
-    @When("^I insert a description on the description field$")
-    public void i_insert_a_description_on_the_description_field() {
-        onViewWithId(R.id.editTxtDescription).type("This is a description");
-        Espresso.closeSoftKeyboard();
-    }
-
-
-    @Then("^I see a error saying that I need to put a location$")
-    public void i_see_a_error_saying_that_I_need_to_put_a_location() {
-        onViewWithText(string(R.string.errorReportLocationNotPut)).isDisplayed();
-    }
-
 
 }

@@ -109,6 +109,8 @@
     <string name="uploadPhoto">Upload Photo</string>
     <string name="txtViewInfoUploadedSuccess">Image obtained with success.</string>
     <string name="errorPermissionStorageDenied">You can\'t access this funcionality if the application doesn\'t have permission.</string>
+    <string name="incidentsEmptyList">There\'s no incidents reports.</string>
+    <string name="titleReportSpot">Spot Location</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -124,6 +126,7 @@
         <item>Leave My Spot</item>
         <item>Statistics</item>
         <item>Change my password</item>
+        <item>Incidents Reports List</item>
         <item>Report an Incident</item>
         <item>Logout</item>
         <item>Algorithm Performance</item>

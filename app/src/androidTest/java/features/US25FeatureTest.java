@@ -24,30 +24,31 @@ import java.io.IOException;
 import java.util.Collection;
 
 import groupf.taes.ipleiria.spots.DashboardAuthActivity;
+import modelo.IncidentsReportsManager;
 import modelo.UsersManager;
-import steps.US23FeatureEmptyFieldsSteps;
-import steps.US23FeatureSteps;
+import steps.US25FeatureSteps;
 
 @RunWith(Parameterized.class)
-public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
+public class US25FeatureTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
     @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
-    public US23FeatureEmptyFieldsTest(ScenarioConfig scenario) {
+
+    public US25FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<ScenarioConfig> data() throws IOException {
-        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS23EmptyFields.feature").scenarios();
+        return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS25.feature").scenarios();
     }
 
     @Test
     public void test() {
-        start(new US23FeatureEmptyFieldsSteps());
+        start(new US25FeatureSteps());
     }
 
     @BeforeClass
@@ -55,23 +56,25 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots10@email.pt", "12345678");
+        Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots9@email.pt", "12345678");
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
 
         if(registerTask.isSuccessful()){
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots10@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
         }
         else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots10@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
         }
+
+        IncidentsReportsManager.INSTANCE.addIncidentToDatabase(0, "This is a test, this is a test, this is a test", null, "TestSpot");
 
     }
 
@@ -86,7 +89,7 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
 
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots10@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots9@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
@@ -100,6 +103,8 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
 
             }
         }
+
+        IncidentsReportsManager.INSTANCE.removeIncidentFromDatabase(0);
 
     }
 }

@@ -15,6 +15,7 @@ import helpers.DrawerHelper;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -30,6 +31,7 @@ public class US24FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
         sleep(500);
+        Espresso.onView(withId(R.id.drawer_layout)).perform(swipeUp());
         Espresso.onView(withText(arg1)).perform(click());
     }
 
