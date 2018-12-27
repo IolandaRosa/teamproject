@@ -1,13 +1,21 @@
 package modelo;
 
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +29,8 @@ public enum IncidentsReportsManager {
     private DatabaseReference dbRef;
     private List<IncidentReport> incidents;
 
+    private StorageReference storageRef;
+
 
     IncidentsReportsManager() {
         database = FirebaseDatabase.getInstance();
@@ -28,7 +38,11 @@ public enum IncidentsReportsManager {
         dbRef = database.getReference().child("ReportOfIncidents");
         dbRef.keepSynced(true);
 
-        incidents = new LinkedList<>();
+      //  incidents = new LinkedList<>();
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        this.storageRef = storage.getReference().child("incidents");
     }
 
     public void getIncidentsReporstFromDatabase() {
@@ -44,6 +58,7 @@ public enum IncidentsReportsManager {
                     String description = null;
                     String location = null;
                     String spotId = null;
+                    int hasPhoto = -1;
 
 
                     Object idObject = d.child("id").getValue();
@@ -66,7 +81,12 @@ public enum IncidentsReportsManager {
                         spotId = spotObject.toString();
                     }
 
-                    IncidentReport i = new IncidentReport(id, description, location, spotId);
+                    Object photoObject = d.child("hasPhoto").getValue();
+                    if (photoObject != null) {
+                        hasPhoto = Integer.parseInt(photoObject.toString());
+                    }
+
+                    IncidentReport i = new IncidentReport(id, description, location, spotId, hasPhoto);
                     incidents.add(i);
                 }
             }
@@ -79,26 +99,56 @@ public enum IncidentsReportsManager {
 
     }
 
-    public void createNewIncidentReport(String description, Location location, String spotId) {
-        String loc = null;
-        if (location != null) {
-            loc = location.getLatitude() + "," + location.getLongitude();
-        }
-
-
+    public int getNextId() {
         int id;
         if (incidents.size() == 0) {
             id = 1;
         } else {
             id = incidents.size() + 1;
         }
+        return id;
+    }
 
 
+    public void uploadPhoto(Bitmap bm) {
+        int id = getNextId();
 
-        IncidentReport incident = new IncidentReport(id, description, loc, spotId);
+        StorageReference photoRef = this.storageRef.child(id + ".jpg");
+
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = photoRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+            }
+        });
+    }
+
+    public void createNewIncidentReport(String description, Location location, String spotId, int hasPhoto) {
+        String loc = null;
+        if (location != null) {
+            loc = location.getLatitude() + "," + location.getLongitude();
+        }
+
+
+        int id = getNextId();
+
+        IncidentReport incident = new IncidentReport(id, description, loc, spotId, hasPhoto);
 
         dbRef.child(String.valueOf(id)).setValue(incident);
     }
+
 
 
 }
