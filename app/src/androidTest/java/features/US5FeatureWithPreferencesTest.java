@@ -2,6 +2,7 @@ package features;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +35,9 @@ public class US5FeatureWithPreferencesTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US5FeatureWithPreferencesTest(ScenarioConfig scenario) {
         super(scenario);

@@ -28,7 +28,6 @@ public class US15FeatureSteps extends GreenCoffeeSteps {
     public void i_am_in_the_proximity_of_that_spot() {
         float distance = FindMeASpotActivity.distance(39.734859, -8.820784, userLocation.latitude, userLocation.longitude);
         Assert.assertTrue(distance < DashboardAuthActivity.distanceLimit);
-
     }
 
     @When("^The application asks if I am parked on that spot$")

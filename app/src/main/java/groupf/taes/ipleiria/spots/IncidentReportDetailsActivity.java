@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import modelo.IncidentReport;
 
-public class IncidentReportDetailsActivity extends AppCompatActivity {
+public class IncidentReportDetailsActivity extends PerformanceButtonActivity {
     private static IncidentReport currentIncident;
 
     private TextView txtDescription;
@@ -33,9 +33,13 @@ public class IncidentReportDetailsActivity extends AppCompatActivity {
 
 
     @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_incident_report_details,null);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incident_report_details);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -61,9 +65,6 @@ public class IncidentReportDetailsActivity extends AppCompatActivity {
         }
 
         txtDescription.setText(currentIncident.getDescription());
-
-
-
     }
 
 

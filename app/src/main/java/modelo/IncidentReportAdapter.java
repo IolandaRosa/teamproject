@@ -53,8 +53,6 @@ public class IncidentReportAdapter extends ArrayAdapter<IncidentReport> {
             location.setText(incident.getLocation());
         }
 
-
-
         return convertView;
     }
 }

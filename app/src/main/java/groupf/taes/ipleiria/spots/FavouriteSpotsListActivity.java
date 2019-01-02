@@ -22,7 +22,7 @@ import modelo.Spot;
 import modelo.SpotAdapter;
 import modelo.UsersManager;
 
-public class FavouriteSpotsListActivity extends PerformanceButtonActivity /*AppCompatActivity*/ {
+public class FavouriteSpotsListActivity extends PerformanceButtonActivity {
 
     private List<Spot> spots;
     private ListView spotsList;
@@ -30,7 +30,6 @@ public class FavouriteSpotsListActivity extends PerformanceButtonActivity /*AppC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_favourite_spots_list);
 
         this.spots=new ArrayList<>();
         this.spotsList = findViewById(R.id.spotsList);
@@ -85,7 +84,6 @@ public class FavouriteSpotsListActivity extends PerformanceButtonActivity /*AppC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-                //startActivity(DashboardAuthActivity.getIntent(FavouriteSpotsListActivity.this));
             }
         });
 
@@ -96,6 +94,4 @@ public class FavouriteSpotsListActivity extends PerformanceButtonActivity /*AppC
     protected View childView() {
         return getLayoutInflater().inflate(R.layout.activity_favourite_spots_list,null);
     }
-
-
 }

@@ -9,7 +9,6 @@ Feature: Park manually
     And I select other marker on the map
     And I see a message asking "Do you want to park in the spot selected?"
     And I select select the option "No"
-    And I am on the dashboard auth
     And The spot status is free
 
   Scenario: User park on the spot
@@ -23,7 +22,5 @@ Feature: Park manually
 
   Scenario: User is already parked
     Given I am authenticated user
-    And I am already parked
     When I press the "Park Manually" on the menu
     Then I see a message saying that I am already parked
-    And I am on the dashboard auth

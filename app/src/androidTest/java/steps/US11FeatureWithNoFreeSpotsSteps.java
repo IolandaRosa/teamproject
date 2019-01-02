@@ -47,7 +47,5 @@ public class US11FeatureWithNoFreeSpotsSteps extends GreenCoffeeSteps {
     @Then("^I see the error message saying \"([^\"]*)\"$")
     public void i_see_the_error_message_saying(String arg1) {
         onView(withText(arg1)).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
-
-
     }
 }

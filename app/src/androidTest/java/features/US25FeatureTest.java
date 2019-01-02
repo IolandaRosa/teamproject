@@ -36,7 +36,6 @@ public class US25FeatureTest extends GreenCoffeeTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
-
     public US25FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }

@@ -2,6 +2,7 @@ package features;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,11 +30,11 @@ import steps.US2FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US2FeatureTest extends GreenCoffeeTest {
-    private static Object lock = new Object();
-    private static boolean ready = false;
-
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US2FeatureTest(ScenarioConfig scenario) {
         super(scenario);
@@ -68,26 +69,6 @@ public class US2FeatureTest extends GreenCoffeeTest {
             while (!loginTask.isComplete())
                 Thread.sleep(1);
         }
-
-
-            /*FirebaseAuth.getInstance().createUserWithEmailAndPassword("test@test.test", "12345678")
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            synchronized (lock) {
-                                if (task.isSuccessful()) {
-                                    if (FirebaseAuth.getInstance().getCurrentUser() != null)
-                                        FirebaseAuth.getInstance().signOut();
-                                } else {
-                                    Log.println(1, "Exception US2 - beforeClass", task.getException().getMessage());
-                                }
-                                ready = true;
-                                lock.notify();
-                            }
-                        }
-                    });*/
-
-
     }
 
     @AfterClass
@@ -108,17 +89,6 @@ public class US2FeatureTest extends GreenCoffeeTest {
 
     @Test
     public synchronized void test() {
-        /*synchronized (lock) {
-            while (!ready) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            start(new US2FeatureSteps());
-        }*/
         start(new US2FeatureSteps());
     }
 

@@ -34,7 +34,6 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -65,8 +64,6 @@ import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
-import static android.os.SystemClock.sleep;
-
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
     public static final int distanceLimit = 60;
@@ -77,39 +74,27 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
-
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
-
     private User currentUser;
-
     private  static int currentPark;
-    private static LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
-
     private Marker choosenMarker = null;
     private static Marker userSpotMarker = null;
-
-    //private Marker spotParked
-
     private String occupiedParkId = "";
     private  boolean execute = true;
-
     private Location loc = null;
     private Boolean isManual = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //FirebaseAuth.getInstance().signOut();
+
         super.onCreate(savedInstanceState);
         currentPark = 0;
-         //SpotsManager.INSTANCE().writeSpotsOnDatabase();
-
-        //SpotsManager.INSTANCE.writeSpotsOnDatabase();
 
         execute = getIntent().getBooleanExtra("EXECUTE_READ_SPOTS",true);
         if(execute)//para evitar que seja executado mais do que uma vez
@@ -181,11 +166,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     public void onChangeSpotStatus(){
 
-            //final List<Spot> spotsBeforeChange = SpotsManager.INSTANCE.getFreeParkingSpots(0);
-
-            //System.out.println("before change: "+ spotsBeforeChange);
-            //spotsBeforeChange.addAll(SpotsManager.INSTANCE.getFreeParkingSpots(1));
-
             FirebaseDatabase firebase = FirebaseDatabase.getInstance();
 
             DatabaseReference reference = firebase.getReference();
@@ -197,20 +177,18 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                     List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(), SpotsManager.INSTANCE.getParkingSpots());
 
-                    //Task<Location> lastLocation = getLocation();
-                    Location lastLocation = getLocationG();
+                    final Location lastLocation = getLocationG();
+
                     String[] location;
 
                     for (Spot spot : spotsWithStateChanged) {
                         location = spot.getLocationGeo().split(",");
 
-                        //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
                         //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
-
-                        if (FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
+                        /*if (FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
+                                && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)*/
+                        if (lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
                                 && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)
-                /*if(lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
-                        && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)*/
 
                         {
                             setParkingInSpot(spot.getSpotId());
@@ -243,12 +221,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private List<Spot> getFreeSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
 
         List<Spot> spotsResult = new LinkedList<>();
-        //System.out.println("before change:  " + spotsBeforeChange);
+
         for (Spot spotBeforeChange: spotsBeforeChange) {
             for (Spot spotChanged: spotsChanged) {
                 if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 1 && spotChanged.getStatus() == 0)
                 {
-                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
                     spotsResult.add(spotChanged);
                 }
             }
@@ -259,12 +236,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private List<Spot> getOcuppiedSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
 
         List<Spot> spotsResult = new LinkedList<>();
-        //System.out.println("before change:  " + spotsBeforeChange);
+
         for (Spot spotBeforeChange: spotsBeforeChange) {
             for (Spot spotChanged: spotsChanged) {
                 if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 0 && spotChanged.getStatus() == 1)
                 {
-                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
                     spotsResult.add(spotChanged);
                 }
             }
@@ -331,7 +307,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         showProfile();
                         break;
                     case 1:
-                        //  checkPermission();
                         findMeASpot();
                         break;
                     case 2:
@@ -592,14 +567,11 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
     //mudar aqui se ele ja tiver preferencias entao, nao mostra a atividade
     public void findMeASpot() {
-
-       // UsersManager.INSTANCE.loadCurrentUser(UsersManager.INSTANCE.getUserProfileInfo());
-
         if (currentUser.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", currentUser));
         } else {
             LatLng choosenSpot = null;
-            //LatLng currentLocation = null;
+
             switch (currentUser.getFindPreference()) {
                 case BEST_RATED:
                     startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", currentUser).putExtra("preference", 0).putExtra("park",currentPark));
@@ -636,8 +608,6 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
         askUserYesOrNo(R.string.msgAskUserIfWantToPark, true);
-
-        //  initializeMapsApp(marker.getPosition());
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
@@ -797,8 +767,4 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
-
-
-
-
 }

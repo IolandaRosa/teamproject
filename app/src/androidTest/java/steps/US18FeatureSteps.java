@@ -15,7 +15,11 @@ import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -40,7 +44,7 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I see a dialog asking if I want to leave$")
     public void i_see_a_dialog_asking_if_I_want_to_leave() {
-        onViewWithText(string(R.string.askUserIsLeavingTheSpot)).isDisplayed();
+        onView(withText(string(R.string.askUserIsLeavingTheSpot))).inRoot(isDialog()).check(matches(isDisplayed()));
     }
 
     @Given("^I select the option \"([^\"]*)\"$")
@@ -102,12 +106,6 @@ public class US18FeatureSteps extends GreenCoffeeSteps {
         Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
         Assert.assertEquals(0, spot.getStatus());
     }
-
-   /* @Then("^I am parked$")
-    public void i_am_parked() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    } */
 
     @Then("^The spot is occupied$")
     public void the_spot_is_occupied() {

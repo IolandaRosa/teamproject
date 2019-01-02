@@ -2,6 +2,7 @@ package features;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,11 +30,12 @@ import steps.US7FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US7FeatureTest extends GreenCoffeeTest {
-    private static Object lock = new Object();
-    private static boolean ready = false;
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(ProfileActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US7FeatureTest(ScenarioConfig scenario) {
         super(scenario);
@@ -66,26 +68,6 @@ public class US7FeatureTest extends GreenCoffeeTest {
             while (!loginTask.isComplete())
                 Thread.sleep(1);
         }
-
-        /*synchronized (lock) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword("maria_leopoldina@email.pt", "12345678")
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                ready = true;
-
-                                UsersManager.INSTANCE.addUserToDatabase("Maria Leopoldina","maria_leopoldina@email.pt");
-                            } else {
-                                Log.println(1, "Exception US2 - beforeClass", task.getException().getMessage());
-                            }
-                        }
-                    });
-
-            if (ready) {
-                lock.notify();
-            }
-        }*/
     }
 
     @AfterClass
@@ -114,15 +96,6 @@ public class US7FeatureTest extends GreenCoffeeTest {
 
     @Test
     public synchronized void test() {
-        /*synchronized (lock) {
-            while (!ready) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
         start(new US7FeatureSteps());
     }
 }

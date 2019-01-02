@@ -17,15 +17,19 @@ import modelo.IncidentReport;
 import modelo.IncidentReportAdapter;
 import modelo.IncidentsReportsManager;
 
-public class IncidentsReportsListActivity extends AppCompatActivity {
+public class IncidentsReportsListActivity extends PerformanceButtonActivity{
 
     private ListView incidentsList;
     private List<IncidentReport> incidents;
 
     @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_incidents_reports_list,null);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incidents_reports_list);
 
         incidentsList = findViewById(R.id.incidentsList);
 
@@ -70,7 +74,6 @@ public class IncidentsReportsListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-                //startActivity(DashboardAuthActivity.getIntent(FavouriteSpotsListActivity.this));
             }
         });
 

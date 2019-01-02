@@ -22,7 +22,11 @@ import modelo.UsersManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -37,7 +41,7 @@ public class US19FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I see a message saing I want to leave \"([^\"]*)\"$")
     public void i_see_a_message_saing_I_want_to_leave(String arg1) {
-       onViewWithText(string(R.string.askUserIsLeavingTheSpot)).isDisplayed();
+        onView(withText(string(R.string.askUserIsLeavingTheSpot))).inRoot(isDialog()).check(matches(isDisplayed()));
     }
 
     @Given("^I select the option \"([^\"]*)\"$")
@@ -87,7 +91,6 @@ public class US19FeatureSteps extends GreenCoffeeSteps {
     @Then("^The spot is occupied$")
     public void the_spot_is_occupied() {
         SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot",false);
-        sleep(5000);
         Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
         Assert.assertEquals(1, spot.getStatus());
     }

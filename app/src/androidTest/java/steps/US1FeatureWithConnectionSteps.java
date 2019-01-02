@@ -13,7 +13,6 @@ import groupf.taes.ipleiria.spots.DashboardActivity;
 import groupf.taes.ipleiria.spots.R;
 import modelo.SpotsManager;
 
-
 public class US1FeatureWithConnectionSteps extends GreenCoffeeSteps {
 
     @Given("^I am an anonymous user $")

@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +34,9 @@ public class US16FeatureNoFreeSpotsTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     public US16FeatureNoFreeSpotsTest(ScenarioConfig scenario) {
         super(scenario);
     }
@@ -42,24 +46,20 @@ public class US16FeatureNoFreeSpotsTest extends GreenCoffeeTest {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS16NoFreeSpots.feature").scenarios();
     }
 
-
     @Test
     public void test() {
         start(new US16FeatureNoFreeSpotsSteps());
     }
-
 
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots4@email.pt", "12345678");
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
-
 
         if(registerTask.isSuccessful()){
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots4@email.pt");
@@ -104,7 +104,4 @@ public class US16FeatureNoFreeSpotsTest extends GreenCoffeeTest {
 
         SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
     }
-
-
-
 }

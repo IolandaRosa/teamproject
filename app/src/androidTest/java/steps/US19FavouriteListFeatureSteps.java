@@ -17,15 +17,16 @@ import modelo.UsersManager;
 
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
-
-
     @Given("^I am an authenticated user and I am leaving my spot$")
     public void i_am_an_authenticated_user_and_I_am_leaving_my_spot() {
      Assert.assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
@@ -34,7 +35,7 @@ public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I see a message saing I want to leave \"([^\"]*)\"$")
     public void i_see_a_message_saing_I_want_to_leave(String arg1) {
-       onViewWithText(string(R.string.askUserIsLeavingTheSpot)).isDisplayed();
+        onView(withText(string(R.string.askUserIsLeavingTheSpot))).inRoot(isDialog()).check(matches(isDisplayed()));
     }
 
     @Given("^I select the option \"([^\"]*)\"$")
@@ -97,7 +98,6 @@ public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
     public void i_go_to_my_favourits_spots_list() {
         onViewWithId(R.id.btnClose).click();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        //sleep(5000);
         Espresso.onView(withText(R.string.btnFavouriteSpots)).perform(click());
     }
 

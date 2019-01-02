@@ -13,6 +13,11 @@ import modelo.SpotsManager;
 import modelo.UsersManager;
 
 import static android.os.SystemClock.sleep;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class US19CancelFeatureSteps extends GreenCoffeeSteps {
 
@@ -25,7 +30,7 @@ public class US19CancelFeatureSteps extends GreenCoffeeSteps {
 
     @Given("^I see a message saing I want to leave \"([^\"]*)\"$")
     public void i_see_a_message_saing_I_want_to_leave(String arg1) {
-       onViewWithText(string(R.string.askUserIsLeavingTheSpot)).isDisplayed();
+        onView(withText(string(R.string.askUserIsLeavingTheSpot))).inRoot(isDialog()).check(matches(isDisplayed()));
     }
 
     @Given("^I select the option \"([^\"]*)\"$")

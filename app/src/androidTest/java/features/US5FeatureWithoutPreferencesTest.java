@@ -2,6 +2,7 @@ package features;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,11 +31,12 @@ import steps.US5FeatureWithoutPreferencesSteps;
 
 @RunWith(Parameterized.class)
 public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
-    private static Object lock = new Object();
-    private static boolean ready = false;
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US5FeatureWithoutPreferencesTest(ScenarioConfig scenario) {
         super(scenario);
@@ -51,28 +53,6 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
-
-
-        /*synchronized (lock) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword("maria@email.pt", "12345678")
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                ready = true;
-
-                                UsersManager.INSTANCE.addUserToDatabase("Maria Pt","maria@email.pt");
-
-                            } else {
-                                Log.println(1, "Exception US5 - beforeClass", task.getException().getMessage());
-                            }
-                        }
-                    });
-
-            if (ready) {
-                lock.notify();
-            }
-        }*/
 
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("maria@email.pt", "12345678");
 
@@ -123,15 +103,6 @@ public class US5FeatureWithoutPreferencesTest extends GreenCoffeeTest {
 
     @Test
     public synchronized void test() {
-       /* synchronized (lock) {
-            while (!ready) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
         start(new US5FeatureWithoutPreferencesSteps());
     }
 }

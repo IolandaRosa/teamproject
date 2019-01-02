@@ -36,8 +36,6 @@ public class US11FeatureWithNoFreeSpotsTest extends GreenCoffeeTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-
-
     public US11FeatureWithNoFreeSpotsTest(ScenarioConfig scenario) {
         super(scenario);
     }
@@ -57,13 +55,10 @@ public class US11FeatureWithNoFreeSpotsTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
-
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
-
 
         if(registerTask.isSuccessful()){
 
@@ -75,7 +70,6 @@ public class US11FeatureWithNoFreeSpotsTest extends GreenCoffeeTest {
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
-
 
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
             UsersManager.INSTANCE.addFindPreferenceToAUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),FindPreference.CLOSER_LOCATION);

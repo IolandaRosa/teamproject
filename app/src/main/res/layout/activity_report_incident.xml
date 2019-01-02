@@ -1,10 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:paddingTop="70dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,14 +15,13 @@
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_light"
             android:text="@string/titleReportIncident"
+            android:paddingVertical="2dp"
             android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textSize="18sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="18dp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView15"
@@ -41,10 +40,6 @@
             android:ems="10"
             android:inputType="textMultiLine"
             android:maxLength="180" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="23dp" />
 
         <TextView
             android:id="@+id/textView16"
@@ -100,10 +95,6 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"/>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="12dp" />
-
         <Button
             android:id="@+id/btnUploadPhoto"
             android:layout_width="match_parent"
@@ -116,10 +107,6 @@
             android:layout_height="wrap_content"
             android:text="@string/txtViewInfoUploadedSuccess"
             android:visibility="gone"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
 
         <Button
             android:id="@+id/btnSaveReport"

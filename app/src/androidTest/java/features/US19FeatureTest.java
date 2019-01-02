@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +30,8 @@ import steps.US19FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US19FeatureTest extends GreenCoffeeTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
@@ -85,10 +88,8 @@ public class US19FeatureTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-            //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 

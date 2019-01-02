@@ -41,5 +41,4 @@ public class US18FeatureNotParkedSteps extends GreenCoffeeSteps {
         onViewWithText(string(R.string.errorUserIsNotParked)).isDisplayed();
     }
 
-
 }

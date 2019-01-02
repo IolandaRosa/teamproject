@@ -29,7 +29,8 @@ public class US8FeatureSteps extends GreenCoffeeSteps {
     @When("^I select the menu option \"([^\"]*)\" the dashboard autheticated screen$")
     public void i_select_the_menu_option_the_dashboard_autheticated_screen(String arg1) {
         onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        onView(withText(arg1)).perform(click());
+        onViewWithText(arg1).click();
+        //onView(withText(arg1)).perform(click());
     }
 
     @When("^I see the update password screen displayed$")

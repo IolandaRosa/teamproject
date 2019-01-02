@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +31,9 @@ public class US13FeatureWithoutFavouritesListTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule=new ActivityTestRule(ProfileActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US13FeatureWithoutFavouritesListTest(ScenarioConfig scenario) {
         super(scenario);
@@ -69,7 +73,6 @@ public class US13FeatureWithoutFavouritesListTest extends GreenCoffeeTest {
         }
     }
 
-
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
@@ -80,7 +83,6 @@ public class US13FeatureWithoutFavouritesListTest extends GreenCoffeeTest {
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots@email.pt", "12345678");
-
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);

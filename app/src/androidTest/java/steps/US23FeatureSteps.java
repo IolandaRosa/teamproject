@@ -32,7 +32,6 @@ public class US23FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(500);
         Espresso.onView(withId(R.id.drawer_layout)).perform(swipeUp());
         Espresso.onView(withText(arg1)).perform(click());
     }
