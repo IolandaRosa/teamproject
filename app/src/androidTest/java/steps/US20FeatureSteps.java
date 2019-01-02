@@ -13,6 +13,7 @@ import junit.framework.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -28,6 +29,7 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
     public void i_press_the_menu_option_on_dashboard_auth_screen(String arg1) {
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        sleep(500);
         Espresso.onView(withText(arg1)).perform(click());
     }
 
@@ -38,7 +40,6 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
         onViewWithText(R.string.totalRegistered).isDisplayed();
         onViewWithText(R.string.topBestRated).isDisplayed();
         onViewWithText(R.string.topMostParked).isDisplayed();
-        onViewWithText(R.string.statisticsTitle).isDisplayed();
     }
 
     @Then("^I confirm that the value of registered users is at least (\\d+)$")
@@ -63,9 +64,9 @@ public class US20FeatureSteps extends GreenCoffeeSteps {
     public void the_top_most_parking_and_best_rated_spots_is_displayed(int arg1) {
         onViewWithId(R.id.textTopBestRated).isDisplayed().isNotEmpty();
         String[] split = onViewWithId(R.id.textTopBestRated).text().split("\n");
-        Assert.assertTrue(split.length==5);
+        Assert.assertTrue(split.length==arg1);
         onViewWithId(R.id.textTopMostParked).isDisplayed().isNotEmpty();
         split = onViewWithId(R.id.textTopMostParked).text().split("\n");
-        Assert.assertTrue(split.length==5);
+        Assert.assertTrue(split.length==arg1);
     }
 }

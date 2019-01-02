@@ -95,7 +95,5 @@ public class US20FeatureTest extends GreenCoffeeTest {
 
             }
         }
-
-        SpotsManager.INSTANCE.removeSpotFromDatabase("TestSpot");
     }
 }

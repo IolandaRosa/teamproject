@@ -81,7 +81,6 @@ Feature: Updated Profile for an authenticate user
     And I type "12345678" on password field
     And I press the Ok button
     Then I see the profile activity with my new email dispalyed
-    And I confirm the authentication email is now "maria_jesus@email.com"
 
   Scenario: Update profile change preference with empty password confirmation
     When I click on the spinner
@@ -119,7 +118,6 @@ Feature: Updated Profile for an authenticate user
     And I type "12345678" on password field
     And I press the Ok button
     Then I see the profile activity with my new information dispalyed
-    And I confirm the authentication email is now "maria_juventina@email.com"
 
   Scenario: Update profile cancel
     And I press the Cancel button

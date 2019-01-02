@@ -1,0 +1,133 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ReportIncidentActivity">
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/titleReportIncident"
+            android:textAlignment="center"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="18sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/titleReportDescription"
+            android:textAlignment="center"
+            android:labelFor="@+id/editTxtDescription"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editTxtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Description"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:maxLength="180" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="23dp" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/titleReportLocation" />
+
+        <Button
+            android:id="@+id/btnGetCurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="btnGetCurrentLocationClick"
+            android:text="@string/txtBtnReportGetCurrentLocation" />
+
+        <TextView
+            android:id="@+id/textViewInfoLocationObtained"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/infoReportGotUserLocation"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnChooseParkSpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="btnChooseAParkSpotClick"
+            android:text="@string/txtBtnReportChooseParkAndSpot" />
+
+        <TextView
+            android:id="@+id/txtViewChooseAPark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtViewChooseAPark"
+            android:visibility="invisible" />
+
+        <Spinner
+            android:id="@+id/spinnerParks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/txtViewChooseASpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtViewChooseASpot"
+            android:visibility="invisible"/>
+
+        <Spinner
+            android:id="@+id/spinnerSpots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <Button
+            android:id="@+id/btnUploadPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="btnUploadPhotoClick"
+            android:text="@string/uploadPhoto" />
+        <TextView
+            android:id="@+id/txtViewInfoUploadedSuccess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtViewInfoUploadedSuccess"
+            android:visibility="gone"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/btnSaveReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="btnCreateIncidentReportClick"
+            android:text="@string/save" />
+
+    </LinearLayout>
+
+</ScrollView>

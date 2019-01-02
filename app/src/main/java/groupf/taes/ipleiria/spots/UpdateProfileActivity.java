@@ -24,7 +24,7 @@ import modelo.InternetConnectionManager;
 import modelo.User;
 import modelo.UsersManager;
 
-public class UpdateProfileActivity extends AppCompatActivity {
+public class UpdateProfileActivity extends PerformanceButtonActivity {
 
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("updateProfile");
     private EditText editTextName;
@@ -38,7 +38,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
             startActivity(DashboardActivity.getIntent(this));
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_profile);
 
         this.editTextName = findViewById(R.id.editTextName);
         this.editTextEmail = findViewById(R.id.editTextEmail);
@@ -122,13 +121,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if(!nameEquals && (!emailEquals || !preferenceEquals)){
             UsersManager.INSTANCE.updateUserNameInDatabase(name);
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnSave).setVisibility(View.GONE);
+            findViewById(R.id.btnSaveReport).setVisibility(View.GONE);
             return;
         }
 
         if(!emailEquals || !preferenceEquals){
             findViewById(R.id.confirmationLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnSave).setVisibility(View.GONE);
+            findViewById(R.id.btnSaveReport).setVisibility(View.GONE);
             return;
         }
 
@@ -173,6 +172,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
     public static CountingIdlingResource getIdlingResource() {
         return idlingResource;
+    }
+
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_update_profile,null);
     }
 
 }

@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.test.espresso.idling.CountingIdlingResource;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,13 +17,14 @@ import com.google.firebase.database.ValueEventListener;
 import modelo.User;
 import modelo.UsersManager;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends PerformanceButtonActivity{
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("profile");
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtfindMeAPreference;
     private User user;
     private int currentPark;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,29 +32,19 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(DashboardActivity.getIntent(this));
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
-        //this.user = (User) this.getIntent().getSerializableExtra("user");
         currentPark = this.getIntent().getIntExtra("currentPark", -1);
 
-
-      //  this.user=null;
         txtName=findViewById(R.id.txtViewName);
         txtEmail=findViewById(R.id.txtViewEmail);
         txtfindMeAPreference=findViewById(R.id.textViewPreference);
 
-        /*if (user != null) {
-            txtName.setText(user.getName());
-            txtEmail.setText(user.getEmail());
-
-            if(user.getFindPreference()!=null){
-                txtfindMeAPreference.setText(UsersManager.INSTANCE.toStringPreference(user.getFindPreference()));
-            }
-        } else {  // principalmente por causa dos testes
-            this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
-        }*/
-
         this.getProfile(UsersManager.INSTANCE.getUserProfileInfo());
+    }
+
+    @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_profile,null);
     }
 
     public static Intent getIntent(Context context) {
@@ -104,8 +94,6 @@ public class ProfileActivity extends AppCompatActivity {
         if (user.getFindPreference() == null) {
             startActivity(ChooseAPreferenceActivity.getIntent(this).putExtra("user", user));
         } else {
-            LatLng choosenSpot = null;
-            //LatLng currentLocation = null;
             switch (user.getFindPreference()) {
                 case BEST_RATED:
                     startActivity(FindMeASpotActivity.getIntent(this).putExtra("user", user).putExtra("preference", 0).putExtra("park",currentPark));
@@ -126,5 +114,4 @@ public class ProfileActivity extends AppCompatActivity {
     public static CountingIdlingResource getIdlingResource() {
         return idlingResource;
     }
-
 }

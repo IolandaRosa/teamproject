@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +21,7 @@ import modelo.Spot;
 import modelo.SpotsManager;
 import modelo.UsersManager;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends PerformanceButtonActivity{
 
     private TextView textRegistered;
     private TextView textLogged;
@@ -32,7 +32,6 @@ public class StatisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
 
         this.textRegistered = findViewById(R.id.txtTotalRegisteredUsers);
         this.textLogged = findViewById(R.id.txtTotalLoggedUsers);
@@ -56,15 +55,16 @@ public class StatisticsActivity extends AppCompatActivity {
                     int totalParked=0;
 
                     for(DataSnapshot d:children){
-                        d.child("logged").getValue().toString();
-                        if(d.child("logged").getValue().toString().compareToIgnoreCase("true")==0){
-                            totalLoggedUsers++;
-                        }
+                        if (d.child("logged").getValue() != null) {
 
+                            if (d.child("logged").getValue().toString().compareToIgnoreCase("true") == 0) {
+                                totalLoggedUsers++;
+                            }
+                            totalRegistered++;
+                        }
                         if(d.child("spotParked").getValue()!=null){
                             totalParked++;
                         }
-                        totalRegistered++;
                     }
 
                     textLogged.setText(String.valueOf(totalLoggedUsers));
@@ -126,7 +126,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
                     //Guarda as strings na variavel
                     for (int i = 0; i < 5; i++) {
-                        multilineBest += "Spot: " + "\"" + orderedSpots.get(i).getSpotId() + "\"" + " Rated Value: " + String.valueOf(orderedSpots.get(i).getRating()) + " Stars\n";
+                        multilineBest += String.format("%d - Spot: '%4s' \t\t Rated Value: %s\n", (i + 1), orderedSpots.get(i).getSpotId(), String.valueOf(orderedSpots.get(i).getRating()));
                     }
 
                     //Preenche valores de most
@@ -149,7 +149,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     String multilineMostParked = "";
 
                     for (int i = 0; i < 5; i++) {
-                        multilineMostParked += "Spot: " + "\"" + orderedSpots.get(i).getSpotId() + "\"" + " Total Parkings: " + String.valueOf(orderedSpots.get(i).getTotalOfParkings()) +"\n";
+                        multilineMostParked += String.format("%d - Spot: '%4s' \t\t Total Parkings: %s\n",(i+1),orderedSpots.get(i).getSpotId(),String.valueOf(orderedSpots.get(i).getTotalOfParkings()) );
                     }
 
                     textTopRated.setText(multilineBest);
@@ -171,6 +171,10 @@ public class StatisticsActivity extends AppCompatActivity {
 
     public static Intent getIntent(Context context) {
         return new Intent(context, StatisticsActivity.class);
+    }
+
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_statistics,null);
     }
 
 }

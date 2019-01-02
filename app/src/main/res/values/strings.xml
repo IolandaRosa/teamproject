@@ -81,6 +81,36 @@
     <string name="totalParkedUsers">Total Parked Users</string>
     <string name="topBestRated">Top 5 Best Rated Spots</string>
     <string name="topMostParked">Top 5 Most Parked Spots</string>
+    <string name="findMeASpotTitle">Find Me a Spot Medium Time</string>
+    <string name="best_rated">Best Rated Time</string>
+    <string name="closerLocation">Closer Location Time</string>
+    <string name="myFavourites">My Favourites List Time</string>
+    <string name="occupationRateTittle">Occupation Rate At This Moment</string>
+    <string name="initialDate">Insert Initial Date</string>
+    <string name="finalDate">Insert Final Date</string>
+    <string name="hintDatetime">dd/mm/yyyy</string>
+    <string name="performanceBtn">View Occupation Rate And Find Me a Spot Performance</string>
+    <string name="invalidDateFormat">The initial and final dates must be valid and in format dd/mm/yyyy</string>
+    <string name="invalidInitialDate">The initial date can not be higher or equal to the final date</string>
+    <string name="invalidInitialDateActual">The date must van not be higher or equal to the actual date</string>
+    <string name="noDataFound">No data found for given time period</string>
+    <string name="displayGraph">Show Occupation Rate Evolution On Period</string>
+    <string name="titleReportIncident">Report Incident</string>
+    <string name="titleReportDescription">Description</string>
+    <string name="titleReportLocation">Location</string>
+    <string name="txtBtnReportGetCurrentLocation">Get My Current Location</string>
+    <string name="txtBtnReportChooseParkAndSpot">Choose a park and a spot</string>
+    <string name="txtViewChooseAPark">Choose a park</string>
+    <string name="txtViewChooseASpot">Choose a spot</string>
+    <string name="infoReportGotUserLocation">Your location was successfully obtained.</string>
+    <string name="errorReportDescriptionEmpty">Description can\'t be empty.</string>
+    <string name="errorReportLocationNotPut">ERROR: You need to put a location.</string>
+    <string name="incidentReportedWithSuccess">The incident was reported with success.</string>
+    <string name="uploadPhoto">Upload Photo</string>
+    <string name="txtViewInfoUploadedSuccess">Image obtained with success.</string>
+    <string name="errorPermissionStorageDenied">You can\'t access this funcionality if the application doesn\'t have permission.</string>
+    <string name="incidentsEmptyList">There\'s no incidents reports.</string>
+    <string name="titleReportSpot">Spot Location</string>
     <string-array name="findPreferencesOptions">
         <item>None</item>
         <item>Closer To My Location</item>
@@ -96,6 +126,10 @@
         <item>Leave My Spot</item>
         <item>Statistics</item>
         <item>Change my password</item>
+        <item>Incidents Reports List</item>
+        <item>Report an Incident</item>
         <item>Logout</item>
+        <item>Algorithm Performance</item>
+        <item>Occupation Rate During Time</item>
     </string-array>
 </resources>

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".FirebaseHandler"
@@ -51,7 +52,13 @@
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".FavouriteSpotsListActivity" />
         <activity android:name=".FindMeASpotActivity" />
-        <activity android:name=".StatisticsActivity"></activity>
+        <activity android:name=".StatisticsActivity" />
+        <activity android:name=".AlghorithmPerformanceActivity" />
+        <activity android:name=".RateChartActivity" />
+        <activity android:name=".DatePickActivity" />
+        <activity android:name=".ReportIncidentActivity" />
+        <activity android:name=".IncidentsReportsListActivity" />
+        <activity android:name=".IncidentReportDetailsActivity"></activity>
     </application>
 
 </manifest>

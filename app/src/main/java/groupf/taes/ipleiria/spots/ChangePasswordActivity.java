@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.idling.CountingIdlingResource;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
@@ -21,7 +20,7 @@ import java.util.Map;
 import modelo.InternetConnectionManager;
 import modelo.UsersManager;
 
-public class ChangePasswordActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends PerformanceButtonActivity {
 
     private static final CountingIdlingResource idlingResource = new CountingIdlingResource("password");
     private EditText editCurrentPassword;
@@ -39,7 +38,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_password);
 
         editCurrentPassword = findViewById(R.id.editOldPassword);
         editNewPassword = findViewById(R.id.editNewPassword);
@@ -111,5 +109,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     public static Intent getIntent(Context context) {
         return new Intent(context, ChangePasswordActivity.class);
+    }
+
+    @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_change_password,null);
     }
 }

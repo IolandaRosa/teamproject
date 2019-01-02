@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -57,6 +58,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import modelo.IncidentsReportsManager;
 import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
@@ -85,7 +87,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private User currentUser;
 
     private  static int currentPark;
-    private LatLng currentLocation = null;
+    private static LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
 
     private Marker choosenMarker = null;
@@ -105,7 +107,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         //FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         currentPark = 0;
-        // SpotsManager.getINSTANCE().writeSpotsOnDatabase();
+         //SpotsManager.INSTANCE().writeSpotsOnDatabase();
+
+        //SpotsManager.INSTANCE.writeSpotsOnDatabase();
 
         execute = getIntent().getBooleanExtra("EXECUTE_READ_SPOTS",true);
         if(execute)//para evitar que seja executado mais do que uma vez
@@ -114,6 +118,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
 
 
+        IncidentsReportsManager.INSTANCE.getIncidentsReporstFromDatabase();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(DashboardActivity.getIntent(this));
@@ -168,7 +173,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         onChangeSpotStatus();
 
-        //mapFragment.getMapAsync(this);
+        SpotsManager.INSTANCE.updateDailyOccupationRate();
 
         // Para saber a localização do dispositivo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -263,6 +268,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     spotsResult.add(spotChanged);
                 }
             }
+
+
         }
         return spotsResult;
     }
@@ -287,6 +294,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         }
                     }
                 });
+
         return loc;
     }
 
@@ -309,7 +317,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     //Menu Hamburguer
-    private void addDrawerItems() {
+    public void addDrawerItems() {
         mAdapter = ArrayAdapter.createFromResource(this, R.array.dashboardIems, android.R.layout.simple_list_item_1);
         mDrawerList.setAdapter(mAdapter);
 
@@ -348,9 +356,22 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                         startActivity(ChangePasswordActivity.getIntent(DashboardAuthActivity.this));
                         break;
                     case 8:
+                        mDrawerLayout.closeDrawers();
+                        startActivity(IncidentsReportsListActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 9:
+                        mDrawerLayout.closeDrawers();
+                        startActivity(ReportIncidentActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 10:
                         UsersManager.INSTANCE.logoutUser();
                         startActivity(DashboardActivity.getIntent(DashboardAuthActivity.this));
                         break;
+                    case 11:
+                        startActivity(AlghorithmPerformanceActivity.getIntent(DashboardAuthActivity.this));
+                        break;
+                    case 12:
+                        startActivity(DatePickActivity.getIntent(DashboardAuthActivity.this));
                 }
             }
         });
@@ -375,7 +396,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    private void setupDrawer() {
+    public void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */
@@ -634,8 +655,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                if (parking) {
-                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle(),true);
-                   UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   try{
+                       SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle(),true);
+                       UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
+                   }
+                   catch (Exception e){
+                       Log.d("Ex",e.getMessage());
+                   }
+
                } else {
                     leaveSpot();
                }

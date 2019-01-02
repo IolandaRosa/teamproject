@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+    android:gravity="center_horizontal"
+tools:context=".AlghorithmPerformanceActivity">
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="@string/findMeASpotTitle"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/best_rated"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtBestRatedTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/closerLocation"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCloserLocationTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/myFavourites"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtMyFavouritesTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:paddingBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="@string/occupationRateTittle"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtOccupationRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:lines="2"
+        android:maxLines="2"/>
+
+    <Button
+        android:id="@+id/btnDisplayDataInsertionArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:onClick="onClick_btnDisplayDataInsertionArea"
+        android:text="@string/displayGraph" />
+</LinearLayout>

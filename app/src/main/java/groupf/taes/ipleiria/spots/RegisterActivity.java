@@ -95,10 +95,10 @@ public class RegisterActivity extends AppCompatActivity {
                     idlingResource.decrement();
                     if(task.isSuccessful()){
 
-                        UsersManager.INSTANCE.setUserLogged(true);
                         //#############################
                         UsersManager.INSTANCE.addUserToDatabase(name,email/*,password*/);
                         //#############################
+                        UsersManager.INSTANCE.setUserLogged(true);
 
                         startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));
 
