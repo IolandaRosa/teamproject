@@ -7,6 +7,8 @@ import android.support.test.rule.GrantPermissionRule;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mauriciotogneri.greencoffee.GreenCoffeeConfig;
 import com.mauriciotogneri.greencoffee.GreenCoffeeTest;
 import com.mauriciotogneri.greencoffee.ScenarioConfig;
@@ -75,7 +77,11 @@ public class US8FeatureTest extends GreenCoffeeTest {
                 Thread.sleep(1);
 
             if (loginTask.isSuccessful()) {
-                FirebaseAuth.getInstance().getCurrentUser().delete();
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
+                currentUser.delete();
+
+                FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
             }
         }
     }

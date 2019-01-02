@@ -88,7 +88,7 @@ public class US19FeatureTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
+            Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots7@email.pt", "12345678");
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
