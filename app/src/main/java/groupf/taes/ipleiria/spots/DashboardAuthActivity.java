@@ -34,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -64,6 +65,8 @@ import modelo.SpotsManager;
 import modelo.User;
 import modelo.UsersManager;
 
+import static android.os.SystemClock.sleep;
+
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
     public static final int distanceLimit = 60;
@@ -74,19 +77,27 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     private String mActivityTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
+
     private GoogleMap mMap;
     private TextView freeSpotsTxt;
     private TextView occupiedSpotsTxt;
     private TextView lastInfoDateTxt;
     private static List<Marker> markers;
+
     private User currentUser;
+
     private  static int currentPark;
     private static LatLng currentLocation = null;
     private static FusedLocationProviderClient mFusedLocationClient;
+
     private Marker choosenMarker = null;
     private static Marker userSpotMarker = null;
+
+    //private Marker spotParked
+
     private String occupiedParkId = "";
     private  boolean execute = true;
+
     private Location loc = null;
     private Boolean isManual = false;
 
@@ -146,6 +157,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //empty
+
             }
         });
 
@@ -205,6 +217,19 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                             break;
                         }
                     }
+
+
+                    spotsWithStateChanged = getFreeSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(),SpotsManager.INSTANCE.getParkingSpots());
+
+                    for (Spot spot : spotsWithStateChanged) {
+
+                        if (UsersManager.INSTANCE.getCurrentUser().getSpotParked() != null && UsersManager.INSTANCE.getCurrentUser().getSpotParked().equals(spot.getSpotId()))
+                            {
+                                askUserYesOrNo(R.string.askUserIsLeavingTheSpot, false);
+                                break;
+                            }
+                    }
+
                     putMarkers();
                 }
 
@@ -214,6 +239,21 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                 }
             });
 
+    }
+    private List<Spot> getFreeSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
+
+        List<Spot> spotsResult = new LinkedList<>();
+        //System.out.println("before change:  " + spotsBeforeChange);
+        for (Spot spotBeforeChange: spotsBeforeChange) {
+            for (Spot spotChanged: spotsChanged) {
+                if(spotBeforeChange.getSpotId().equals(spotChanged.getSpotId()) && spotBeforeChange.getStatus() == 1 && spotChanged.getStatus() == 0)
+                {
+                    //Toast.makeText(DashboardAuthActivity.this, "stateeee:  " + spotChanged.toString() , Toast.LENGTH_LONG).show();
+                    spotsResult.add(spotChanged);
+                }
+            }
+        }
+        return spotsResult;
     }
 
     private List<Spot> getOcuppiedSpotsChanged(List<Spot> spotsBeforeChange, List<Spot> spotsChanged) {
@@ -228,6 +268,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
                     spotsResult.add(spotChanged);
                 }
             }
+
+
         }
         return spotsResult;
     }
@@ -614,7 +656,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             public void onClick(DialogInterface dialogInterface, int i) {
                if (parking) {
                    try{
-                       SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                       SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle(),true);
                        UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
                    }
                    catch (Exception e){
@@ -633,6 +675,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (parking) {
                     choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                }else
+                {
+                    SpotsManager.INSTANCE.setSpotStatusToOccupied(UsersManager.INSTANCE.getCurrentUser().getSpotParked(),false);
                 }
                 dialogInterface.dismiss();
             }
@@ -681,6 +726,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void leaveSpot() {
+        currentUser = UsersManager.INSTANCE.getCurrentUser();
         final String spotId = currentUser.getSpotParked();
         SpotsManager.INSTANCE.setSpotStatusToFree(currentUser.getSpotParked());
         UsersManager.INSTANCE.userLeaveSpot();
@@ -751,4 +797,8 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
         SpotsManager.INSTANCE.setSpotRate(spotId, finalRate);
     }
+
+
+
+
 }

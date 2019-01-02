@@ -126,9 +126,24 @@ public enum UsersManager {
             user.setFavouriteSpots(spots);
         }
         mDatabase.child(id).setValue(user);
-        if(currentUser!=null)
+        if(currentUser!=null){
             currentUser.setFavouriteSpots(spots);
+
+        }
     }
+
+   /* public void addUserThatIsParkedUS19(String name, String email, String spotId, List<Spot> spots) {
+        String id=mAuth.getCurrentUser().getUid();
+        User user=new User(id,name,email,null, spotId);
+        if (spots != null) {
+            user.setFavouriteSpots(spots);
+        }
+        mDatabase.child(id).setValue(user);
+        if(currentUser!=null){
+            currentUser.setFavouriteSpots(spots);
+        }
+        currentUser = user;
+    }*/
 
     // para testes
     public void addUserWithFavouritesAndParked(String name, String email, String spotId, List<Spot> spots) {
@@ -382,6 +397,7 @@ public enum UsersManager {
                     spotParked = spotParkedObject.toString();
                 }
                 currentUser = new User(id, name, email, preference, spotParked);
+                System.out.println("-----------vem aqui e atualiza o user" + currentUser.toString() + "----------");
 
                 ArrayList<Spot> favouriteSpots = new ArrayList<Spot>();
 

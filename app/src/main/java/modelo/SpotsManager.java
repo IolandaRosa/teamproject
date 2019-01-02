@@ -202,16 +202,21 @@ public enum SpotsManager {
        return freeSpots;
    }
 
-    public void setSpotStatusToOccupied(String id) {
+    public void setSpotStatusToOccupied(String id,boolean parking) {
         dbRef.child(id).child("Status").setValue(1);
 
         int index=getSpotIndexById(id);
-        if(index!=-1){
+        if(index!=-1 && parking){
             Spot spot = this.parkingSpots.get(index);
             spot.setTotalOfParkings();
             this.parkingSpots.set(index,spot);
             dbRef.child(id).child("TotalOfParkings").setValue(spot.getTotalOfParkings());
         }
+
+    }
+
+    public void setSpotStatusToOccupiedTest(String id) {
+        dbRef.child(id).child("Status").setValue(1);
 
     }
 

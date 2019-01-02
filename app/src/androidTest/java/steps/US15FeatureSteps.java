@@ -21,7 +21,7 @@ public class US15FeatureSteps extends GreenCoffeeSteps {
 
     @Given("^The application detects that a spot has changed from free to occupied$")
     public void the_application_detects_that_a_spot_has_changed_from_free_to_occupied() {
-         SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot");
+         SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot",false);
     }
 
     @When("^I am in the proximity of that spot$")
