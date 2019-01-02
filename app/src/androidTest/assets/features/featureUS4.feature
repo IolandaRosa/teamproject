@@ -17,6 +17,5 @@ Feature: Dashboard for authenticated users
     Given I am an authenticated user
     And I see the authenticated user dashboard
     When I choose other park on the spinner
-    Then I see that park on the map
-    And I see the free spots markers on the map of the other park
+    Then I see the free spots markers on the map of the other park
     And the information of total free spots and total of ocupied spots for that park

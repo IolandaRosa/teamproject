@@ -58,7 +58,6 @@ public class US12FeatureTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots3@email.pt", "12345678");
 
         while(!registerTask.isComplete())
@@ -76,7 +75,6 @@ public class US12FeatureTest extends GreenCoffeeTest {
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
-
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
@@ -96,9 +94,7 @@ public class US12FeatureTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
-
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);

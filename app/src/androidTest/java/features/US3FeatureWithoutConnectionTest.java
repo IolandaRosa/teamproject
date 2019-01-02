@@ -25,7 +25,6 @@ import steps.US3FeatureWithoutConnectionSteps;
 
 import static android.content.Context.WIFI_SERVICE;
 
-
 @RunWith(Parameterized.class)
 public class US3FeatureWithoutConnectionTest extends GreenCoffeeTest {
 

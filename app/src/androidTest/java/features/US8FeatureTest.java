@@ -2,6 +2,7 @@ package features;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,11 +28,11 @@ import steps.US8FeatureSteps;
 
 @RunWith(Parameterized.class)
 public class US8FeatureTest extends GreenCoffeeTest {
-    private static Object lock = new Object();
-    private static boolean ready = false;
-
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US8FeatureTest(ScenarioConfig scenario) {
         super(scenario);
@@ -49,25 +50,6 @@ public class US8FeatureTest extends GreenCoffeeTest {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null)
             FirebaseAuth.getInstance().signOut();
-
-        /*synchronized (lock) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword("changePass@email.pt", "12345678")
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                ready = true;
-
-                            } else {
-                                Log.println(1, "Exception US8 - beforeClass", task.getException().getMessage());
-                            }
-                        }
-                    });
-
-            if (ready) {
-                lock.notify();
-            }
-        }*/
 
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("changePass@email.pt", "12345678");
 
@@ -100,15 +82,6 @@ public class US8FeatureTest extends GreenCoffeeTest {
 
     @Test
     public void test() {
-        /*synchronized (lock) {
-            while (!ready) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
         start(new US8FeatureSteps());
     }
 

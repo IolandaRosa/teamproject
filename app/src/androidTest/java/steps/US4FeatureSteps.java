@@ -16,9 +16,16 @@ import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 import modelo.SpotsManager;
 
+import static android.os.SystemClock.sleep;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.AllOf.allOf;
 
 public class US4FeatureSteps extends GreenCoffeeSteps {
     @Given("^I am an authenticated user$")
@@ -67,8 +74,13 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
     @Then("^I see the options: Profile, Find me a spot, My favourite Spots, My Spot, Statistics, Change My Password, Logout, Dashboard$")
     public void i_see_the_options_Profile_Find_me_a_spot_My_favourite_Spots_My_Spot_Statistics_Change_My_Password_Logout_Dashboard() {
         String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
-        for (String s : options) {
-            onViewWithText(s).isDisplayed();
+        for (int i = 0; i < 9; i++) {
+            onViewWithText(options[i]).isDisplayed();
+        }
+        onView(withId(R.id.drawer_layout)).perform(swipeUp());
+
+        for(int i=9;i<options.length;i++){
+            onViewWithText(options[i]).isDisplayed();
         }
     }
 
@@ -77,12 +89,6 @@ public class US4FeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.spinner).click();
         String[] mapsOptions = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.maps);
         onViewWithText(mapsOptions[1]).click();
-    }
-
-    @Then("^I see that park on the map$")
-    public void i_see_that_park_on_the_map() {
-
-
     }
 
     @When("^I see the free spots markers on the map of the other park$")

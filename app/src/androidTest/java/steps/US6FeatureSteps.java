@@ -13,7 +13,9 @@ import org.junit.Assert;
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -37,9 +39,8 @@ public class US6FeatureSteps extends GreenCoffeeSteps {
 
     @When("^I press the logout button$")
     public void i_press_the_logout_button() {
-        //Espresso.onView(withText("Logout")).perform(click());
-        String[] options = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.dashboardIems);
-        Espresso.onView(withText(options[8])).perform(click());
+        onView(withId(R.id.drawer_layout)).perform(swipeUp());
+        onViewWithText("Logout").click();
     }
 
     @When("^I am in the anonymous dashboard page$")
