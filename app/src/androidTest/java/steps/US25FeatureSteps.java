@@ -32,8 +32,6 @@ public class US25FeatureSteps extends GreenCoffeeSteps {
 
         onViewWithId(R.id.drawer_layout).isDisplayed();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
-        sleep(500);
-    //    Espresso.onView(withText("Logout")).perform(scrollTo());
         Espresso.onView(withId(R.id.drawer_layout)).perform(swipeUp());
         Espresso.onView(withText(arg1)).perform(click());
     }

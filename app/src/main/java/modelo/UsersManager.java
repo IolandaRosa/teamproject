@@ -34,7 +34,6 @@ public enum UsersManager {
     UsersManager() {
 
         this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        //mDatabase.keepSynced(true);
 
         this.mAuth=FirebaseAuth.getInstance();
     }
@@ -131,19 +130,6 @@ public enum UsersManager {
 
         }
     }
-
-   /* public void addUserThatIsParkedUS19(String name, String email, String spotId, List<Spot> spots) {
-        String id=mAuth.getCurrentUser().getUid();
-        User user=new User(id,name,email,null, spotId);
-        if (spots != null) {
-            user.setFavouriteSpots(spots);
-        }
-        mDatabase.child(id).setValue(user);
-        if(currentUser!=null){
-            currentUser.setFavouriteSpots(spots);
-        }
-        currentUser = user;
-    }*/
 
     // para testes
     public void addUserWithFavouritesAndParked(String name, String email, String spotId, List<Spot> spots) {
@@ -336,35 +322,11 @@ public enum UsersManager {
         return errorMap;
     }
 
-    //Não utilizados
-    public DatabaseReference getCurrentUserPasswordReference() {
-        String id=mAuth.getCurrentUser().getUid();
-
-        return mDatabase.child(id).child("password");
-    }
-
-    public String md5_Hash(String s) {
-        MessageDigest m = null;
-
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        m.update(s.getBytes(),0,s.length());
-        String hash = new BigInteger(1, m.digest()).toString(16);
-        return hash;
-    }
-
     public void loadCurrentUser (DatabaseReference ref) {
-        //DatabaseReference ref = this.getUserProfileInfo();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot ds) {
-               // currentUser = dataSnapshot.getValue(User.class);
-
                 FindPreference preference=null;
                 String id=null;
                 String name=null;
@@ -388,7 +350,6 @@ public enum UsersManager {
 
                 Object preferenceObject = ds.child("findPreference").getValue();
                 if (preferenceObject != null) {
-                   // String str = preferenceObject.toString();
                     preference = UsersManager.INSTANCE.getFindPreference(preferenceObject.toString());
                 }
 
@@ -460,7 +421,6 @@ public enum UsersManager {
     }
 
     public void userLeaveSpot() {
-       // mDatabase.child(mAuth.getCurrentUser().getUid()).child("spotParked").setValue(null);
         if(currentUser!=null){
             currentUser.setSpotParked(null);
         }

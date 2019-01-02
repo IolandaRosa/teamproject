@@ -115,7 +115,6 @@ public class DashboardActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void disconnectInternet() {
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-      //  wm.disconnect();
         wm.setWifiEnabled(false);
     }
 

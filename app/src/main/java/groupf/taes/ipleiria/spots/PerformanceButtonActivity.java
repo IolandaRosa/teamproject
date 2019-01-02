@@ -20,7 +20,6 @@ public abstract class PerformanceButtonActivity extends AppCompatActivity {
                 this.getLayoutInflater().inflate(R.layout.activity_performance_button_fragment, null);
         stub = (ViewStub) baseLayout.findViewById(R.id.base_content_stub);
 
-        // Replace viewstub with content.
         baseLayout.removeView(stub);
         baseLayout.addView(childView(), stub.getLayoutParams());
 

@@ -16,9 +16,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,8 +34,6 @@ public enum IncidentsReportsManager {
 
         dbRef = database.getReference().child("ReportOfIncidents");
         dbRef.keepSynced(true);
-
-      //  incidents = new LinkedList<>();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
 

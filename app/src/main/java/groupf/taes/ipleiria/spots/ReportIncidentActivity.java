@@ -8,13 +8,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,9 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -33,13 +30,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import modelo.IncidentReport;
 import modelo.IncidentsReportsManager;
 import modelo.InternetConnectionManager;
 import modelo.Spot;
 import modelo.SpotsManager;
 
-public class ReportIncidentActivity extends AppCompatActivity {
+public class ReportIncidentActivity extends PerformanceButtonActivity {
     private static final int PERMISSION_STORAGE_REQUEST = 0;
     private Button btnGetLocation;
     private Button btnChooseSpotPark;
@@ -63,9 +59,13 @@ public class ReportIncidentActivity extends AppCompatActivity {
     private int hasPhoto = 0;
 
     @Override
+    protected View childView() {
+        return getLayoutInflater().inflate(R.layout.activity_report_incident, null);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_incident);
 
         txtViewInfoLocationObtained = findViewById(R.id.textViewInfoLocationObtained);
         btnGetLocation = findViewById(R.id.btnGetCurrentLocation);
@@ -77,9 +77,6 @@ public class ReportIncidentActivity extends AppCompatActivity {
         btnUpload = findViewById(R.id.btnUploadPhoto);
         txtDescription = findViewById(R.id.editTxtDescription);
         txtInfoUploadedSuccess = findViewById(R.id.txtViewInfoUploadedSuccess);
-
-
-
     }
 
     private void putSpots(int park) {
@@ -220,7 +217,6 @@ public class ReportIncidentActivity extends AppCompatActivity {
                 } else {
                     // permissão denied
                     InternetConnectionManager.INSTANCE.showErrorMessage(ReportIncidentActivity.this,R.string.errorPermissionStorageDenied);
-                    //showErrorMessage(R.string.errorPermissionLocationDenied);
                 }
             }
         }
@@ -272,8 +268,6 @@ public class ReportIncidentActivity extends AppCompatActivity {
     private void finishActivity() {
         this.finish();
     }
-
-
 
 
 }

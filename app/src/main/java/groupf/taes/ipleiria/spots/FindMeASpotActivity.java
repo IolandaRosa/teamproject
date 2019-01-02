@@ -56,7 +56,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
         optionForSpot = this.getIntent().getIntExtra("preference", -1);
         currentUser = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
-        //currentPark=this.getIntent().getIntExtra("park",0);
+
         currentPark = DashboardAuthActivity.getCurrentPark();
         checkPermission();
     }
@@ -88,9 +88,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
                             mediumBestRated = Double.parseDouble(dataSnapshot.child("Best_Rated").getValue().toString());
                             mediumCloserLocation = Double.parseDouble(dataSnapshot.child("Closer_Location").getValue().toString());
                             mediumMyFavourites = Double.parseDouble(dataSnapshot.child("My_Favourites").getValue().toString());
-
-
-
 
                             String media = null;
                             DatabaseReference performance_alghorithms = FirebaseDatabase.getInstance().getReference().child("Performance_Alghorithms");
@@ -137,8 +134,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
             }
         });
 
-
-        //SpotsManager.INSTANCE.readFreeSpotsDataFromDatabase(DashboardAuthActivity.getCurrentPark());
         List<Spot> freeSpots = SpotsManager.INSTANCE.getFreeParkingSpots(DashboardAuthActivity.getCurrentPark());
         if(!freeSpots.isEmpty()){
             return getCoordenatesFromString(getCloserSpot(loc.getResult().getLatitude(),loc.getResult().getLongitude(),freeSpots).getLocationGeo());
@@ -149,9 +144,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
     public static Spot getCloserSpot(double latitude, double longitude, List<Spot> freeParkingSpots) {
         Spot choosenSpot=null;
@@ -201,7 +193,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
     }
 
     public void showSpot() {
-      //  User user = (User) this.getIntent().getSerializableExtra("user"); // por causa dos favourites
         LatLng choosenSpot = null;
         Spot best=null;
 
@@ -211,7 +202,7 @@ public class FindMeASpotActivity extends AppCompatActivity {
 
                 List<Spot> spots = null;
                 best = bestRatedPerPark(spots, currentPark);
-                //System.out.println(best.getRating() + best.getSpotParked()+best.getPark());
+
                 if(best==null){
                     showErrorMessage(R.string.noSpotFree);
                     return;
@@ -246,8 +237,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.noFavouriteSpotsFree);
                     return;
                 }
-                //System.out.println(best.getRating() + best.getSpotParked());
-                //LatLng bestRatedCoordinates = getCoordenatesFromSting(bestRatedSpot.getLocationGeo());
                 finish();
                 initializeMapsApp (getCoordenatesFromString(best.getLocationGeo()));
                 break;
@@ -273,7 +262,6 @@ public class FindMeASpotActivity extends AppCompatActivity {
                 } else {
                     // permissão denied
                     InternetConnectionManager.INSTANCE.showErrorMessage(FindMeASpotActivity.this,R.string.errorPermissionLocationDenied);
-                    //showErrorMessage(R.string.errorPermissionLocationDenied);
                 }
             }
         }

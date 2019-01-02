@@ -95,9 +95,8 @@ public class RegisterActivity extends AppCompatActivity {
                     idlingResource.decrement();
                     if(task.isSuccessful()){
 
-                        //#############################
-                        UsersManager.INSTANCE.addUserToDatabase(name,email/*,password*/);
-                        //#############################
+                        UsersManager.INSTANCE.addUserToDatabase(name, email);
+
                         UsersManager.INSTANCE.setUserLogged(true);
 
                         startActivity(DashboardAuthActivity.getIntent(RegisterActivity.this));
@@ -127,6 +126,4 @@ public class RegisterActivity extends AppCompatActivity {
     public static CountingIdlingResource getIdlingResource() {
         return idlingResource;
     }
-
-
 }
