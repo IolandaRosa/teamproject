@@ -634,7 +634,7 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                if (parking) {
-                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle());
+                   SpotsManager.INSTANCE.setSpotStatusToOccupied(choosenMarker.getTitle(),true);
                    UsersManager.INSTANCE.setSpotUserIsParked(choosenMarker.getTitle());
                } else {
                     leaveSpot();
@@ -648,6 +648,9 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (parking) {
                     choosenMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                }else
+                {
+                    SpotsManager.INSTANCE.setSpotStatusToOccupied(UsersManager.INSTANCE.getCurrentUser().getSpotParked(),false);
                 }
                 dialogInterface.dismiss();
             }

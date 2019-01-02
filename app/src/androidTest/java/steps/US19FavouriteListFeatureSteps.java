@@ -80,12 +80,7 @@ public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
         Assert.assertNotNull(UsersManager.INSTANCE.getCurrentUser().getSpotParked());
     }
 
-    @Then("^The spot is occupied$")
-    public void the_spot_is_occupied() {
-        SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot");
-        Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        Assert.assertEquals(1, spot.getStatus());
-    }
+
 
     @Given("^I see a message asking if I want to add that spot to my favourits list spots$")
     public void i_see_a_message_asking_if_I_want_to_add_that_spot_to_my_favourits_list_spots() {
@@ -101,14 +96,15 @@ public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
     public void i_go_to_my_favourits_spots_list() {
         onViewWithId(R.id.btnClose).click();
         Espresso.onView(withId(R.id.drawer_layout)).perform(DrawerHelper.actionOpenDrawer());
+        //sleep(5000);
         Espresso.onView(withText(R.string.btnFavouriteSpots)).perform(click());
     }
 
+
+
     @Then("^The spot is added to my favourits spots list$")
     public void the_spot_is_added_to_my_favourits_spots_list() {
-        onData(anything()).atPosition(0).onChildView(withId(R.id.spotId)).check(matches(withText("Name: TestSpot")));    }
-
-
-
+        onData(anything()).atPosition(0).onChildView(withId(R.id.spotId)).check(matches(withText("Name: TestSpot")));
+    }
 
 }

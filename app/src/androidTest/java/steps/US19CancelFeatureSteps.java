@@ -77,8 +77,7 @@ public class US19CancelFeatureSteps extends GreenCoffeeSteps {
 
     @Then("^The spot is occupied$")
     public void the_spot_is_occupied() {
-        SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot");
-        sleep(5000);
+        SpotsManager.INSTANCE.setSpotStatusToOccupied("TestSpot",false);
         Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
         Assert.assertEquals(1, spot.getStatus());
     }
