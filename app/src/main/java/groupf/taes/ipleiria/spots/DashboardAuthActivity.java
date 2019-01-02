@@ -34,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -177,15 +178,14 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
 
                     List<Spot> spotsWithStateChanged = getOcuppiedSpotsChanged(SpotsManager.INSTANCE.getParkingSpotsOld(), SpotsManager.INSTANCE.getParkingSpots());
 
-                    Location lastLocation = getLocationG();
+                    final Location lastLocation = getLocationG();
+
                     String[] location;
 
                     for (Spot spot : spotsWithStateChanged) {
                         location = spot.getLocationGeo().split(",");
 
-                        //if(FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getResult().getLatitude(), lastLocation.getResult().getLongitude()) < 60)
                         //tive que por as coordenadas assim pq ele nao esta a conseguir por a localizacao
-
                         /*if (FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), 39.734810, -8.820888) < distanceLimit
                                 && UsersManager.INSTANCE.getCurrentUser().getSpotParked() == null)*/
                         if (lastLocation != null && FindMeASpotActivity.distance(Double.parseDouble(location[0]), Double.parseDouble(location[1]), lastLocation.getLatitude(), lastLocation.getLongitude()) < distanceLimit
