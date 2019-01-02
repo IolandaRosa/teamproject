@@ -48,6 +48,7 @@ public class US19FavouriteListFeatureSteps extends GreenCoffeeSteps {
         onViewWithId(R.id.btnSendRate).isDisplayed();
         onViewWithId(R.id.btnAddToFavourites).isDisplayed();
         onViewWithId(R.id.btnClose).isDisplayed();
+
     }
 
     @Given("^I insert the rate value$")
