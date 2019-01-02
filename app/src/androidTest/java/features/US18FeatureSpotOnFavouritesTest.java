@@ -78,7 +78,6 @@ public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-
             UsersManager.INSTANCE.addUserThatIsParked("Spots","spots7@email.pt", "TestSpot", spots);
         }
 
@@ -94,10 +93,8 @@ public class US18FeatureSpotOnFavouritesTest extends GreenCoffeeTest {
 
             FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }else{
-            //Se não fazer login - não deve acontecer em principio ele esta logado sempre - e eliminar
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots3@email.pt", "12345678");
 
-            //todo - não é a melhor solução mas em termos de performance é melhor que sleep
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 

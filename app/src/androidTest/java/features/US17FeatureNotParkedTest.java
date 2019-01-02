@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +31,9 @@ public class US17FeatureNotParkedTest extends GreenCoffeeTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     public US17FeatureNotParkedTest(ScenarioConfig scenario) {
         super(scenario);
@@ -91,6 +95,4 @@ public class US17FeatureNotParkedTest extends GreenCoffeeTest {
             }
         }
     }
-
-
 }

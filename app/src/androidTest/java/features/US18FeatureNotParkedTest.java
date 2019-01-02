@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +31,9 @@ public class US18FeatureNotParkedTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     public US18FeatureNotParkedTest(ScenarioConfig scenario) {
         super(scenario);
     }
@@ -49,9 +53,7 @@ public class US18FeatureNotParkedTest extends GreenCoffeeTest {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots6@email.pt", "12345678");
-
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
@@ -94,6 +96,4 @@ public class US18FeatureNotParkedTest extends GreenCoffeeTest {
             }
         }
     }
-
-
 }

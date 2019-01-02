@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,6 +33,9 @@ public class US16FeatureTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     public US16FeatureTest(ScenarioConfig scenario) {
         super(scenario);
     }
@@ -55,7 +59,6 @@ public class US16FeatureTest extends GreenCoffeeTest {
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
-
 
         if(registerTask.isSuccessful()){
             UsersManager.INSTANCE.addUserToDatabase("Spots","spots3@email.pt");
@@ -95,7 +98,6 @@ public class US16FeatureTest extends GreenCoffeeTest {
                 currentUser.delete();
 
                 FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
-
             }
         }
 

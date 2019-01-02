@@ -45,9 +45,6 @@ public class US18FeatureSpotOnFavouritesSteps extends GreenCoffeeSteps {
 
     @Given("^The spot is already on my favourites list$")
     public void the_spot_is_already_on_my_favourites_list() {
-       /* Spot spot = SpotsManager.INSTANCE.getSpotFromId("TestSpot");
-        List<Spot> spotsList = UsersManager.INSTANCE.getCurrentUser().getFavouriteSpots();
-        Assert.assertTrue(spotsList.contains(spot)); */
        Assert.assertTrue(UsersManager.INSTANCE.spotIsUserFavourite("TestSpot"));
     }
 

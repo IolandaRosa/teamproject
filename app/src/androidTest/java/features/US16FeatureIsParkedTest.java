@@ -1,6 +1,7 @@
 package features;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +31,9 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(DashboardAuthActivity.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     public US16FeatureIsParkedTest(ScenarioConfig scenario) {
         super(scenario);
     }
@@ -39,32 +43,26 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
         return new GreenCoffeeConfig().withFeatureFromAssets("assets/features/featureUS16IsParked.feature").scenarios();
     }
 
-
     @Test
     public void test() {
         start(new US16FeatureIsParkedSteps());
     }
-
 
     @BeforeClass
     public static void setUpOnlyOnce() throws Exception {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             FirebaseAuth.getInstance().signOut();
 
-
         Task<AuthResult> registerTask = UsersManager.INSTANCE.registerUser("spots5@email.pt", "12345678");
 
         while(!registerTask.isComplete())
             Thread.sleep(1);
 
-
         if(registerTask.isSuccessful()){
-
             UsersManager.INSTANCE.addUserThatIsParked("Spots","spots5@email.pt", "TestSpot", null);
         }
         else{
             Task<AuthResult> loginTask = UsersManager.INSTANCE.makeLogin("spots5@email.pt", "12345678");
-
 
             while(!loginTask.isComplete())
                 Thread.sleep(1);
@@ -73,7 +71,6 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
         }
 
     }
-
 
     @AfterClass
     public static void tearDownOnlyOnce() throws Throwable {
@@ -99,8 +96,5 @@ public class US16FeatureIsParkedTest extends GreenCoffeeTest {
 
             }
         }
-
     }
-
-
 }

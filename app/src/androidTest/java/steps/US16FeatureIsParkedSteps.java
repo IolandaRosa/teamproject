@@ -12,7 +12,6 @@ import org.junit.Assert;
 
 import groupf.taes.ipleiria.spots.R;
 import helpers.DrawerHelper;
-import modelo.User;
 import modelo.UsersManager;
 
 import static android.support.test.espresso.action.ViewActions.click;
@@ -29,7 +28,6 @@ public class US16FeatureIsParkedSteps extends GreenCoffeeSteps {
 
     @Given("^I am already parked$")
     public void i_am_already_parked() {
-        User user = UsersManager.INSTANCE.getCurrentUser();
         Assert.assertNotNull(UsersManager.INSTANCE.getCurrentUser().getSpotParked());
     }
 
