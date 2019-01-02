@@ -70,7 +70,7 @@ public class US23FeatureEmptyFieldsTest extends GreenCoffeeTest {
             while(!loginTask.isComplete())
                 Thread.sleep(1);
 
-            UsersManager.INSTANCE.addUserToDatabase("Spots","spots9@email.pt");
+            UsersManager.INSTANCE.addUserToDatabase("Spots","spots10@email.pt");
         }
 
     }

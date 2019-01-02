@@ -85,7 +85,11 @@ public class US3FeatureTest extends GreenCoffeeTest {
             Thread.sleep(1);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseAuth.getInstance().getCurrentUser().delete();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = currentUser.getUid();
+            currentUser.delete();
+
+            FirebaseDatabase.getInstance().getReference("users").child(uid).removeValue();
         }
     }
 
