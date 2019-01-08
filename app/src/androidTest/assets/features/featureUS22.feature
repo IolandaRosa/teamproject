@@ -78,7 +78,7 @@ Feature: An authenticated user can see the occupation rate evolution displayed
     And I insert the initial date from the future
     And I insert the final date higher than initial date
     And I press the button with text "Show Occupation Rate Evolution On Period"
-    Then I see an error message saying "The date must van not be higher or equal to the actual date"
+    Then I see an error message saying "The date must not be higher or equal to the actual date"
 
   Scenario: An authenticated user wants to see graphical information whenthere is no data registered
     Given I am an authenticated user

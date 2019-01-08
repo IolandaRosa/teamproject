@@ -66,7 +66,7 @@ import modelo.UsersManager;
 
 public class DashboardAuthActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSION_LOCATION_REQUEST = 0;
-    public static final int distanceLimit = 60;
+    public static final int distanceLimit = 100;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<CharSequence> mAdapter;
@@ -607,7 +607,10 @@ public class DashboardAuthActivity extends AppCompatActivity implements OnMapRea
             }
         }
 
-        askUserYesOrNo(R.string.msgAskUserIfWantToPark, true);
+        if(currentUser.getSpotParked() == null){
+            askUserYesOrNo(R.string.msgAskUserIfWantToPark, true);
+        }
+
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the

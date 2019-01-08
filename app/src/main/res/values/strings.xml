@@ -92,7 +92,7 @@
     <string name="performanceBtn">View Occupation Rate And Find Me a Spot Performance</string>
     <string name="invalidDateFormat">The initial and final dates must be valid and in format dd/mm/yyyy</string>
     <string name="invalidInitialDate">The initial date can not be higher or equal to the final date</string>
-    <string name="invalidInitialDateActual">The date must van not be higher or equal to the actual date</string>
+    <string name="invalidInitialDateActual">The date must not be higher or equal to the actual date</string>
     <string name="noDataFound">No data found for given time period</string>
     <string name="displayGraph">Show Occupation Rate Evolution On Period</string>
     <string name="titleReportIncident">Report Incident</string>
